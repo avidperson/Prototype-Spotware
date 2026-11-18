@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>cTrader Help Centre</title>
   <link rel="icon" href="https://help.ctrader.com/img/logo.png">
-  <!-- MANDATORY: Declare support for both light and dark themes -->
-  <meta name="color-scheme" content="light dark">
+  <!-- Default to light theme; supports toggling between light and dark -->
+  <meta name="color-scheme" content="light">
   <script>
     try {
-      document.querySelector('meta[name="color-scheme"]').content = localStorage.getItem("color-scheme") ?? "light dark";
+      localStorage.removeItem("color-scheme");
+      var savedTheme = sessionStorage.getItem("ctrader_help_theme");
+      document.querySelector('meta[name="color-scheme"]').content = (savedTheme === "dark" || savedTheme === "light") ? savedTheme : "light";
       var savedLang = localStorage.getItem("ctrader_help_lang");
       if (savedLang && savedLang !== "en") {
         document.documentElement.lang = savedLang;
@@ -87,22 +89,6 @@
       --scrollbar-thumb: var(--scrollbar-thumb-light);
       --scrollbar-track: var(--scrollbar-track-light);
 
-      @media (prefers-color-scheme: dark) {
-        --bg-canvas: var(--bg-canvas-dark);
-        --bg-surface: var(--bg-surface-dark);
-        --bg-subtle: var(--bg-subtle-dark);
-        --bg-header: var(--bg-header-dark);
-        --text-primary: var(--text-primary-dark);
-        --text-secondary: var(--text-secondary-dark);
-        --text-muted: var(--text-muted-dark);
-        --border: var(--border-dark);
-        --border-strong: var(--border-strong-dark);
-        --accent: var(--accent-dark);
-        --accent-soft: var(--accent-soft-dark);
-        --scrollbar-thumb: var(--scrollbar-thumb-dark);
-        --scrollbar-track: var(--scrollbar-track-dark);
-      }
-
       @supports (color: light-dark(white, black)) {
         --bg-canvas: light-dark(var(--bg-canvas-light), var(--bg-canvas-dark));
         --bg-surface: light-dark(var(--bg-surface-light), var(--bg-surface-dark));
@@ -119,10 +105,23 @@
         --scrollbar-track: light-dark(var(--scrollbar-track-light), var(--scrollbar-track-dark));
       }
 
-      color-scheme: light dark;
+      color-scheme: light;
 
       &:has(> head > meta[name="color-scheme"][content="dark"]) {
         color-scheme: dark;
+        --bg-canvas: var(--bg-canvas-dark);
+        --bg-surface: var(--bg-surface-dark);
+        --bg-subtle: var(--bg-subtle-dark);
+        --bg-header: var(--bg-header-dark);
+        --text-primary: var(--text-primary-dark);
+        --text-secondary: var(--text-secondary-dark);
+        --text-muted: var(--text-muted-dark);
+        --border: var(--border-dark);
+        --border-strong: var(--border-strong-dark);
+        --accent: var(--accent-dark);
+        --accent-soft: var(--accent-soft-dark);
+        --scrollbar-thumb: var(--scrollbar-thumb-dark);
+        --scrollbar-track: var(--scrollbar-track-dark);
       }
       &:has(> head > meta[name="color-scheme"][content="light"]) {
         color-scheme: light;
@@ -361,6 +360,10 @@
       font-size: 0.74rem;
       flex-shrink: 0;
     }
+    body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-bar {
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    }
     .header-search-dropdown {
       position: absolute;
       top: calc(100% + 12px);
@@ -381,8 +384,8 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-md);
-      padding: 0.45rem 0.7rem;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+      padding: 0.38rem 0.65rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
       min-width: 0;
     }
     .header-suggestions-label {
@@ -400,14 +403,13 @@
       background: var(--bg-subtle);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      padding: 0.2rem 0.6rem;
-      font-size: 0.7rem;
+      padding: 0.18rem 0.52rem;
+      font-size: 0.68rem;
       font-weight: 500;
     }
     .header-suggestions-card .prompt-chip:hover {
-      background: var(--accent-soft);
-      border-color: color-mix(in srgb, var(--accent) 40%, transparent);
-      color: var(--accent);
+      border-color: var(--border-strong);
+      color: var(--text-primary);
     }
     .header-search-dropdown .instant-results-box {
       position: static;
@@ -492,6 +494,7 @@
        3. WORKSPACE SHELL & LEFT NAVIGATION PANEL
        ========================================================================== */
     .workspace-shell {
+      position: relative;
       display: grid;
       grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
       flex: 1;
@@ -502,6 +505,73 @@
 
     body[data-sidebar-mode="hidden"] .workspace-shell {
       grid-template-columns: 0% minmax(0, 1fr);
+    }
+
+    .sidebar-tab-curve {
+      display: none;
+    }
+
+    @media (min-width: 561px) {
+      #sidebarCycleBtn {
+        position: absolute;
+        top: 50%;
+        left: calc(var(--sidebar-width) - 1px);
+        transform: translateY(-50%);
+        z-index: 39;
+        width: 32px;
+        height: 36px;
+        padding: 0 2px 0 0;
+        border: none;
+        background: transparent;
+        border-radius: 0 9px 9px 0;
+        box-shadow: none;
+        overflow: visible;
+        transition: left 0.2s ease, right 0.2s ease, color 0.15s;
+      }
+      #sidebarCycleBtn:hover {
+        color: var(--accent);
+        border: none;
+        background: transparent;
+      }
+      #sidebarCycleBtn:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .sidebar-tab-curve {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: -10px;
+        width: 32px;
+        height: 56px;
+        pointer-events: none;
+        z-index: 0;
+        overflow: visible;
+      }
+      .sidebar-tab-fill {
+        fill: var(--bg-canvas);
+        stroke: none;
+      }
+      .sidebar-tab-stroke {
+        fill: none;
+        stroke: var(--border);
+        stroke-width: 1;
+      }
+      #sidebarCycleBtn .sidebar-icon-side {
+        position: relative;
+        z-index: 1;
+        width: 20px;
+        height: 20px;
+      }
+      body[data-sidebar-mode="hidden"] #sidebarCycleBtn {
+        left: 0;
+        transform: translateY(-50%);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #sidebarCycleBtn {
+          transition: color 0.15s;
+        }
+      }
     }
 
     .left-nav-panel {
@@ -527,15 +597,18 @@
     .nav-panel-top {
       width: 100%;
       min-width: 0;
+      flex-shrink: 0;
       padding: 0.75rem 0.75rem;
       border-bottom: 1px solid var(--border);
       display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.45rem;
     }
 
     .sidebar-filter-box {
-      width: 100%;
+      flex: 1 1 0;
+      min-width: 0;
       display: flex;
       align-items: center;
       gap: 0.45rem;
@@ -631,6 +704,29 @@
       color: var(--accent);
       background: var(--accent-soft);
     }
+    .nav-home-btn {
+      width: auto;
+      flex: 0 1 auto;
+      min-width: 0;
+      padding: 0.34rem 0.55rem;
+      gap: 0.35rem;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      font-size: 0.77rem;
+      line-height: 1.25;
+      overflow: hidden;
+    }
+    .nav-home-btn span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-home-btn:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-subtle);
+    }
+    .nav-home-btn.active {
+      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+    }
 
     /* Native <details> Accordion styling (per modern-web-guidance `accordion`) */
     details::details-content {
@@ -640,6 +736,7 @@
     }
     details:not([open])::details-content {
       block-size: 0;
+      min-block-size: 0;
     }
     @media (prefers-reduced-motion: no-preference) {
       details::details-content {
@@ -651,6 +748,13 @@
     .nav-group {
       width: 100%;
       border-radius: var(--radius-sm);
+    }
+    .nav-group::details-content {
+      transition: none;
+      block-size: auto;
+      min-block-size: 0;
+      overflow: visible;
+      contain: none;
     }
     .nav-group.audience-prioritized > summary {
       color: var(--accent);
@@ -688,7 +792,7 @@
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat center / contain;
       rotate: -90deg;
     }
-    .nav-group[open] > summary::before {
+    .nav-group[open]:not(.is-closing) > summary::before {
       rotate: 0deg;
     }
     @media (prefers-reduced-motion: no-preference) {
@@ -700,12 +804,19 @@
     .nav-links-list {
       list-style: none;
       margin: 0;
-      padding: 0.1rem 0 0.35rem 1.15rem;
+      padding: 0 0 0 1.15rem;
       border-left: 1px solid var(--border);
       margin-left: 0.75rem;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       gap: 1px;
+    }
+    .nav-links-list > li:first-child {
+      padding-top: 0.1rem;
+    }
+    .nav-links-list > li:last-child {
+      padding-bottom: 0.35rem;
     }
 
     .nav-link-item {
@@ -742,6 +853,7 @@
 
     body[data-active-audience="home"] .main-container {
       scrollbar-gutter: auto;
+      overflow-y: hidden;
     }
 
     .back-to-top-btn {
@@ -803,24 +915,32 @@
     }
 
     body[data-active-audience="home"] .main-inner {
-      padding: clamp(0.75rem, 2.5vh, 1.5rem) max(clamp(1rem, 3vw, 2rem), calc((100% - 1060px) / 2));
+      position: relative;
+      z-index: 5;
+      flex: 1 1 0;
+      min-height: 0;
+      padding: clamp(0.25rem, 1.6vh, 1.4rem) max(clamp(0.85rem, 3vw, 2rem), calc((100% - 1060px) / 2));
       gap: 0;
     }
 
     /* Minimal Hero (Home View) */
     .hero-section {
-      flex: 0 1 auto;
-      margin: auto 0;
-      padding: clamp(0.5rem, 2vh, 1.5rem) 0;
+      flex: 1 1 0;
+      min-height: 0;
+      margin: 0;
+      padding: clamp(0.15rem, 1vh, 1rem) 0;
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: space-evenly;
       text-align: center;
-      gap: clamp(1.25rem, 3.6vh, 2.35rem);
+      gap: clamp(0.35rem, 2vh, 1.85rem);
     }
 
     .hero-copy {
+      flex: 0 1 auto;
+      min-height: 0;
       width: 100%;
       max-width: 720px;
       margin: 0 auto;
@@ -828,8 +948,8 @@
     }
 
     .hero-copy h1 {
-      margin: 0 0 clamp(0.55rem, 1.4vh, 0.85rem);
-      font-size: clamp(1.3rem, min(4.6vw, 5.4vh), 2.65rem);
+      margin: 0 0 clamp(0.25rem, 1vh, 0.75rem);
+      font-size: clamp(1rem, min(4.4vw, 4.4vh), 2.5rem);
       line-height: 1.15;
       font-weight: 600;
       letter-spacing: -0.025em;
@@ -839,21 +959,32 @@
     .hero-copy p {
       margin: 0 auto;
       color: var(--text-secondary);
-      font-size: clamp(0.76rem, min(2.4vw, 1.9vh), 0.94rem);
-      line-height: 1.55;
+      font-size: clamp(0.66rem, min(2.2vw, 1.75vh), 0.92rem);
+      line-height: clamp(1.25, 1.9vh, 1.55);
       max-width: 100%;
     }
 
     /* Clean Omni Search Bar */
     .omni-search-shell {
+      flex: 0 0 auto;
       position: relative;
       z-index: 25;
       display: flex;
       flex-direction: column;
-      gap: clamp(0.6rem, 1.6vh, 0.9rem);
+      gap: clamp(0.3rem, 1.2vh, 0.85rem);
       width: 100%;
       max-width: 720px;
       margin: 0 auto;
+      transform: translateY(0);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell {
+      transform: translateY(var(--hero-search-shift, 0px));
+      z-index: 39;
+    }
+    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-bar {
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
     }
 
     .hero-copy,
@@ -869,6 +1000,8 @@
       pointer-events: none;
     }
     @media (prefers-reduced-motion: reduce) {
+      .omni-search-shell,
+      .omni-search-shell .suggestions-bar,
       .hero-copy,
       .ecosystem-banners-grid,
       .site-footer {
@@ -933,6 +1066,36 @@
       width: 100%;
       min-width: 0;
     }
+    .omni-search-shell .suggestions-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 0.45rem);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 0.36rem 0.65rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+      z-index: 31;
+    }
+    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.22s ease 0.04s, transform 0.22s ease 0.04s, visibility 0s;
+    }
+    .omni-search-shell .suggestions-bar .prompt-chip {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 0.18rem 0.52rem;
+      font-size: 0.68rem;
+    }
     .suggestions-bar .prompt-chips-row {
       flex: 0 1 auto;
       width: auto;
@@ -993,7 +1156,7 @@
 
     .instant-results-box {
       position: absolute;
-      top: calc(100% + 0.55rem);
+      top: calc(100% + var(--hero-suggestions-offset, 52px));
       left: 0;
       right: 0;
       z-index: 30;
@@ -1001,22 +1164,58 @@
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-md);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
-      padding: 1rem;
+      padding: 0.9rem 1rem;
       display: none;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.35rem;
       text-align: left;
       max-height: calc(100dvh - 8rem);
-      overflow-x: hidden;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-      overscroll-behavior: contain;
+      overflow: hidden;
     }
     .instant-results-box.active {
       display: flex;
     }
-    .instant-results-box > * {
+    .results-scroll-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
+      --res-fade-t: #000;
+      --res-fade-b: #000;
+      mask-image: linear-gradient(to bottom, var(--res-fade-t) 0, #000 20px, #000 calc(100% - 20px), var(--res-fade-b) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, var(--res-fade-t) 0, #000 20px, #000 calc(100% - 20px), var(--res-fade-b) 100%);
+    }
+    .results-scroll-body[data-fade-top="true"] {
+      --res-fade-t: transparent;
+    }
+    .results-scroll-body[data-fade-bottom="true"] {
+      --res-fade-b: transparent;
+    }
+    .results-scroll-body > * {
       flex-shrink: 0;
+    }
+    .results-close-bottom {
+      padding: 0.2rem 0.62rem;
+      font-size: 0.72rem;
+      line-height: 1.25;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .results-close-bottom:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+      background: var(--bg-surface);
+    }
+    .results-close-bottom-bar {
+      display: none;
     }
 
     /* ==========================================================================
@@ -1284,12 +1483,18 @@
       border: 1px solid var(--border);
       width: 100%;
       max-width: 100%;
-      height: 150px;
-      overflow: auto;
+      height: auto;
+      max-height: 140px;
+      overflow: hidden;
       margin: 0;
+      transition: border-color 0.15s;
     }
     #builderCodeBox {
-      height: 220px;
+      max-height: 165px;
+    }
+    .code-snippet-box.scroll-active {
+      overflow: auto;
+      border-color: var(--border-strong);
     }
 
     /* ==========================================================================
@@ -1352,18 +1557,23 @@
     }
 
     .ecosystem-banners-grid {
+      flex: 0 1 auto;
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(0.55rem, 1.6vw, 1rem);
+      gap: clamp(0.45rem, 1.5vw, 1rem);
       width: 100%;
-      max-width: 720px;
+      max-width: min(720px, 100%, calc((100dvh - var(--header-height) - 240px) * 4.2));
       text-align: left;
-      margin: clamp(0.15rem, 0.8vh, 0.5rem) auto 0;
+      margin: 0 auto;
     }
-    @media (max-height: 700px) {
-      .ecosystem-banners-grid {
-        max-width: min(720px, 92vh, 100%);
-      }
+
+    .eco-carousel-btn {
+      display: none;
+    }
+
+    .eco-carousel-stage {
+      display: contents;
     }
 
     .eco-banner-card {
@@ -1433,65 +1643,8 @@
     }
 
     /* ==========================================================================
-       9. DIALOG & POPOVERS
+       9. POPOVERS
        ========================================================================== */
-    dialog {
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-md);
-      background: var(--bg-surface);
-      color: var(--text-primary);
-      padding: 0;
-      max-width: 680px;
-      width: calc(100% - 2rem);
-      max-height: calc(100dvh - clamp(1.5rem, 6vh, 4rem));
-      margin: clamp(0.75rem, 3vh, 2rem) auto auto;
-      overflow: hidden;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-    }
-    dialog[open] {
-      display: flex;
-      flex-direction: column;
-    }
-    dialog::backdrop {
-      background-color: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
-    }
-
-    .dialog-inner {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1 1 auto;
-      min-height: 0;
-      gap: 0.65rem;
-      overflow: hidden;
-    }
-    .dialog-header,
-    .dialog-inner > .omni-bar,
-    .dialog-inner > .suggestions-bar {
-      flex-shrink: 0;
-    }
-    #aiModal .instant-results-box {
-      position: static;
-      flex: 1 1 auto;
-      min-height: 0;
-      max-height: none;
-      box-shadow: none;
-    }
-    .dialog-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 0.75rem;
-      margin-bottom: 0.25rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .dialog-header h2 {
-      margin: 0;
-      font-size: 0.98rem;
-      font-weight: 600;
-    }
-
     [popover] {
       border: 1px solid var(--border-strong);
       border-radius: var(--radius-md);
@@ -1647,22 +1800,19 @@
       .omni-search-shell {
         max-width: min(600px, 100%);
       }
-      .omni-search-shell .omni-bar,
-      #aiModal .omni-bar {
+      .omni-search-shell .omni-bar {
         padding: 0.32rem 0.45rem 0.32rem 0.7rem;
       }
-      .omni-search-shell .btn-subtle-accent,
-      #aiModal .btn-subtle-accent {
+      .omni-search-shell .btn-subtle-accent {
         padding: 0.36rem 0.7rem;
         font-size: 0.76rem;
       }
       .omni-search-shell .suggestions-bar,
-      #aiModal .suggestions-bar,
-      .omni-search-shell .prompt-chips-row,
-      #aiModal .prompt-chips-row {
+      .omni-search-shell .prompt-chips-row {
         justify-content: flex-start;
       }
       .workspace-shell {
+        --nav-drawer-width: clamp(256px, 35%, 320px);
         grid-template-columns: 1fr !important;
       }
       .left-nav-panel {
@@ -1670,7 +1820,7 @@
         left: 0;
         top: var(--header-height);
         height: calc(100dvh - var(--header-height));
-        width: clamp(256px, 35%, 320px);
+        width: var(--nav-drawer-width);
         z-index: 38;
         border-right: 1px solid var(--border);
         box-shadow: 12px 0 32px rgba(0, 0, 0, 0.16);
@@ -1697,8 +1847,9 @@
       .nav-tree-scroll {
         width: 100%;
         min-width: 0;
+        min-height: 0;
       }
-      .nav-all-btn,
+      .nav-all-btn:not(.nav-home-btn),
       .nav-group {
         width: 100%;
       }
@@ -1729,7 +1880,7 @@
         padding: 1.5rem 1.15rem 3.5rem;
       }
       body[data-active-audience="home"] .main-inner {
-        padding: clamp(0.65rem, 1.8vh, 1.1rem) 1.15rem;
+        padding: clamp(0.25rem, 1.5vh, 1.1rem) 1.15rem;
       }
       .header-search-shell {
         max-width: 290px;
@@ -1741,14 +1892,36 @@
     }
 
     @media (max-width: 720px) {
+      .workspace-shell {
+        --nav-drawer-width: clamp(256px, 45%, 320px);
+      }
       .left-nav-panel {
-        width: clamp(256px, 45%, 320px);
+        width: var(--nav-drawer-width);
       }
       .header-search-dropdown {
         width: clamp(100%, 380px, calc(100vw - 1.5rem));
         left: 50%;
         right: auto;
         transform: translateX(-50%);
+      }
+    }
+
+    @media (min-width: 561px) and (max-width: 960px) {
+      #sidebarCycleBtn,
+      body[data-mobile-nav="closed"] #sidebarCycleBtn {
+        left: 0;
+        transform: translateY(-50%);
+        transition: left 0.22s ease, right 0.22s ease, color 0.15s;
+      }
+      body[data-mobile-nav="open"] #sidebarCycleBtn {
+        left: calc(var(--nav-drawer-width) - 1px);
+        transform: translateY(-50%);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #sidebarCycleBtn,
+        body[data-mobile-nav="closed"] #sidebarCycleBtn {
+          transition: color 0.15s;
+        }
       }
     }
 
@@ -1789,6 +1962,7 @@
         bottom: 8px;
         transform: translateX(-50%);
         z-index: 42;
+        transition: filter 0.18s ease, opacity 0.18s ease, color 0.15s, background 0.15s, border-color 0.15s;
       }
       .sidebar-icon-side {
         display: none;
@@ -1821,14 +1995,75 @@
         border-top: 1px solid var(--border);
         justify-content: flex-end;
         z-index: 41;
+        transition: filter 0.18s ease, opacity 0.18s ease;
+      }
+      body[data-hero-search="open"] .header-actions,
+      body[data-hero-search="open"] #sidebarCycleBtn,
+      body[data-header-search="open"] .header-actions,
+      body[data-header-search="open"] #sidebarCycleBtn {
+        filter: blur(5px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      body[data-active-audience="home"][data-hero-search="open"] .workspace-shell,
+      body[data-active-audience="home"][data-hero-search="open"] .main-container {
+        overflow: visible;
+      }
+      body[data-active-audience="home"][data-hero-search="open"] .main-inner {
+        z-index: 45;
+      }
+      body:not([data-active-audience="home"])[data-header-search="open"] .top-bar {
+        z-index: 45;
       }
       .header-search-shell {
         display: none;
       }
-      dialog {
-        width: calc(100% - 1rem);
-        margin: 0.75rem auto auto;
-        max-height: calc(100dvh - 1.5rem);
+      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell {
+        display: flex;
+        position: fixed;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: var(--mobile-header-search-bottom, 10px);
+        max-width: none;
+        height: auto;
+        z-index: 43;
+      }
+      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-bar {
+        padding: 0.3rem 0.4rem 0.3rem 0.65rem;
+        gap: 0.4rem;
+      }
+      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-input {
+        font-size: 0.8rem;
+        padding: 0.26rem 0;
+      }
+      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .btn-subtle-accent {
+        padding: 0.34rem 0.6rem;
+        font-size: 0.74rem;
+      }
+      .header-search-dropdown {
+        top: auto;
+        bottom: calc(100% + 0.45rem);
+        left: 0;
+        right: 0;
+        width: auto;
+        transform: none;
+        flex-direction: column-reverse;
+        gap: 0.45rem;
+      }
+      .header-suggestions-label {
+        display: none;
+      }
+      .header-suggestions-card {
+        padding: 0.36rem 0.55rem;
+      }
+      .header-suggestions-card .prompt-chip {
+        padding: 0.18rem 0.52rem;
+        font-size: 0.68rem;
+      }
+      .header-search-dropdown .instant-results-box {
+        padding: 0.85rem 0.9rem 0.55rem;
+        gap: 0.35rem;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
       }
       .mobile-nav-backdrop {
         inset: var(--header-height) 0 52px 0;
@@ -1840,7 +2075,7 @@
         right: 0;
         width: 100%;
         height: auto;
-        max-height: calc(100dvh - var(--header-height) - 64px);
+        max-height: calc(100dvh - var(--header-height) - 52px);
         border-top: 1px solid var(--border);
         border-right: none;
         border-bottom: none;
@@ -1851,22 +2086,40 @@
         transform: translateY(0);
       }
       .nav-panel-top {
-        padding: 0.75rem 1.15rem;
+        order: 2;
+        padding: 0.65rem max(1.15rem, calc((100% - 320px) / 2));
+        border-bottom: none;
+        border-top: 1px solid var(--border);
         align-items: center;
       }
       .sidebar-filter-box {
-        max-width: 320px;
+        max-width: none;
       }
       .nav-tree-scroll {
-        padding: 0.65rem 1.15rem 1rem;
+        order: 1;
+        flex-direction: column-reverse;
+        padding: 0.65rem 1.15rem 0.85rem;
         scrollbar-gutter: stable both-edges;
         align-items: center;
       }
-      .nav-all-btn,
+      .nav-tree-scroll > * {
+        flex-shrink: 0;
+      }
+      .nav-all-btn:not(.nav-home-btn),
       .nav-group {
         max-width: 320px;
       }
-      .nav-all-btn,
+      .nav-group {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      .nav-group > summary::before {
+        rotate: -90deg;
+      }
+      .nav-group[open]:not(.is-closing) > summary::before {
+        rotate: -180deg;
+      }
+      .nav-all-btn:not(.nav-home-btn),
       .nav-group > summary {
         justify-content: center;
         text-align: center;
@@ -1874,42 +2127,117 @@
       .nav-links-list {
         border-left: none;
         margin-left: 0;
-        padding: 0.15rem 0 0.45rem;
+        padding: 0;
         align-items: center;
+      }
+      .nav-links-list > li:first-child {
+        padding-top: 0.35rem;
+      }
+      .nav-links-list > li:last-child {
+        padding-bottom: 0.25rem;
       }
       .nav-link-item {
         justify-content: center;
         text-align: center;
       }
-      .omni-search-shell .omni-bar,
-      #aiModal .omni-bar {
+      .omni-search-shell .omni-bar {
         padding: 0.3rem 0.4rem 0.3rem 0.65rem;
         gap: 0.4rem;
       }
-      .omni-search-shell .omni-input,
-      #aiModal .omni-input {
+      .omni-search-shell .omni-input {
         font-size: 0.8rem;
         padding: 0.26rem 0;
       }
-      .omni-search-shell .btn-subtle-accent,
-      #aiModal .btn-subtle-accent {
+      .omni-search-shell .btn-subtle-accent {
         padding: 0.34rem 0.6rem;
         font-size: 0.74rem;
         flex-shrink: 0;
       }
-      .omni-search-shell .chip-label,
-      #aiModal .chip-label {
+      .omni-search-shell .chip-label {
         display: none;
       }
       .prompt-chip {
         font-size: 0.64rem;
         padding: 0.12rem 0.44rem;
       }
+      .omni-search-shell .suggestions-bar {
+        top: auto;
+        bottom: calc(100% + 0.45rem);
+        padding: 0.36rem 0.55rem;
+        transform: translateY(6px);
+      }
+      body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar {
+        transform: translateY(0);
+      }
+      .omni-search-shell .instant-results-box {
+        top: auto;
+        bottom: calc(100% + var(--hero-suggestions-offset, 52px));
+        padding: 0.85rem 0.9rem 0.55rem;
+        gap: 0.35rem;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
+      }
+      .results-close-bottom-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0.1rem 0 0;
+        background: transparent;
+        border: none;
+      }
       .ecosystem-banners-grid {
-        grid-template-columns: 1fr;
-        gap: clamp(0.95rem, 2.8vh, 1.35rem);
-        margin: clamp(0.6rem, 2vh, 1.1rem) auto 0;
-        max-width: min(100%, clamp(220px, 64vw, 280px));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        margin: 0 auto;
+        max-width: min(100%, 340px);
+      }
+      .eco-carousel-btn {
+        display: inline-flex;
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--border);
+        background: var(--bg-surface);
+        color: var(--text-secondary);
+        border-radius: 999px;
+      }
+      .eco-carousel-btn:hover {
+        color: var(--text-primary);
+        border-color: var(--border-strong);
+        background: var(--bg-subtle);
+      }
+      .eco-carousel-stage {
+        position: relative;
+        display: block;
+        flex: 0 1 auto;
+        min-width: 96px;
+        width: min(clamp(120px, 56vw, 240px), calc((100dvh - var(--header-height) - 300px) * 1.45));
+        max-width: min(100%, clamp(120px, 56vw, 240px));
+        overflow: hidden;
+        border-radius: var(--radius-md);
+      }
+      .eco-banner-card {
+        display: none;
+        width: 100%;
+        transition: border-color 0.15s;
+      }
+      .eco-banner-card:hover {
+        transform: none;
+      }
+      .eco-banner-card.active-slide {
+        display: block;
+        position: relative;
+        z-index: 1;
+      }
+      .eco-banner-card.slide-exit {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
       }
       .site-footer {
         padding: 0.55rem 0.9rem;
@@ -1984,7 +2312,7 @@
       border-right: 1px solid var(--border);
       margin-left: 0;
       margin-right: 0.75rem;
-      padding: 0.1rem 1.15rem 0.35rem 0;
+      padding: 0 1.15rem 0 0;
     }
     [dir="rtl"] .nav-all-btn {
       text-align: right;
@@ -1993,7 +2321,7 @@
     [dir="rtl"] .faq-accordion-section summary::before {
       rotate: 90deg;
     }
-    [dir="rtl"] .nav-group[open] > summary::before,
+    [dir="rtl"] .nav-group[open]:not(.is-closing) > summary::before,
     [dir="rtl"] .faq-accordion-section details[open] > summary::before {
       rotate: 0deg;
     }
@@ -2015,6 +2343,21 @@
       transform: scaleX(-1);
     }
     @media (min-width: 561px) {
+      [dir="rtl"] #sidebarCycleBtn {
+        left: auto;
+        right: calc(var(--sidebar-width) - 1px);
+        transform: translateY(-50%);
+        padding: 0 0 0 2px;
+        border-radius: 9px 0 0 9px;
+      }
+      [dir="rtl"] .sidebar-tab-curve {
+        transform: scaleX(-1);
+      }
+      [dir="rtl"] body[data-sidebar-mode="hidden"] #sidebarCycleBtn {
+        left: auto;
+        right: 0;
+        transform: translateY(-50%);
+      }
       @supports not (position-area: block-end) {
         [dir="rtl"] #langPopover {
           inset: calc(var(--header-height) + 12px) auto auto 1.25rem;
@@ -2031,15 +2374,32 @@
       [dir="rtl"] body[data-mobile-nav="open"] .left-nav-panel {
         transform: translateX(0);
       }
+      [dir="rtl"] #sidebarCycleBtn,
+      [dir="rtl"] body[data-mobile-nav="closed"] #sidebarCycleBtn {
+        left: auto;
+        right: 0;
+        transform: translateY(-50%);
+      }
+      [dir="rtl"] body[data-mobile-nav="open"] #sidebarCycleBtn {
+        left: auto;
+        right: calc(var(--nav-drawer-width) - 1px);
+        transform: translateY(-50%);
+      }
     }
     @media (max-width: 560px) {
       [dir="rtl"] .left-nav-panel {
         border-left: none;
       }
+      [dir="rtl"] .nav-group > summary::before {
+        rotate: 90deg;
+      }
+      [dir="rtl"] .nav-group[open]:not(.is-closing) > summary::before {
+        rotate: 180deg;
+      }
       [dir="rtl"] .nav-links-list {
         border-right: none;
         margin-right: 0;
-        padding: 0.15rem 0 0.45rem;
+        padding: 0;
       }
       [dir="rtl"] .back-to-top-btn {
         left: 0.75rem;
@@ -2047,6 +2407,9 @@
       [dir="rtl"] #themeToggleBtn {
         left: auto;
         right: 0.75rem;
+      }
+      [dir="rtl"] .eco-carousel-btn svg {
+        transform: scaleX(-1);
       }
     }
   </style>
@@ -2058,20 +2421,6 @@
        ======================================================================== -->
   <header class="top-bar" role="banner">
     <div class="brand-cluster">
-      <button type="button" class="icon-btn" id="sidebarCycleBtn" title="Toggle Left Navigation ([)" aria-label="Toggle Left Navigation Panel">
-        <svg class="sidebar-icon-side" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect class="sidebar-icon-pane" x="3.5" y="4.5" width="5.75" height="15" rx="2" fill="currentColor" stroke="none"/>
-          <rect x="3" y="4" width="18" height="16" rx="3"/>
-          <line x1="9.5" y1="4" x2="9.5" y2="20"/>
-          <polyline class="sidebar-icon-arrow" points="16.25 9.25 13.5 12 16.25 14.75"/>
-        </svg>
-        <svg class="sidebar-icon-top" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect class="top-icon-pane" x="3.5" y="4.5" width="17" height="5.5" rx="2" fill="currentColor" stroke="none"/>
-          <rect x="3" y="4" width="18" height="16" rx="3"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-          <polyline class="top-icon-arrow" points="9.25 13.75 12 16.5 14.75 13.75"/>
-        </svg>
-      </button>
       <a href="#home" class="brand-logo" id="brandHomeLink">
         <img src="https://help.ctrader.com/img/logo.png" alt="logo" class="brand-logo-img" width="24" height="24">
         <span>cTrader Help Centre</span>
@@ -2114,6 +2463,24 @@
        WORKSPACE SHELL
        ======================================================================== -->
   <div class="workspace-shell">
+    <button type="button" class="icon-btn" id="sidebarCycleBtn" title="Toggle Left Navigation ([)" aria-label="Toggle Left Navigation Panel">
+      <svg class="sidebar-tab-curve" width="32" height="56" viewBox="0 0 32 56" aria-hidden="true">
+        <path class="sidebar-tab-fill" d="M 0,0 L 0.5,0 A 10,10 0 0 0 10.5,10 L 22.5,10 A 9,9 0 0 1 31.5,19 L 31.5,37 A 9,9 0 0 1 22.5,46 L 10.5,46 A 10,10 0 0 0 0.5,56 L 0,56 Z"/>
+        <path class="sidebar-tab-stroke" d="M 0.5,0 A 10,10 0 0 0 10.5,10 L 22.5,10 A 9,9 0 0 1 31.5,19 L 31.5,37 A 9,9 0 0 1 22.5,46 L 10.5,46 A 10,10 0 0 0 0.5,56"/>
+      </svg>
+      <svg class="sidebar-icon-side" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect class="sidebar-icon-pane" x="3.5" y="4.5" width="5.75" height="15" rx="2" fill="currentColor" stroke="none"/>
+        <rect x="3" y="4" width="18" height="16" rx="3"/>
+        <line x1="9.5" y1="4" x2="9.5" y2="20"/>
+        <polyline class="sidebar-icon-arrow" points="16.25 9.25 13.5 12 16.25 14.75"/>
+      </svg>
+      <svg class="sidebar-icon-top" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect class="top-icon-pane" x="3.5" y="4.5" width="17" height="5.5" rx="2" fill="currentColor" stroke="none"/>
+        <rect x="3" y="4" width="18" height="16" rx="3"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <polyline class="top-icon-arrow" points="9.25 13.75 12 16.5 14.75 13.75"/>
+      </svg>
+    </button>
 
     <!-- ======================================================================
          ADAPTIVE LEFT NAVIGATION PANEL
@@ -2124,14 +2491,13 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);flex-shrink:0;" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="search" id="sidebarFilterInput" class="sidebar-filter-input" placeholder="Filter sections..." aria-label="Filter sidebar navigation links">
         </div>
-      </div>
-
-      <nav class="nav-tree-scroll" id="sidebarTreeContainer" aria-label="Section Tree">
-        <button type="button" class="nav-all-btn active" id="navAllAudiencesBtn" data-select-audience="home">
+        <button type="button" class="nav-all-btn nav-home-btn active" id="navAllAudiencesBtn" data-select-audience="home">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           <span>Home</span>
         </button>
+      </div>
 
+      <nav class="nav-tree-scroll" id="sidebarTreeContainer" aria-label="Section Tree">
         <button type="button" class="nav-all-btn" id="navPopularBtn" data-select-audience="popular">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           <span>Popular Guides</span>
@@ -2250,16 +2616,24 @@
           <div class="instant-results-box" id="instantResultsBox" aria-live="polite"></div>
         </div>
 
-        <div class="ecosystem-banners-grid">
-          <a class="eco-banner-card" href="https://ctrader.com/brokers" target="_blank" rel="noopener">
-            <img src="https://help.ctrader.com/img/open-live-account.svg" data-banner-slug="open-live-account" alt="Open a live account">
-          </a>
-          <a class="eco-banner-card" href="https://ctrader.com/" target="_blank" rel="noopener">
-            <img src="https://help.ctrader.com/img/explore-store.svg" data-banner-slug="explore-store" alt="Explore cTrader Store">
-          </a>
-          <a class="eco-banner-card" href="https://go.spotware.com/discord/" target="_blank" rel="noopener">
-            <img src="https://help.ctrader.com/img/join-community.svg" data-banner-slug="join-community" alt="Join cTrader community">
-          </a>
+        <div class="ecosystem-banners-grid" id="ecoBannersGrid">
+          <button type="button" class="icon-btn eco-carousel-btn" id="ecoBannerPrevBtn" aria-label="Previous">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="eco-carousel-stage" id="ecoCarouselStage">
+            <a class="eco-banner-card active-slide" href="https://ctrader.com/brokers" target="_blank" rel="noopener">
+              <img src="https://help.ctrader.com/img/open-live-account.svg" data-banner-slug="open-live-account" alt="Open a live account">
+            </a>
+            <a class="eco-banner-card" href="https://ctrader.com/" target="_blank" rel="noopener">
+              <img src="https://help.ctrader.com/img/explore-store.svg" data-banner-slug="explore-store" alt="Explore cTrader Store">
+            </a>
+            <a class="eco-banner-card" href="https://go.spotware.com/discord/" target="_blank" rel="noopener">
+              <img src="https://help.ctrader.com/img/join-community.svg" data-banner-slug="join-community" alt="Join cTrader community">
+            </a>
+          </div>
+          <button type="button" class="icon-btn eco-carousel-btn" id="ecoBannerNextBtn" aria-label="Next">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
         </div>
       </section>
 
@@ -2885,36 +3259,6 @@
   </div>
 
   <!-- ========================================================================
-       MODAL DIALOG: AI COPILOT & SEARCH (`<dialog closedby="any">`)
-       ======================================================================== -->
-  <dialog id="aiModal" closedby="any" aria-labelledby="aiModalTitle">
-    <div class="dialog-inner">
-      <div class="dialog-header">
-        <h2 id="aiModalTitle">Search &amp; AI Assistant</h2>
-        <form method="dialog"><button type="submit" class="ghost-btn">Esc</button></form>
-      </div>
-      <div class="omni-bar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="modalAiInput" class="omni-input" placeholder="Search docs or ask AI..." aria-label="Ask cTrader AI">
-        <button type="button" class="btn-subtle-accent" id="modalAskBtn">Ask AI</button>
-      </div>
-      <div class="suggestions-bar">
-        <span class="chip-label">Suggested:</span>
-        <div class="prompt-chips-row">
-          <button type="button" class="prompt-chip" data-modal-query="How do I create a cBot in Python?">Create a cBot in Python</button>
-          <button type="button" class="prompt-chip" data-modal-query="How do I connect Claude or Cursor to cTrader MCP servers?">Connect AI Agent via MCP</button>
-          <button type="button" class="prompt-chip" data-modal-query="How do pending orders and stop loss work in cTrader?">Orders &amp; Stop Loss</button>
-          <button type="button" class="prompt-chip" data-modal-query="How do cTrader Invite and partner deeplinks work?">Partner Invite &amp; Deeplinks</button>
-          <button type="button" class="prompt-chip" data-modal-query="Open API vs FIX API: which should I choose?">Open API vs FIX API</button>
-        </div>
-      </div>
-      <div id="modalAiResponseArea" class="instant-results-box active" aria-live="polite">
-        <span style="color:var(--text-muted);font-size:0.81rem;">Enter a query above for step-by-step guidance and direct documentation links.</span>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- ========================================================================
        CLIENT-SIDE LOGIC
        ======================================================================== -->
   <script>
@@ -2923,62 +3267,24 @@
       import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
     }
 
-    // 2. Dialog `closedby="any"` Fallback
-    if (!('closedBy' in HTMLDialogElement.prototype)) {
-      document.querySelectorAll('dialog[closedby="any"]').forEach((dialog) => {
-        dialog.addEventListener('click', (event) => {
-          if (event.target !== dialog) return;
-          const rect = dialog.getBoundingClientRect();
-          const isDialogContent = (
-            rect.top <= event.clientY &&
-            event.clientY <= rect.top + rect.height &&
-            rect.left <= event.clientX &&
-            event.clientX <= rect.left + rect.width
-          );
-          if (isDialogContent) return;
-          dialog.close();
-        });
-      });
-    }
-
-    // 3. `hidden="until-found"` Support Check
+    // 2. `hidden="until-found"` Support Check
     const supportsUntilFound = ('onbeforematch' in HTMLElement.prototype);
 
-    // 4. Two-State Dark/Light Mode Override Toggle
+    // 4. Two-State Dark/Light Mode Override Toggle (starts in light theme)
     const metaScheme = document.querySelector('meta[name="color-scheme"]');
     const themeToggleBtn = document.getElementById('themeToggleBtn');
 
-    function getSystemScheme() {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-
     function getCurrentRenderedScheme() {
-      const content = metaScheme.content;
-      if (content === 'dark' || content === 'light') return content;
-      return getSystemScheme();
+      return metaScheme.content === 'dark' ? 'dark' : 'light';
     }
 
     themeToggleBtn.addEventListener('click', () => {
       const current = getCurrentRenderedScheme();
       const target = current === 'dark' ? 'light' : 'dark';
-      const sys = getSystemScheme();
+      metaScheme.content = target;
       try {
-        if (target !== sys) {
-          localStorage.setItem('color-scheme', target);
-          metaScheme.content = target;
-        } else {
-          localStorage.removeItem('color-scheme');
-          metaScheme.content = 'light dark';
-        }
-      } catch (e) {
-        metaScheme.content = target;
-      }
-    });
-
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'color-scheme') {
-        metaScheme.content = e.newValue ?? 'light dark';
-      }
+        sessionStorage.setItem('ctrader_help_theme', target);
+      } catch (e) {}
     });
 
     // 5. Section-Based View Routing (Home shows only AI Search; clicking any menu section shows its content)
@@ -3019,24 +3325,14 @@
       return `https://help.ctrader.com/${hub}/${lang}/${sub}`;
     }
 
-    function getModalDefaultHintHTML() {
-      return `<span style="color:var(--text-muted);font-size:0.81rem;">${t('Enter a query above for step-by-step guidance and direct documentation links.')}</span>`;
-    }
-
-    let modalManagedByScreenSize = false;
-
     function resetAiSearchState() {
       const heroInput = document.getElementById('heroSearchInput');
       const headerInput = document.getElementById('headerSearchInput');
-      const modalInput = document.getElementById('modalAiInput');
       const heroBox = document.getElementById('instantResultsBox');
       const headerBox = document.getElementById('headerResultsBox');
-      const modalArea = document.getElementById('modalAiResponseArea');
-      const dialogEl = document.getElementById('aiModal');
 
       if (heroInput) heroInput.value = '';
       if (headerInput) headerInput.value = '';
-      if (modalInput) modalInput.value = '';
       if (heroBox) {
         heroBox.classList.remove('active');
         heroBox.innerHTML = '';
@@ -3045,11 +3341,8 @@
         headerBox.classList.remove('active');
         headerBox.innerHTML = '';
       }
-      if (modalArea) modalArea.innerHTML = getModalDefaultHintHTML();
       delete document.body.dataset.heroSearch;
       delete document.body.dataset.headerSearch;
-      modalManagedByScreenSize = false;
-      if (dialogEl?.open) dialogEl.close();
       document.querySelectorAll('.prompt-chips-row').forEach((row) => {
         row.scrollLeft = 0;
         if (typeof updateChipRowFades === 'function') updateChipRowFades(row);
@@ -3087,6 +3380,141 @@
       } catch {}
       return 'home';
     }
+
+    const reduceMotionNavMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const navGroupAnimCleanups = new WeakMap();
+
+    function isNavPanelVisible() {
+      if (document.documentElement.classList.contains('view-pending')) return false;
+      return window.innerWidth <= 960
+        ? document.body.dataset.mobileNav === 'open'
+        : document.body.dataset.sidebarMode !== 'hidden';
+    }
+
+    function cancelNavGroupAnimation(group) {
+      const cleanup = navGroupAnimCleanups.get(group);
+      if (cleanup) {
+        cleanup();
+        navGroupAnimCleanups.delete(group);
+      }
+      group.classList.remove('is-closing');
+      const ul = group.querySelector('.nav-links-list');
+      if (ul) {
+        ul.style.transition = '';
+        ul.style.height = '';
+        ul.style.opacity = '';
+      }
+    }
+
+    function setNavGroupOpen(group, expand, { animate = isNavPanelVisible() } = {}) {
+      if (!group) return;
+      const ul = group.querySelector('.nav-links-list');
+      if (reduceMotionNavMq.matches || !animate || !ul) {
+        cancelNavGroupAnimation(group);
+        group.open = Boolean(expand);
+        return;
+      }
+
+      const isCurrentlyOpen = group.open && !group.classList.contains('is-closing');
+      if (Boolean(expand) === isCurrentlyOpen && !navGroupAnimCleanups.has(group)) {
+        return;
+      }
+
+      const startHeight = group.open ? ul.getBoundingClientRect().height : 0;
+      const startOpacity = group.open ? (parseFloat(getComputedStyle(ul).opacity) || 1) : 0;
+
+      const prevCleanup = navGroupAnimCleanups.get(group);
+      if (prevCleanup) {
+        prevCleanup();
+        navGroupAnimCleanups.delete(group);
+      }
+
+      if (expand) {
+        group.classList.remove('is-closing');
+        group.open = true;
+        ul.style.transition = 'none';
+        ul.style.height = 'auto';
+        const targetHeight = ul.scrollHeight;
+        ul.style.height = `${startHeight}px`;
+        ul.style.opacity = `${startOpacity}`;
+        void getComputedStyle(ul).height;
+
+        let finished = false;
+        let timerId = 0;
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timerId);
+          ul.removeEventListener('transitionend', onEnd);
+          navGroupAnimCleanups.delete(group);
+          ul.style.transition = '';
+          ul.style.height = '';
+          ul.style.opacity = '';
+        };
+        const onEnd = (e) => {
+          if (e.target === ul && e.propertyName === 'height') finish();
+        };
+        navGroupAnimCleanups.set(group, () => {
+          finished = true;
+          clearTimeout(timerId);
+          ul.removeEventListener('transitionend', onEnd);
+        });
+        ul.addEventListener('transitionend', onEnd);
+        timerId = setTimeout(finish, 280);
+
+        requestAnimationFrame(() => {
+          if (finished) return;
+          ul.style.transition = 'height 0.22s ease, opacity 0.18s ease';
+          ul.style.height = `${targetHeight}px`;
+          ul.style.opacity = '1';
+        });
+      } else {
+        if (!group.open) return;
+        group.classList.add('is-closing');
+        ul.style.transition = 'none';
+        ul.style.height = `${startHeight}px`;
+        ul.style.opacity = `${startOpacity}`;
+        void getComputedStyle(ul).height;
+
+        let finished = false;
+        let timerId = 0;
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timerId);
+          ul.removeEventListener('transitionend', onEnd);
+          navGroupAnimCleanups.delete(group);
+          group.classList.remove('is-closing');
+          group.open = false;
+          ul.style.transition = '';
+          ul.style.height = '';
+          ul.style.opacity = '';
+        };
+        const onEnd = (e) => {
+          if (e.target === ul && e.propertyName === 'height') finish();
+        };
+        navGroupAnimCleanups.set(group, () => {
+          finished = true;
+          clearTimeout(timerId);
+          ul.removeEventListener('transitionend', onEnd);
+        });
+        ul.addEventListener('transitionend', onEnd);
+        timerId = setTimeout(finish, 280);
+
+        requestAnimationFrame(() => {
+          if (finished) return;
+          ul.style.transition = 'height 0.22s ease, opacity 0.16s ease';
+          ul.style.height = '0px';
+          ul.style.opacity = '0';
+        });
+      }
+    }
+
+    ['(max-width: 960px)', '(max-width: 560px)'].forEach((mqQuery) => {
+      window.matchMedia(mqQuery).addEventListener('change', () => {
+        sidebarGroups.forEach((group) => cancelNavGroupAnimation(group));
+      });
+    });
 
     function selectAudience(audience) {
       if (!VALID_AUDIENCES.includes(audience)) audience = 'home';
@@ -3142,7 +3570,7 @@
         const groupAud = group.dataset.navAudience;
         const isActive = !isHome && !isPopular && !isFaqs && groupAud === audience;
         group.classList.toggle('audience-prioritized', isActive);
-        group.open = isActive;
+        setNavGroupOpen(group, isActive);
       });
 
       document.getElementById('mainContent')?.scrollTo({ top: 0 });
@@ -3184,7 +3612,8 @@
         if (current !== groupAud) {
           selectAudience(groupAud);
         } else {
-          group.open = !group.open;
+          const isOpen = group.open && !group.classList.contains('is-closing');
+          setNavGroupOpen(group, !isOpen);
         }
       });
     });
@@ -3276,9 +3705,9 @@
         });
         group.style.display = anyVisible ? '' : 'none';
         if (q) {
-          group.open = anyVisible;
+          setNavGroupOpen(group, anyVisible);
         } else {
-          group.open = (group.dataset.navAudience === activeAud);
+          setNavGroupOpen(group, group.dataset.navAudience === activeAud);
         }
       });
     });
@@ -3452,14 +3881,16 @@
         : '';
 
       return `
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <strong style="font-size:0.84rem;">${aiMatch.code === undefined ? escapeHtml(aiMatch.title) : t(aiMatch.title)}</strong>
-          ${showClose ? `<button type="button" class="text-link-btn" data-close-hero-results>${t('Close')}</button>` : ''}
+        <div class="results-scroll-body">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
+            <strong style="font-size:0.84rem;">${aiMatch.code === undefined ? escapeHtml(aiMatch.title) : t(aiMatch.title)}</strong>
+          </div>
+          <p style="margin:0;font-size:0.81rem;color:var(--text-secondary);">${t(aiMatch.answer)}</p>
+          ${aiMatch.code ? `<pre class="code-snippet-box" dir="ltr"><code>${aiMatch.code}</code></pre>` : ''}
+          <div class="doc-sublinks">${linksHtml}</div>
+          ${docsHtml}
         </div>
-        <p style="margin:0;font-size:0.81rem;color:var(--text-secondary);">${t(aiMatch.answer)}</p>
-        ${aiMatch.code ? `<pre class="code-snippet-box" dir="ltr"><code>${aiMatch.code}</code></pre>` : ''}
-        <div class="doc-sublinks">${linksHtml}</div>
-        ${docsHtml}
+        ${showClose ? `<div class="results-close-bottom-bar"><button type="button" class="ghost-btn results-close-bottom" data-close-hero-results>${t('Close')}</button></div>` : ''}
       `;
     }
 
@@ -3469,9 +3900,6 @@
     const headerSearchShell = document.getElementById('headerSearchShell');
     const headerSearchInput = document.getElementById('headerSearchInput');
     const headerResultsBox = document.getElementById('headerResultsBox');
-    const aiModal = document.getElementById('aiModal');
-    const modalAiInput = document.getElementById('modalAiInput');
-    const modalAiResponseArea = document.getElementById('modalAiResponseArea');
     const mobileSearchMq = window.matchMedia('(max-width: 560px)');
 
     function closeHeroResults() {
@@ -3489,210 +3917,191 @@
       closeHeaderResults();
     }
 
-    function ensureHeroSearchVisible({ immediate = false } = {}) {
-      if (document.body.dataset.activeAudience !== 'home' || !heroSearchShell) return;
-      const mainEl = document.getElementById('mainContent');
-      if (!mainEl || mainEl.scrollHeight <= mainEl.clientHeight + 2) return;
-      const mainRect = mainEl.getBoundingClientRect();
-      const shellRect = heroSearchShell.getBoundingClientRect();
+    function getCurrentTranslateY(el) {
+      if (!el) return 0;
+      const tf = window.getComputedStyle(el).transform;
+      if (!tf || tf === 'none') return 0;
+      if (typeof DOMMatrixReadOnly === 'function') {
+        return new DOMMatrixReadOnly(tf).m42 || 0;
+      }
+      const match = tf.match(/matrix\(([^)]+)\)/);
+      if (match) {
+        const parts = match[1].split(',').map(Number);
+        return parts[5] || 0;
+      }
+      return 0;
+    }
+
+    function updateHeroSearchPosition() {
+      if (!heroSearchShell) return { shift: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0 };
+      if (document.body.dataset.activeAudience !== 'home') {
+        heroSearchShell.style.setProperty('--hero-search-shift', '0px');
+        return { shift: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0 };
+      }
       const barEl = heroSearchShell.querySelector('.omni-bar') || heroSearchShell;
+      const suggEl = heroSearchShell.querySelector('.suggestions-bar');
       const barRect = barEl.getBoundingClientRect();
-      const edgePad = 12;
+      const currentY = getCurrentTranslateY(heroSearchShell);
+      const restingTop = barRect.top - currentY;
+      const restingBottom = barRect.bottom - currentY;
+      const suggH = suggEl ? suggEl.offsetHeight : 38;
+      const suggOffset = suggH + 14;
 
-      let delta = 0;
-      if (barRect.top < mainRect.top + edgePad) {
-        delta = barRect.top - (mainRect.top + edgePad);
-      } else if (shellRect.bottom > mainRect.bottom - edgePad) {
-        const minReveal = shellRect.bottom - (mainRect.bottom - edgePad);
-        const maxAllowed = Math.max(0, barRect.top - (mainRect.top + edgePad));
-        const desiredResultRoom = Math.min(180, Math.max(0, mainRect.height - shellRect.height - edgePad * 2));
-        delta = Math.min(minReveal + desiredResultRoom, maxAllowed);
+      let shift = 0;
+      if (mobileSearchMq.matches) {
+        const vv = window.visualViewport;
+        const vvBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
+        const limitBottom = vvBottom - 10;
+        shift = Math.max(0, Math.round(limitBottom - restingBottom));
+      } else {
+        const mainEl = document.getElementById('mainContent');
+        const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
+        const targetTop = mainTop + 14;
+        shift = Math.min(0, Math.round(targetTop - restingTop));
       }
 
-      if (Math.abs(delta) > 1) {
-        const maxScroll = Math.max(0, mainEl.scrollHeight - mainEl.clientHeight);
-        const targetScroll = Math.max(0, Math.min(maxScroll, Math.round(mainEl.scrollTop + delta)));
-        if (targetScroll !== Math.round(mainEl.scrollTop)) {
-          mainEl.scrollTo({
-            top: targetScroll,
-            behavior: (immediate || reducedMotionMq.matches) ? 'auto' : 'smooth'
-          });
-        }
+      heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
+      heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
+
+      return {
+        shift,
+        finalBarTop: restingTop + shift,
+        finalBarBottom: restingBottom + shift,
+        suggOffset
+      };
+    }
+
+    function updateResultsScrollFades(scrollEl) {
+      if (!scrollEl) return;
+      const maxScroll = Math.max(0, scrollEl.scrollHeight - scrollEl.clientHeight);
+      const hasOverflow = maxScroll > 2;
+      scrollEl.dataset.fadeTop = String(hasOverflow && scrollEl.scrollTop > 2);
+      scrollEl.dataset.fadeBottom = String(hasOverflow && scrollEl.scrollTop < maxScroll - 2);
+    }
+
+    function bindResultsScrollFades(boxEl) {
+      const scrollEl = boxEl?.querySelector('.results-scroll-body');
+      if (!scrollEl) return;
+      scrollEl.addEventListener('scroll', () => updateResultsScrollFades(scrollEl), { passive: true });
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(() => updateResultsScrollFades(scrollEl)).observe(scrollEl);
       }
-    }
-
-    function getSpaceBelowSearchBar() {
-      if (document.body.dataset.activeAudience !== 'home' || !heroSearchShell) {
-        return Math.floor(window.innerHeight - 360);
-      }
-      const mainEl = document.getElementById('mainContent');
-      const mainBottom = mainEl ? mainEl.getBoundingClientRect().bottom : window.innerHeight;
-      const shellBottom = heroSearchShell.getBoundingClientRect().bottom;
-      return Math.floor(Math.min(mainBottom, window.innerHeight) - shellBottom - 20);
-    }
-
-    function isTightSearchSpace() {
-      return window.innerWidth < 320 || window.innerHeight < 580 || getSpaceBelowSearchBar() < 140;
-    }
-
-    function isHeaderTightSpace() {
-      return window.innerWidth <= 560 || window.innerHeight < 580;
-    }
-
-    function updateSearchLayoutMode() {
-      document.body.dataset.searchLayout = isTightSearchSpace() ? 'overlay' : 'inline';
+      requestAnimationFrame(() => updateResultsScrollFades(scrollEl));
+      updateResultsScrollFades(scrollEl);
     }
 
     function fitHeroResultsHeight() {
-      if (instantResultsBox.classList.contains('active')) {
-        const mainEl = document.getElementById('mainContent');
-        const mainBottom = mainEl ? mainEl.getBoundingClientRect().bottom : window.innerHeight;
-        const available = Math.floor(Math.min(mainBottom, window.innerHeight) - instantResultsBox.getBoundingClientRect().top - 20);
-        instantResultsBox.style.maxHeight = `${Math.max(140, available)}px`;
-      }
-      if (headerResultsBox.classList.contains('active')) {
-        const available = Math.floor(window.innerHeight - headerResultsBox.getBoundingClientRect().top - 20);
-        headerResultsBox.style.maxHeight = `${Math.max(140, available)}px`;
-      }
-    }
-
-    function isCurrentSearchTight() {
-      return document.body.dataset.activeAudience === 'home'
-        ? isTightSearchSpace()
-        : isHeaderTightSpace();
-    }
-
-    function renderModalResults(query) {
-      const html = buildSearchAndAiHTML(query);
-      modalAiResponseArea.innerHTML = html || getModalDefaultHintHTML();
-    }
-
-    function openAiModal(initialQuery, { responsive = isCurrentSearchTight() } = {}) {
-      closeAllInlineResults();
-      modalManagedByScreenSize = responsive;
-      if (typeof initialQuery === 'string') {
-        modalAiInput.value = initialQuery;
-        renderModalResults(initialQuery);
-      }
-      if (!aiModal.open) aiModal.showModal();
-      modalAiInput.focus();
-      const len = modalAiInput.value.length;
-      modalAiInput.setSelectionRange?.(len, len);
-    }
-
-    function switchModalToInlineResults() {
-      const query = modalAiInput.value;
-      const isHome = document.body.dataset.activeAudience === 'home';
-      const targetInput = isHome ? heroSearchInput : headerSearchInput;
-      modalManagedByScreenSize = false;
-      aiModal.close();
-      if (query.trim()) {
-        if (isHome) {
-          triggerHeroQuery(query);
+      if (document.body.dataset.activeAudience === 'home') {
+        const { finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
+        if (instantResultsBox.classList.contains('active')) {
+          const mainEl = document.getElementById('mainContent');
+          const mainRect = mainEl ? mainEl.getBoundingClientRect() : { top: 48, bottom: window.innerHeight };
+          let available;
+          if (mobileSearchMq.matches) {
+            const topBound = mainRect.top + 8;
+            const resultsBottom = finalBarTop - suggOffset;
+            available = Math.floor(resultsBottom - topBound);
+          } else {
+            const bottomBound = Math.min(mainRect.bottom, window.innerHeight) - 16;
+            const resultsTop = finalBarBottom + suggOffset;
+            available = Math.floor(bottomBound - resultsTop);
+          }
+          instantResultsBox.style.maxHeight = `${Math.max(96, available)}px`;
+        }
+      } else if (headerSearchShell) {
+        if (mobileSearchMq.matches) {
+          const vv = window.visualViewport;
+          const vvBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
+          const bottomEdge = vvBottom - 10;
+          const offsetFromViewportBottom = Math.max(10, Math.round(window.innerHeight - bottomEdge));
+          headerSearchShell.style.setProperty('--mobile-header-search-bottom', `${offsetFromViewportBottom}px`);
+          if (headerResultsBox.classList.contains('active')) {
+            const barEl = headerSearchShell.querySelector('.omni-bar');
+            const suggEl = headerSearchShell.querySelector('.header-suggestions-card');
+            const barH = barEl ? barEl.offsetHeight : 44;
+            const suggH = suggEl ? suggEl.offsetHeight : 40;
+            const topBound = 48 + 8;
+            const resultsBottom = (window.innerHeight - offsetFromViewportBottom) - barH - suggH - 18;
+            headerResultsBox.style.maxHeight = `${Math.max(96, Math.floor(resultsBottom - topBound))}px`;
+          }
         } else {
-          triggerHeaderQuery(query);
+          headerSearchShell.style.removeProperty('--mobile-header-search-bottom');
+          if (headerResultsBox.classList.contains('active')) {
+            const available = Math.floor(window.innerHeight - headerResultsBox.getBoundingClientRect().top - 16);
+            headerResultsBox.style.maxHeight = `${Math.max(96, available)}px`;
+          }
         }
       }
-      targetInput.focus();
-      const len = targetInput.value.length;
-      targetInput.setSelectionRange?.(len, len);
+      document.querySelectorAll('.results-scroll-body').forEach(updateResultsScrollFades);
     }
 
+    let heroPointerDown = false;
+    let heroHadValueOnDown = false;
+    let heroCancelDown = false;
+    let heroJustCleared = false;
+    let heroPointerStartedInside = false;
+
     function syncSearchUiToScreenSize() {
-      updateSearchLayoutMode();
       const mainPlaceholder = t(mobileSearchMq.matches
         ? 'Search or ask AI...'
         : 'Search docs or ask AI...');
       heroSearchInput.placeholder = mainPlaceholder;
-      modalAiInput.placeholder = mainPlaceholder;
       headerSearchInput.placeholder = t(window.innerWidth <= 720
         ? 'Search or ask AI...'
         : 'Search docs or ask AI...');
 
-      const tightNow = isCurrentSearchTight();
-      if (aiModal.open && tightNow) {
-        modalManagedByScreenSize = true;
+      if (document.body.dataset.activeAudience === 'home' && document.activeElement === heroSearchInput && !heroPointerDown) {
+        document.body.dataset.heroSearch = 'open';
       }
-
-      if (document.body.dataset.activeAudience === 'home' && document.activeElement === heroSearchInput) {
-        ensureHeroSearchVisible({ immediate: true });
-      }
-      if (isTightSearchSpace() && instantResultsBox.classList.contains('active')) {
-        openAiModal(heroSearchInput.value, { responsive: true });
-      } else if (isHeaderTightSpace() && headerResultsBox.classList.contains('active')) {
-        openAiModal(headerSearchInput.value, { responsive: true });
-      } else if (aiModal.open && modalManagedByScreenSize && !tightNow) {
-        switchModalToInlineResults();
-      } else if (mobileSearchMq.matches && document.body.dataset.headerSearch === 'open') {
-        closeHeaderResults();
-      } else {
-        fitHeroResultsHeight();
-      }
+      fitHeroResultsHeight();
     }
     mobileSearchMq.addEventListener('change', syncSearchUiToScreenSize);
     overlayDrawerMq.addEventListener('change', syncSearchUiToScreenSize);
     window.addEventListener('resize', syncSearchUiToScreenSize);
+    window.visualViewport?.addEventListener('resize', syncSearchUiToScreenSize);
+    window.visualViewport?.addEventListener('scroll', syncSearchUiToScreenSize);
     syncSearchUiToScreenSize();
 
-    aiModal.addEventListener('close', () => {
-      modalManagedByScreenSize = false;
-      if (document.body.dataset.activeAudience === 'home') {
-        heroSearchInput.value = modalAiInput.value;
-      } else {
-        headerSearchInput.value = modalAiInput.value;
-      }
-    });
-
-    function runInlineBoxQuery({ inputEl, boxEl, bodyStateKey, tightFn, queryText, forceModal = false }) {
+    function runInlineBoxQuery({ inputEl, boxEl, bodyStateKey, queryText }) {
       if (queryText !== undefined) inputEl.value = queryText;
       const val = inputEl.value.trim();
 
-      if (forceModal || tightFn()) {
-        if (val || forceModal) {
-          openAiModal(val || t('Create a cBot in Python'));
-        } else {
-          closeAllInlineResults();
-        }
-        return;
-      }
-
-      updateSearchLayoutMode();
       const html = buildSearchAndAiHTML(val, { showClose: true });
       if (html) {
         boxEl.innerHTML = html;
         boxEl.classList.add('active');
         document.body.dataset[bodyStateKey] = 'open';
+        bindResultsScrollFades(boxEl);
         fitHeroResultsHeight();
       } else {
         boxEl.classList.remove('active');
-        if (boxEl === headerResultsBox && document.activeElement === headerSearchInput && !mobileSearchMq.matches) {
+        if (boxEl === headerResultsBox && (document.activeElement === headerSearchInput || document.body.dataset.headerSearch === 'open')) {
           document.body.dataset.headerSearch = 'open';
+          fitHeroResultsHeight();
+        } else if (boxEl === instantResultsBox && (document.activeElement === heroSearchInput || document.body.dataset.heroSearch === 'open')) {
+          document.body.dataset.heroSearch = 'open';
+          fitHeroResultsHeight();
         } else {
           delete document.body.dataset[bodyStateKey];
         }
       }
     }
 
-    function triggerHeroQuery(queryText, { forceModal = false } = {}) {
-      ensureHeroSearchVisible({ immediate: true });
+    function triggerHeroQuery(queryText) {
       runInlineBoxQuery({
         inputEl: heroSearchInput,
         boxEl: instantResultsBox,
         bodyStateKey: 'heroSearch',
-        tightFn: isTightSearchSpace,
-        queryText,
-        forceModal
+        queryText
       });
     }
 
-    function triggerHeaderQuery(queryText, { forceModal = false } = {}) {
+    function triggerHeaderQuery(queryText) {
       runInlineBoxQuery({
         inputEl: headerSearchInput,
         boxEl: headerResultsBox,
         bodyStateKey: 'headerSearch',
-        tightFn: isHeaderTightSpace,
-        queryText,
-        forceModal
+        queryText
       });
     }
 
@@ -3714,23 +4123,80 @@
       SUPPORTED_LANGS.forEach(preloadBannerImages);
     }, { once: true });
 
+    document.addEventListener('pointerdown', (e) => {
+      heroPointerStartedInside = Boolean(heroSearchShell?.contains(e.target));
+    });
+
     document.addEventListener('click', (e) => {
-      if (document.body.dataset.heroSearch === 'open' && !heroSearchShell?.contains(e.target)) {
+      const startedInside = heroPointerStartedInside;
+      heroPointerStartedInside = false;
+      if (document.body.dataset.heroSearch === 'open' && !startedInside && !heroSearchShell?.contains(e.target)) {
         closeHeroResults();
       }
-      if (document.body.dataset.headerSearch === 'open' && !headerSearchShell?.contains(e.target)) {
+      if (document.body.dataset.headerSearch === 'open' && !headerSearchShell?.contains(e.target) && !e.target.closest('#openAiCopilotBtn')) {
         closeHeaderResults();
       }
     });
 
-    heroSearchInput.addEventListener('input', () => triggerHeroQuery());
-    heroSearchInput.addEventListener('focus', () => {
+    function isClickOnSearchCancel(inputEl, e) {
+      if (!inputEl || !inputEl.value) return false;
+      const rect = inputEl.getBoundingClientRect();
+      const isRtl = document.documentElement.dir === 'rtl';
+      const distFromEnd = isRtl ? (e.clientX - rect.left) : (rect.right - e.clientX);
+      return distFromEnd >= 0 && distFromEnd <= 24;
+    }
+
+    heroSearchInput.addEventListener('pointerdown', (e) => {
+      heroPointerDown = true;
+      heroHadValueOnDown = Boolean(heroSearchInput.value);
+      heroCancelDown = isClickOnSearchCancel(heroSearchInput, e);
+      heroJustCleared = false;
+    });
+    heroSearchInput.addEventListener('input', () => {
+      if (!heroSearchInput.value && heroHadValueOnDown) {
+        heroJustCleared = true;
+        heroHadValueOnDown = false;
+        closeHeroResults();
+        return;
+      }
+      triggerHeroQuery();
+    });
+    function openHeroSearchOnInteract() {
       const hasQuery = Boolean(heroSearchInput.value.trim());
-      ensureHeroSearchVisible({ immediate: hasQuery });
-      if (!isTightSearchSpace() && hasQuery) triggerHeroQuery();
+      if (document.body.dataset.activeAudience === 'home') {
+        document.body.dataset.heroSearch = 'open';
+        updateHeroSearchPosition();
+        if (hasQuery) {
+          triggerHeroQuery();
+        } else {
+          instantResultsBox.classList.remove('active');
+          fitHeroResultsHeight();
+        }
+      }
+    }
+
+    heroSearchInput.addEventListener('focus', () => {
+      if (heroPointerDown) return;
+      openHeroSearchOnInteract();
     });
     heroSearchInput.addEventListener('click', () => {
-      ensureHeroSearchVisible({ immediate: Boolean(heroSearchInput.value.trim()) });
+      const wasCancelClick = heroJustCleared || (heroCancelDown && heroHadValueOnDown);
+      heroPointerDown = false;
+      heroCancelDown = false;
+      heroHadValueOnDown = false;
+      heroJustCleared = false;
+      if (wasCancelClick) {
+        if (heroSearchInput.value) heroSearchInput.value = '';
+        closeHeroResults();
+        heroSearchInput.blur();
+        return;
+      }
+      openHeroSearchOnInteract();
+    });
+    heroSearchShell?.querySelector('.omni-bar')?.addEventListener('click', (e) => {
+      if (e.target.closest('#heroAskAiBtn') || e.target === heroSearchInput) return;
+      heroSearchInput.focus();
+      openHeroSearchOnInteract();
     });
     heroSearchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
@@ -3743,18 +4209,64 @@
     });
 
     function openHeaderSuggestions() {
-      if (document.body.dataset.activeAudience === 'home' || mobileSearchMq.matches) return;
+      if (document.body.dataset.activeAudience === 'home') return;
       document.body.dataset.headerSearch = 'open';
+      fitHeroResultsHeight();
     }
 
-    headerSearchInput.addEventListener('input', () => triggerHeaderQuery());
+    let headerPointerDown = false;
+    let headerHadValueOnDown = false;
+    let headerCancelDown = false;
+    let headerJustCleared = false;
+
+    headerSearchInput.addEventListener('pointerdown', (e) => {
+      headerPointerDown = true;
+      headerHadValueOnDown = Boolean(headerSearchInput.value);
+      headerCancelDown = isClickOnSearchCancel(headerSearchInput, e);
+      headerJustCleared = false;
+    });
+    headerSearchInput.addEventListener('input', () => {
+      if (!headerSearchInput.value && headerHadValueOnDown) {
+        headerJustCleared = true;
+        headerHadValueOnDown = false;
+        closeHeaderResults();
+        return;
+      }
+      triggerHeaderQuery();
+    });
     headerSearchInput.addEventListener('focus', () => {
+      if (headerPointerDown) return;
       openHeaderSuggestions();
-      if (!isHeaderTightSpace() && headerSearchInput.value.trim()) triggerHeaderQuery();
+      if (headerSearchInput.value.trim()) triggerHeaderQuery();
     });
     headerSearchInput.addEventListener('click', () => {
+      const wasCancelClick = headerJustCleared || (headerCancelDown && headerHadValueOnDown);
+      headerPointerDown = false;
+      headerCancelDown = false;
+      headerHadValueOnDown = false;
+      headerJustCleared = false;
+      if (wasCancelClick) {
+        if (headerSearchInput.value) headerSearchInput.value = '';
+        closeHeaderResults();
+        headerSearchInput.blur();
+        return;
+      }
       openHeaderSuggestions();
+      if (headerSearchInput.value.trim()) triggerHeaderQuery();
     });
+    function clearPointerFlags() {
+      setTimeout(() => {
+        heroPointerDown = false;
+        heroHadValueOnDown = false;
+        heroCancelDown = false;
+        heroPointerStartedInside = false;
+        headerPointerDown = false;
+        headerHadValueOnDown = false;
+        headerCancelDown = false;
+      }, 0);
+    }
+    window.addEventListener('pointerup', clearPointerFlags);
+    window.addEventListener('pointercancel', clearPointerFlags);
     headerSearchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -3852,21 +4364,25 @@
       }, { passive: false });
     });
 
-    document.getElementById('openAiCopilotBtn').addEventListener('click', () => openAiModal());
-    document.getElementById('modalAskBtn').addEventListener('click', () => {
-      const q = modalAiInput.value.trim() ? modalAiInput.value : t('Open API vs FIX API');
-      modalAiInput.value = q;
-      renderModalResults(q);
-    });
-    modalAiInput.addEventListener('input', () => {
-      renderModalResults(modalAiInput.value);
-    });
-    document.querySelectorAll('[data-modal-query]').forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const q = chip.textContent.trim() || chip.dataset.modalQuery;
-        modalAiInput.value = q;
-        renderModalResults(q);
-      });
+    function focusActiveSearchBar() {
+      if (document.body.dataset.activeAudience === 'home') {
+        heroSearchInput.focus();
+        openHeroSearchOnInteract();
+      } else {
+        openHeaderSuggestions();
+        headerSearchInput.focus();
+        if (headerSearchInput.value.trim()) triggerHeaderQuery();
+      }
+    }
+
+    document.getElementById('openAiCopilotBtn').addEventListener('click', () => {
+      if (document.body.dataset.headerSearch === 'open') {
+        closeHeaderResults();
+      } else {
+        openHeaderSuggestions();
+        headerSearchInput.focus();
+        if (headerSearchInput.value.trim()) triggerHeaderQuery();
+      }
     });
 
     // 9. Issue Triage
@@ -3974,14 +4490,35 @@
 
     document.getElementById('builderTabMcp').addEventListener('click', () => {
       builderCodeBox.textContent = mcpSnippet;
+      builderCodeBox.scrollTop = 0;
+      builderCodeBox.scrollLeft = 0;
     });
     document.getElementById('builderTabLlm').addEventListener('click', () => {
       builderCodeBox.textContent = llmContextSnippet;
+      builderCodeBox.scrollTop = 0;
+      builderCodeBox.scrollLeft = 0;
     });
     copyBuilderBtn.addEventListener('click', () => {
       navigator.clipboard?.writeText(builderCodeBox.textContent);
       copyBuilderBtn.textContent = t('Copied');
       setTimeout(() => { copyBuilderBtn.textContent = t('Copy'); }, 1500);
+    });
+
+    // Enable scrolling on a code section only after the user clicks on it (and only if its content overflows)
+    function isCodeBoxOverflowing(box) {
+      return Boolean(box && (box.scrollHeight > box.clientHeight + 1 || box.scrollWidth > box.clientWidth + 1));
+    }
+
+    document.addEventListener('pointerdown', (e) => {
+      const clickedCode = e.target.closest('.code-snippet-box');
+      document.querySelectorAll('.code-snippet-box.scroll-active').forEach((box) => {
+        if (box !== clickedCode) box.classList.remove('scroll-active');
+      });
+      if (clickedCode && isCodeBoxOverflowing(clickedCode)) {
+        clickedCode.classList.add('scroll-active');
+      } else if (clickedCode) {
+        clickedCode.classList.remove('scroll-active');
+      }
     });
 
     // 11. Keyboard Shortcuts
@@ -3998,7 +4535,7 @@
       }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        openAiModal();
+        focusActiveSearchBar();
         return;
       }
       const activeTag = document.activeElement?.tagName;
@@ -4006,13 +4543,7 @@
 
       if (e.key === '/') {
         e.preventDefault();
-        if (document.body.dataset.activeAudience === 'home') {
-          heroSearchInput.focus();
-        } else if (!isHeaderTightSpace()) {
-          headerSearchInput.focus();
-        } else {
-          openAiModal();
-        }
+        focusActiveSearchBar();
       } else if (e.key === '[') {
         e.preventDefault();
         sidebarCycleBtn.click();
@@ -4040,6 +4571,86 @@
       });
     });
     updateBackToTopVisibility();
+
+    // Home Ecosystem Banner Carousel (single-card view on <= 560px)
+    const ecoBannerCards = Array.from(document.querySelectorAll('#ecoBannersGrid .eco-banner-card'));
+    let activeEcoBannerIndex = 0;
+    let ecoBannerCleanup = null;
+
+    function clearEcoBannerTransition() {
+      if (ecoBannerCleanup) {
+        ecoBannerCleanup();
+        ecoBannerCleanup = null;
+      }
+      ecoBannerCards.forEach((card) => {
+        card.classList.remove('slide-exit');
+        card.getAnimations?.().forEach((anim) => anim.cancel());
+      });
+    }
+
+    function setActiveEcoBanner(index, direction = 0) {
+      if (!ecoBannerCards.length) return;
+      const nextIndex = (index + ecoBannerCards.length) % ecoBannerCards.length;
+      if (nextIndex === activeEcoBannerIndex) return;
+
+      const prevCard = ecoBannerCards[activeEcoBannerIndex];
+      const nextCard = ecoBannerCards[nextIndex];
+      activeEcoBannerIndex = nextIndex;
+
+      clearEcoBannerTransition();
+
+      if (!mobileSearchMq.matches || reducedMotionMq.matches || !direction || !prevCard || typeof prevCard.animate !== 'function') {
+        ecoBannerCards.forEach((card, i) => {
+          card.classList.toggle('active-slide', i === activeEcoBannerIndex);
+        });
+        return;
+      }
+
+      const visualDir = direction * (document.documentElement.dir === 'rtl' ? -1 : 1);
+      const timing = { duration: 280, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'both' };
+
+      prevCard.classList.remove('active-slide');
+      prevCard.classList.add('slide-exit');
+      nextCard.classList.add('active-slide');
+
+      const outAnim = prevCard.animate(
+        [
+          { transform: 'translateX(0)', opacity: 1 },
+          { transform: `translateX(${-visualDir * 100}%)`, opacity: 0.75 }
+        ],
+        timing
+      );
+      const inAnim = nextCard.animate(
+        [
+          { transform: `translateX(${visualDir * 100}%)`, opacity: 0.85 },
+          { transform: 'translateX(0)', opacity: 1 }
+        ],
+        timing
+      );
+
+      let cleaned = false;
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+        prevCard.classList.remove('slide-exit');
+        outAnim.cancel();
+        inAnim.cancel();
+        if (ecoBannerCleanup === cleanup) ecoBannerCleanup = null;
+      };
+      ecoBannerCleanup = cleanup;
+      Promise.allSettled([outAnim.finished, inAnim.finished]).then(cleanup);
+    }
+
+    mobileSearchMq.addEventListener('change', (e) => {
+      if (!e.matches) clearEcoBannerTransition();
+    });
+
+    document.getElementById('ecoBannerPrevBtn')?.addEventListener('click', () => {
+      setActiveEcoBanner(activeEcoBannerIndex - 1, -1);
+    });
+    document.getElementById('ecoBannerNextBtn')?.addEventListener('click', () => {
+      setActiveEcoBanner(activeEcoBannerIndex + 1, 1);
+    });
 
     // 13. Client-Side Localization (17 Live Locales)
     (() => {
@@ -4272,10 +4883,6 @@
       syncSearchUiToScreenSize();
       renderDiagnostic(currentDiagnosticSymptom);
 
-      if (aiModal?.open) {
-        const modalQuery = modalAiInput?.value || '';
-        renderModalResults(modalQuery);
-      }
       if (document.body.dataset.heroSearch === 'open') {
         triggerHeroQuery();
       }
