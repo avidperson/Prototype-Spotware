@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <title>cTrader Help Centre</title>
   <link rel="icon" href="https://help.ctrader.com/img/logo.png">
   <!-- Default to light theme; supports toggling between light and dark -->
@@ -1930,10 +1930,14 @@
         --header-height: 48px;
       }
       body {
+        padding-top: var(--header-height);
         padding-bottom: 52px;
       }
       .top-bar {
-        position: relative;
+        position: fixed;
+        top: var(--vv-top, 0px);
+        left: 0;
+        right: 0;
         flex-direction: row;
         align-items: center;
         justify-content: center;
@@ -3950,10 +3954,13 @@
       let shift = 0;
       if (mobileSearchMq.matches) {
         const vv = window.visualViewport;
+        const vvTop = vv ? Math.max(0, Math.round(vv.offsetTop)) : 0;
         const vvBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
+        document.documentElement.style.setProperty('--vv-top', `${vvTop}px`);
         const limitBottom = vvBottom - 10;
         shift = Math.max(0, Math.round(limitBottom - restingBottom));
       } else {
+        document.documentElement.style.removeProperty('--vv-top');
         const mainEl = document.getElementById('mainContent');
         const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
         const targetTop = mainTop + 14;
@@ -3991,6 +3998,14 @@
     }
 
     function fitHeroResultsHeight() {
+      const vv = window.visualViewport;
+      const vvTop = (mobileSearchMq.matches && vv) ? Math.max(0, Math.round(vv.offsetTop)) : 0;
+      if (mobileSearchMq.matches) {
+        document.documentElement.style.setProperty('--vv-top', `${vvTop}px`);
+      } else {
+        document.documentElement.style.removeProperty('--vv-top');
+      }
+
       if (document.body.dataset.activeAudience === 'home') {
         const { finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
         if (instantResultsBox.classList.contains('active')) {
@@ -3998,19 +4013,19 @@
           const mainRect = mainEl ? mainEl.getBoundingClientRect() : { top: 48, bottom: window.innerHeight };
           let available;
           if (mobileSearchMq.matches) {
-            const topBound = mainRect.top + 8;
+            const topBound = Math.max(mainRect.top, vvTop + 48) + 8;
             const resultsBottom = finalBarTop - suggOffset;
             available = Math.floor(resultsBottom - topBound);
+            instantResultsBox.style.maxHeight = `${Math.max(40, available)}px`;
           } else {
             const bottomBound = Math.min(mainRect.bottom, window.innerHeight) - 16;
             const resultsTop = finalBarBottom + suggOffset;
             available = Math.floor(bottomBound - resultsTop);
+            instantResultsBox.style.maxHeight = `${Math.max(96, available)}px`;
           }
-          instantResultsBox.style.maxHeight = `${Math.max(96, available)}px`;
         }
       } else if (headerSearchShell) {
         if (mobileSearchMq.matches) {
-          const vv = window.visualViewport;
           const vvBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
           const bottomEdge = vvBottom - 10;
           const offsetFromViewportBottom = Math.max(10, Math.round(window.innerHeight - bottomEdge));
@@ -4020,9 +4035,9 @@
             const suggEl = headerSearchShell.querySelector('.header-suggestions-card');
             const barH = barEl ? barEl.offsetHeight : 44;
             const suggH = suggEl ? suggEl.offsetHeight : 40;
-            const topBound = 48 + 8;
-            const resultsBottom = (window.innerHeight - offsetFromViewportBottom) - barH - suggH - 18;
-            headerResultsBox.style.maxHeight = `${Math.max(96, Math.floor(resultsBottom - topBound))}px`;
+            const topBound = vvTop + 48 + 8;
+            const resultsBottom = vvBottom - 10 - barH - suggH - 18;
+            headerResultsBox.style.maxHeight = `${Math.max(40, Math.floor(resultsBottom - topBound))}px`;
           }
         } else {
           headerSearchShell.style.removeProperty('--mobile-header-search-bottom');
@@ -4060,6 +4075,12 @@
     window.addEventListener('resize', syncSearchUiToScreenSize);
     window.visualViewport?.addEventListener('resize', syncSearchUiToScreenSize);
     window.visualViewport?.addEventListener('scroll', syncSearchUiToScreenSize);
+    [heroSearchInput, headerSearchInput].forEach((input) => {
+      input?.addEventListener('blur', () => {
+        requestAnimationFrame(syncSearchUiToScreenSize);
+        setTimeout(syncSearchUiToScreenSize, 120);
+      });
+    });
     syncSearchUiToScreenSize();
 
     function runInlineBoxQuery({ inputEl, boxEl, bodyStateKey, queryText }) {
