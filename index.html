@@ -370,12 +370,10 @@
       left: 0;
       right: 0;
       z-index: 50;
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 0.5rem;
-    }
-    body:not([data-active-audience="home"])[data-header-search="open"] .header-search-dropdown {
-      display: flex;
+      pointer-events: none;
     }
     .header-suggestions-card {
       display: flex;
@@ -387,6 +385,18 @@
       padding: 0.38rem 0.65rem;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
       min-width: 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+    }
+    body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-sugg-fit="true"] .header-suggestions-card {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
     }
     .header-suggestions-label {
       font-size: 0.68rem;
@@ -414,6 +424,13 @@
     .header-search-dropdown .instant-results-box {
       position: static;
       max-height: none;
+    }
+    body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-res-fit="true"] .header-search-dropdown .instant-results-box.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
     }
 
     .main-container {
@@ -586,6 +603,17 @@
       white-space: nowrap;
     }
 
+    @media (min-width: 961px) {
+      .left-nav-panel {
+        align-items: flex-end;
+      }
+      .nav-panel-top,
+      .nav-tree-scroll {
+        width: var(--sidebar-width);
+        min-width: var(--sidebar-width);
+      }
+    }
+
     .mobile-nav-backdrop {
       display: none;
     }
@@ -602,13 +630,14 @@
       border-bottom: 1px solid var(--border);
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: stretch;
       gap: 0.45rem;
     }
 
     .sidebar-filter-box {
       flex: 1 1 0;
       min-width: 0;
+      min-height: 32px;
       display: flex;
       align-items: center;
       gap: 0.45rem;
@@ -708,12 +737,13 @@
       width: auto;
       flex: 0 1 auto;
       min-width: 0;
+      min-height: 32px;
       padding: 0.34rem 0.55rem;
       gap: 0.35rem;
       border: 1px solid var(--border);
       background: var(--bg-surface);
       font-size: 0.77rem;
-      line-height: 1.25;
+      line-height: 1.55;
       overflow: hidden;
     }
     .nav-home-btn span {
@@ -1002,6 +1032,8 @@
     @media (prefers-reduced-motion: reduce) {
       .omni-search-shell,
       .omni-search-shell .suggestions-bar,
+      .header-suggestions-card,
+      .instant-results-box,
       .hero-copy,
       .ecosystem-banners-grid,
       .site-footer {
@@ -1080,15 +1112,15 @@
       visibility: hidden;
       pointer-events: none;
       transform: translateY(-6px);
-      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
       z-index: 31;
     }
-    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar {
+    body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
       transform: translateY(0);
-      transition: opacity 0.22s ease 0.04s, transform 0.22s ease 0.04s, visibility 0s;
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
     }
     .omni-search-shell .suggestions-bar .prompt-chip {
       background: var(--bg-subtle);
@@ -1165,15 +1197,24 @@
       border-radius: var(--radius-md);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
       padding: 0.9rem 1rem;
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 0.35rem;
       text-align: left;
       max-height: calc(100dvh - 8rem);
       overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
     }
-    .instant-results-box.active {
-      display: flex;
+    body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
     }
     .results-scroll-body {
       flex: 1 1 auto;
@@ -1946,7 +1987,18 @@
         background: var(--bg-canvas);
         backdrop-filter: none;
       }
+      .top-bar::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--bg-canvas);
+        border-bottom: 1px solid var(--border);
+        z-index: 45;
+        pointer-events: none;
+      }
       .brand-cluster {
+        position: relative;
+        z-index: 46;
         width: auto;
         height: auto;
         justify-content: center;
@@ -2022,57 +2074,90 @@
       body:not([data-active-audience="home"])[data-header-search="open"] .top-bar {
         z-index: 45;
       }
-      .header-search-shell {
-        display: none;
-      }
-      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell {
+      body:not([data-active-audience="home"]) .header-search-shell {
         display: flex;
         position: fixed;
         left: 0.75rem;
         right: 0.75rem;
-        bottom: var(--mobile-header-search-bottom, 10px);
+        bottom: 10px;
         max-width: none;
         height: auto;
         z-index: 43;
-        transition: bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(18px);
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
       }
-      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-bar {
+      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(var(--mobile-header-search-shift, 0px));
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s;
+      }
+      body:not([data-active-audience="home"]) .header-search-shell .omni-bar {
         padding: 0.3rem 0.4rem 0.3rem 0.65rem;
         gap: 0.4rem;
       }
-      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-input {
+      body:not([data-active-audience="home"]) .header-search-shell .omni-input {
         font-size: 0.8rem;
         padding: 0.26rem 0;
       }
-      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .btn-subtle-accent {
+      body:not([data-active-audience="home"]) .header-search-shell .btn-subtle-accent {
         padding: 0.34rem 0.6rem;
         font-size: 0.74rem;
       }
       .header-search-dropdown {
+        display: flex;
         top: auto;
         bottom: calc(100% + 0.45rem);
         left: 0;
         right: 0;
         width: auto;
-        transform: none;
         flex-direction: column-reverse;
         gap: 0.45rem;
+        pointer-events: none;
       }
       .header-suggestions-label {
         display: none;
       }
       .header-suggestions-card {
         padding: 0.36rem 0.55rem;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(6px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+      }
+      body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-sugg-fit="true"] .header-suggestions-card {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
       }
       .header-suggestions-card .prompt-chip {
         padding: 0.18rem 0.52rem;
         font-size: 0.68rem;
       }
       .header-search-dropdown .instant-results-box {
+        display: flex;
         padding: 0.85rem 0.9rem 0.55rem;
         gap: 0.35rem;
-        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
-        transition: max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(6px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-res-fit="true"] .header-search-dropdown .instant-results-box.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .mobile-nav-backdrop {
         inset: calc(var(--mobile-vv-top, 0px) + var(--header-height)) 0 52px 0;
@@ -2099,7 +2184,7 @@
         padding: 0.65rem max(1.15rem, calc((100% - 320px) / 2));
         border-bottom: none;
         border-top: 1px solid var(--border);
-        align-items: center;
+        align-items: stretch;
       }
       .sidebar-filter-box {
         max-width: none;
@@ -2173,23 +2258,57 @@
         top: auto;
         bottom: calc(100% + 0.45rem);
         padding: 0.36rem 0.55rem;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
         transform: translateY(6px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
       }
       body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(6px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+      }
+      body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
         transform: translateY(0);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
       }
       .omni-search-shell .instant-results-box {
+        display: flex;
         top: auto;
         bottom: calc(100% + var(--hero-suggestions-offset, 52px));
         padding: 0.85rem 0.9rem 0.55rem;
         gap: 0.35rem;
-        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
-        transition: max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(6px);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
       }
       @media (prefers-reduced-motion: reduce) {
-        body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell,
+        body:not([data-active-audience="home"]) .header-search-shell,
+        .header-suggestions-card,
+        body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-sugg-fit="true"] .header-suggestions-card,
         .header-search-dropdown .instant-results-box,
-        .omni-search-shell .instant-results-box {
+        body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-res-fit="true"] .header-search-dropdown .instant-results-box.active,
+        .omni-search-shell .suggestions-bar,
+        body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar,
+        body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar,
+        .omni-search-shell .instant-results-box,
+        body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
           transition: none;
         }
       }
@@ -2235,6 +2354,14 @@
         max-width: min(100%, clamp(120px, 56vw, 240px));
         overflow: hidden;
         border-radius: var(--radius-md);
+        touch-action: pan-y;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .eco-carousel-stage img {
+        -webkit-user-drag: none;
+        user-select: none;
+        pointer-events: none;
       }
       .eco-banner-card {
         display: none;
@@ -2247,13 +2374,20 @@
       .eco-banner-card.active-slide {
         display: block;
         position: relative;
+        z-index: 2;
+      }
+      .eco-banner-card.drag-peek {
+        display: block;
+        position: absolute;
+        inset: 0;
         z-index: 1;
+        pointer-events: none;
       }
       .eco-banner-card.slide-exit {
         display: block;
         position: absolute;
         inset: 0;
-        z-index: 2;
+        z-index: 3;
         pointer-events: none;
       }
       .site-footer {
@@ -3918,16 +4052,96 @@
     const headerSearchInput = document.getElementById('headerSearchInput');
     const headerResultsBox = document.getElementById('headerResultsBox');
     const mobileSearchMq = window.matchMedia('(max-width: 560px)');
+    const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let heroBarSettleTimer = 0;
+    let headerBarSettleTimer = 0;
+
+    function cancelHeroBarSettle() {
+      clearTimeout(heroBarSettleTimer);
+      heroBarSettleTimer = 0;
+    }
+
+    function cancelHeaderBarSettle() {
+      clearTimeout(headerBarSettleTimer);
+      headerBarSettleTimer = 0;
+    }
+
+    function settleHeroBar() {
+      cancelHeroBarSettle();
+      if (document.body.dataset.heroSearch === 'open') {
+        document.body.dataset.heroBarSettled = 'true';
+        fitHeroResultsHeight();
+      }
+    }
+
+    function settleHeaderBar() {
+      cancelHeaderBarSettle();
+      if (document.body.dataset.headerSearch === 'open') {
+        document.body.dataset.headerBarSettled = 'true';
+        fitHeroResultsHeight();
+      }
+    }
+
+    function scheduleHeroBarSettle(waitForMove) {
+      cancelHeroBarSettle();
+      if (reducedMotionMq.matches || !waitForMove) {
+        settleHeroBar();
+        return;
+      }
+      heroBarSettleTimer = setTimeout(settleHeroBar, 310);
+    }
+
+    function scheduleHeaderBarSettle(waitForMove) {
+      cancelHeaderBarSettle();
+      if (!mobileSearchMq.matches || reducedMotionMq.matches || !waitForMove) {
+        settleHeaderBar();
+        return;
+      }
+      headerBarSettleTimer = setTimeout(settleHeaderBar, 310);
+    }
+
+    heroSearchShell?.addEventListener('transitionend', (e) => {
+      if (e.target === heroSearchShell && e.propertyName === 'transform' &&
+          document.body.dataset.heroSearch === 'open' &&
+          document.body.dataset.heroBarSettled !== 'true') {
+        settleHeroBar();
+      }
+    });
+    headerSearchShell?.addEventListener('transitionend', (e) => {
+      if (e.target === headerSearchShell && e.propertyName === 'transform' &&
+          document.body.dataset.headerSearch === 'open' &&
+          document.body.dataset.headerBarSettled !== 'true') {
+        settleHeaderBar();
+      }
+    });
 
     function closeHeroResults() {
+      cancelHeroBarSettle();
       instantResultsBox.classList.remove('active');
+      delete instantResultsBox.dataset.renderedHtml;
       delete document.body.dataset.heroSearch;
+      delete document.body.dataset.heroBarSettled;
+      delete document.body.dataset.heroSuggFit;
+      delete document.body.dataset.heroResFit;
+      lastHeroRestingTop = null;
+      if (document.activeElement === heroSearchInput) {
+        heroSearchInput.blur();
+      }
     }
 
     function closeHeaderResults() {
+      cancelHeaderBarSettle();
       headerResultsBox.classList.remove('active');
+      delete headerResultsBox.dataset.renderedHtml;
       delete document.body.dataset.headerSearch;
-      headerSearchShell?.style.removeProperty('--mobile-header-search-bottom');
+      delete document.body.dataset.headerBarSettled;
+      delete document.body.dataset.headerSuggFit;
+      delete document.body.dataset.headerResFit;
+      headerSearchShell?.style.removeProperty('--mobile-header-search-shift');
+      if (document.activeElement === headerSearchInput) {
+        headerSearchInput.blur();
+      }
     }
 
     function closeAllInlineResults() {
@@ -3967,13 +4181,41 @@
       return { vvTop, vvBottom, visibleHeaderBottom: vvTop + headerHeight };
     }
 
+    let lastHeroRestingTop = null;
+
+    function setResultsMaxHeightSmooth(boxEl, targetMaxHeight, maxAllowedNow) {
+      if (!boxEl) return;
+      const clampedTarget = Math.max(0, Math.round(targetMaxHeight));
+      const nextPx = `${clampedTarget}px`;
+      if (boxEl.style.maxHeight === nextPx) return;
+      if (!mobileSearchMq.matches || reducedMotionMq.matches || !boxEl.classList.contains('active')) {
+        boxEl.style.maxHeight = nextPx;
+        return;
+      }
+      const currentMax = parseFloat(boxEl.style.maxHeight);
+      const renderedHeight = Math.round(boxEl.getBoundingClientRect().height);
+      const nowCap = Number.isFinite(maxAllowedNow) ? Math.max(0, Math.round(maxAllowedNow)) : renderedHeight;
+      const clampedStart = Math.min(renderedHeight, nowCap);
+      const needsSlackSnap = Number.isFinite(currentMax) && currentMax > renderedHeight + 1 && clampedTarget < renderedHeight;
+      const needsHeaderCapSnap = nowCap < renderedHeight - 1;
+      if (renderedHeight > 0 && (needsSlackSnap || needsHeaderCapSnap)) {
+        const prevTransition = boxEl.style.transition;
+        boxEl.style.transition = 'none';
+        boxEl.style.maxHeight = `${clampedStart}px`;
+        boxEl.getBoundingClientRect();
+        boxEl.style.transition = prevTransition;
+      }
+      boxEl.style.maxHeight = nextPx;
+    }
+
     function updateHeroSearchPosition() {
       const { vvTop, vvBottom, visibleHeaderBottom } = getMobileViewportMetrics();
       syncMobileHeaderPin(vvTop);
-      if (!heroSearchShell) return { shift: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
+      if (!heroSearchShell) return { shift: 0, currentBarTop: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
       if (document.body.dataset.activeAudience !== 'home') {
         heroSearchShell.style.setProperty('--hero-search-shift', '0px');
-        return { shift: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
+        lastHeroRestingTop = null;
+        return { shift: 0, currentBarTop: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
       }
       const barEl = heroSearchShell.querySelector('.omni-bar') || heroSearchShell;
       const suggEl = heroSearchShell.querySelector('.suggestions-bar');
@@ -3999,11 +4241,30 @@
         shift = Math.min(0, Math.round(targetTop - restingTop));
       }
 
+      const prevShift = parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || 0;
+      const isHeroOpen = document.body.dataset.heroSearch === 'open';
+      if (mobileSearchMq.matches && !reducedMotionMq.matches && isHeroOpen && lastHeroRestingTop !== null && Math.abs(restingTop - lastHeroRestingTop) > 1) {
+        const visualTopBefore = barRect.top;
+        const compensatingShift = Math.round(visualTopBefore - restingTop);
+        const prevTransition = heroSearchShell.style.transition;
+        heroSearchShell.style.transition = 'none';
+        heroSearchShell.style.setProperty('--hero-search-shift', `${compensatingShift}px`);
+        heroSearchShell.getBoundingClientRect();
+        heroSearchShell.style.transition = prevTransition;
+      }
+      lastHeroRestingTop = isHeroOpen ? restingTop : null;
+
       heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
       heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
 
+      if (!reducedMotionMq.matches && isHeroOpen &&
+          document.body.dataset.heroBarSettled !== 'true' && Math.abs(shift - prevShift) > 1) {
+        scheduleHeroBarSettle(true);
+      }
+
       return {
         shift,
+        currentBarTop: barRect.top,
         finalBarTop: restingTop + shift,
         finalBarBottom: restingBottom + shift,
         suggOffset,
@@ -4033,46 +4294,89 @@
     function fitHeroResultsHeight() {
       const { vvTop, vvBottom, visibleHeaderBottom } = getMobileViewportMetrics();
       syncMobileHeaderPin(vvTop);
+      const MIN_RESULTS_SPACE = 76;
 
       if (document.body.dataset.activeAudience === 'home') {
-        const { finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
-        if (instantResultsBox.classList.contains('active')) {
-          const mainEl = document.getElementById('mainContent');
-          const mainRect = mainEl ? mainEl.getBoundingClientRect() : { top: 48, bottom: window.innerHeight };
-          let available;
-          if (mobileSearchMq.matches) {
-            const topBound = visibleHeaderBottom + 8;
-            const resultsBottom = finalBarTop - suggOffset;
-            available = Math.floor(resultsBottom - topBound);
-          } else {
-            const bottomBound = Math.min(mainRect.bottom, window.innerHeight) - 16;
-            const resultsTop = finalBarBottom + suggOffset;
-            available = Math.floor(bottomBound - resultsTop);
-          }
-          const minBoxHeight = mobileSearchMq.matches ? 64 : 96;
-          instantResultsBox.style.maxHeight = `${Math.max(minBoxHeight, available)}px`;
-        }
-      } else if (headerSearchShell) {
+        const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
+        const suggEl = heroSearchShell?.querySelector('.suggestions-bar');
+        const suggH = suggEl ? suggEl.offsetHeight : 38;
+        let suggFits = false;
+        let resFits = false;
+        let available = 0;
+
         if (mobileSearchMq.matches) {
-          const bottomEdge = vvBottom - 10;
-          const offsetFromViewportBottom = Math.max(10, Math.round(window.innerHeight - bottomEdge));
-          headerSearchShell.style.setProperty('--mobile-header-search-bottom', `${offsetFromViewportBottom}px`);
-          if (headerResultsBox.classList.contains('active')) {
-            const barEl = headerSearchShell.querySelector('.omni-bar');
-            const suggEl = headerSearchShell.querySelector('.header-suggestions-card');
-            const barH = barEl ? barEl.offsetHeight : 44;
-            const suggH = suggEl ? suggEl.offsetHeight : 40;
-            const topBound = visibleHeaderBottom + 8;
-            const resultsBottom = (window.innerHeight - offsetFromViewportBottom) - barH - suggH - 18;
-            headerResultsBox.style.maxHeight = `${Math.max(64, Math.floor(resultsBottom - topBound))}px`;
+          const topBound = visibleHeaderBottom + 8;
+          suggFits = (finalBarTop - topBound) >= (suggH + 8);
+          available = Math.floor((finalBarTop - suggOffset) - topBound);
+          resFits = suggFits && available >= MIN_RESULTS_SPACE;
+          if (resFits && instantResultsBox.classList.contains('active')) {
+            setResultsMaxHeightSmooth(instantResultsBox, available, Math.floor((currentBarTop - suggOffset) - topBound));
           }
         } else {
-          headerSearchShell.style.removeProperty('--mobile-header-search-bottom');
-          if (headerResultsBox.classList.contains('active')) {
-            const available = Math.floor(window.innerHeight - headerResultsBox.getBoundingClientRect().top - 16);
-            headerResultsBox.style.maxHeight = `${Math.max(96, available)}px`;
+          const mainEl = document.getElementById('mainContent');
+          const mainRect = mainEl ? mainEl.getBoundingClientRect() : { top: 48, bottom: window.innerHeight };
+          const bottomBound = Math.min(mainRect.bottom, window.innerHeight) - 16;
+          suggFits = (window.innerHeight - 8 - finalBarBottom) >= (suggH + 8);
+          available = Math.floor(bottomBound - (finalBarBottom + suggOffset));
+          resFits = suggFits && available >= MIN_RESULTS_SPACE;
+          if (resFits && instantResultsBox.classList.contains('active')) {
+            instantResultsBox.style.maxHeight = `${available}px`;
           }
         }
+
+        if (suggFits) document.body.dataset.heroSuggFit = 'true';
+        else delete document.body.dataset.heroSuggFit;
+        if (resFits) document.body.dataset.heroResFit = 'true';
+        else delete document.body.dataset.heroResFit;
+      } else if (headerSearchShell) {
+        const suggEl = headerSearchShell.querySelector('.header-suggestions-card');
+        const suggH = suggEl ? suggEl.offsetHeight : 38;
+        let suggFits = false;
+        let resFits = false;
+        let available = 0;
+
+        if (mobileSearchMq.matches) {
+          const barEl = headerSearchShell.querySelector('.omni-bar');
+          const dropdownEl = headerResultsBox.parentElement;
+          const barH = barEl ? barEl.offsetHeight : 44;
+          const restBottom = window.innerHeight - 10;
+          const restTop = restBottom - barH;
+          const minShift = Math.round((visibleHeaderBottom + 8) - restTop);
+          const targetShift = Math.round((vvBottom - 10) - restBottom);
+          const shift = Math.max(minShift, Math.min(0, targetShift));
+          const prevShift = parseFloat(headerSearchShell.style.getPropertyValue('--mobile-header-search-shift')) || 0;
+          headerSearchShell.style.setProperty('--mobile-header-search-shift', `${shift}px`);
+          if (document.body.dataset.headerSearch === 'open' && !reducedMotionMq.matches &&
+              document.body.dataset.headerBarSettled !== 'true' && Math.abs(shift - prevShift) > 1) {
+            scheduleHeaderBarSettle(true);
+          }
+          const gapPx = dropdownEl ? (parseFloat(getComputedStyle(dropdownEl).rowGap) || 8) * 2 + 4 : 18;
+          const topBound = visibleHeaderBottom + 8;
+          const finalBarTop = restTop + shift;
+          const currentBarTop = barEl ? barEl.getBoundingClientRect().top : finalBarTop;
+          suggFits = (finalBarTop - topBound) >= (suggH + 8);
+          available = Math.floor((finalBarTop - suggH - gapPx) - topBound);
+          resFits = suggFits && available >= MIN_RESULTS_SPACE;
+          if (resFits && headerResultsBox.classList.contains('active')) {
+            setResultsMaxHeightSmooth(headerResultsBox, available, Math.floor((currentBarTop - suggH - gapPx) - topBound));
+          }
+        } else {
+          headerSearchShell.style.removeProperty('--mobile-header-search-shift');
+          const topBarRect = document.querySelector('.top-bar')?.getBoundingClientRect();
+          const suggBaseTop = topBarRect ? topBarRect.bottom + 12 : 66;
+          suggFits = (window.innerHeight - 8 - suggBaseTop) >= suggH;
+          const resultsTop = suggBaseTop + suggH + 8;
+          available = Math.floor(window.innerHeight - resultsTop - 16);
+          resFits = suggFits && available >= MIN_RESULTS_SPACE;
+          if (resFits && headerResultsBox.classList.contains('active')) {
+            headerResultsBox.style.maxHeight = `${available}px`;
+          }
+        }
+
+        if (suggFits) document.body.dataset.headerSuggFit = 'true';
+        else delete document.body.dataset.headerSuggFit;
+        if (resFits) document.body.dataset.headerResFit = 'true';
+        else delete document.body.dataset.headerResFit;
       }
       document.querySelectorAll('.results-scroll-body').forEach(updateResultsScrollFades);
     }
@@ -4093,7 +4397,18 @@
         : 'Search docs or ask AI...');
 
       if (document.body.dataset.activeAudience === 'home' && document.activeElement === heroSearchInput && !heroPointerDown) {
-        document.body.dataset.heroSearch = 'open';
+        if (document.body.dataset.heroSearch !== 'open') {
+          openHeroSearchOnInteract();
+          return;
+        }
+      }
+      if (!mobileSearchMq.matches) {
+        if (document.body.dataset.heroSearch === 'open' && !heroBarSettleTimer) {
+          document.body.dataset.heroBarSettled = 'true';
+        }
+        if (document.body.dataset.headerSearch === 'open' && !headerBarSettleTimer) {
+          document.body.dataset.headerBarSettled = 'true';
+        }
       }
       fitHeroResultsHeight();
     }
@@ -4136,13 +4451,27 @@
 
       const html = buildSearchAndAiHTML(val, { showClose: true });
       if (html) {
-        boxEl.innerHTML = html;
-        boxEl.classList.add('active');
+        const wasOpen = document.body.dataset[bodyStateKey] === 'open';
+        const isSameRendered = boxEl.classList.contains('active') && boxEl.dataset.renderedHtml === html;
+        if (!wasOpen) {
+          if (bodyStateKey === 'heroSearch') delete document.body.dataset.heroBarSettled;
+          if (bodyStateKey === 'headerSearch') delete document.body.dataset.headerBarSettled;
+        }
+        if (!isSameRendered) {
+          boxEl.innerHTML = html;
+          boxEl.dataset.renderedHtml = html;
+          boxEl.classList.add('active');
+          bindResultsScrollFades(boxEl);
+        }
         document.body.dataset[bodyStateKey] = 'open';
-        bindResultsScrollFades(boxEl);
         fitHeroResultsHeight();
+        if (!wasOpen) {
+          if (bodyStateKey === 'heroSearch') scheduleHeroBarSettle(true);
+          if (bodyStateKey === 'headerSearch') scheduleHeaderBarSettle(true);
+        }
       } else {
         boxEl.classList.remove('active');
+        delete boxEl.dataset.renderedHtml;
         if (boxEl === headerResultsBox && (document.activeElement === headerSearchInput || document.body.dataset.headerSearch === 'open')) {
           document.body.dataset.headerSearch = 'open';
           fitHeroResultsHeight();
@@ -4232,13 +4561,20 @@
     function openHeroSearchOnInteract() {
       const hasQuery = Boolean(heroSearchInput.value.trim());
       if (document.body.dataset.activeAudience === 'home') {
+        const wasOpen = document.body.dataset.heroSearch === 'open';
+        const startY = getCurrentTranslateY(heroSearchShell);
+        if (!wasOpen) delete document.body.dataset.heroBarSettled;
         document.body.dataset.heroSearch = 'open';
-        updateHeroSearchPosition();
+        const { shift } = updateHeroSearchPosition();
         if (hasQuery) {
           triggerHeroQuery();
         } else {
           instantResultsBox.classList.remove('active');
+          delete instantResultsBox.dataset.renderedHtml;
           fitHeroResultsHeight();
+        }
+        if (!wasOpen) {
+          scheduleHeroBarSettle(Math.abs(shift - startY) > 1);
         }
       }
     }
@@ -4278,8 +4614,13 @@
 
     function openHeaderSuggestions() {
       if (document.body.dataset.activeAudience === 'home') return;
+      const wasOpen = document.body.dataset.headerSearch === 'open';
+      if (!wasOpen) delete document.body.dataset.headerBarSettled;
       document.body.dataset.headerSearch = 'open';
       fitHeroResultsHeight();
+      if (!wasOpen) {
+        scheduleHeaderBarSettle(true);
+      }
     }
 
     let headerPointerDown = false;
@@ -4351,8 +4692,6 @@
     document.querySelectorAll('[data-header-query]').forEach((chip) => {
       chip.addEventListener('click', () => triggerHeaderQuery(chip.textContent.trim() || chip.dataset.headerQuery));
     });
-
-    const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function normalizeWheelDelta(delta, deltaMode, pageSize) {
       if (deltaMode === 1) return delta * 16;
@@ -4591,8 +4930,9 @@
 
     // 11. Keyboard Shortcuts
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.code === 'Escape') {
         if (document.body.dataset.heroSearch === 'open' || document.body.dataset.headerSearch === 'open') {
+          e.preventDefault();
           closeAllInlineResults();
           return;
         }
@@ -4641,9 +4981,21 @@
     updateBackToTopVisibility();
 
     // Home Ecosystem Banner Carousel (single-card view on <= 560px)
+    const ecoCarouselStage = document.getElementById('ecoCarouselStage');
     const ecoBannerCards = Array.from(document.querySelectorAll('#ecoBannersGrid .eco-banner-card'));
     let activeEcoBannerIndex = 0;
     let ecoBannerCleanup = null;
+    let ecoAutoTimer = 0;
+    let ecoDragState = null;
+    let ecoSuppressClickUntil = 0;
+
+    function resetEcoDragStyles() {
+      ecoBannerCards.forEach((card) => {
+        card.classList.remove('drag-peek', 'slide-exit');
+        card.style.transform = '';
+        card.style.opacity = '';
+      });
+    }
 
     function clearEcoBannerTransition() {
       if (ecoBannerCleanup) {
@@ -4651,15 +5003,31 @@
         ecoBannerCleanup = null;
       }
       ecoBannerCards.forEach((card) => {
-        card.classList.remove('slide-exit');
+        card.classList.remove('slide-exit', 'drag-peek');
+        card.style.transform = '';
+        card.style.opacity = '';
         card.getAnimations?.().forEach((anim) => anim.cancel());
       });
     }
 
-    function setActiveEcoBanner(index, direction = 0) {
+    function getEcoNeighbors(index = activeEcoBannerIndex) {
+      const n = ecoBannerCards.length;
+      const isRtl = document.documentElement.dir === 'rtl';
+      const leftStep = isRtl ? 1 : -1;
+      const rightStep = isRtl ? -1 : 1;
+      return {
+        isRtl,
+        leftStep,
+        rightStep,
+        leftIndex: (index + leftStep + n) % n,
+        rightIndex: (index + rightStep + n) % n
+      };
+    }
+
+    function setActiveEcoBanner(index, direction = 0, { startDx = 0, startWidth = 0, duration = 280 } = {}) {
       if (!ecoBannerCards.length) return;
       const nextIndex = (index + ecoBannerCards.length) % ecoBannerCards.length;
-      if (nextIndex === activeEcoBannerIndex) return;
+      if (!startDx && nextIndex === activeEcoBannerIndex) return;
 
       const prevCard = ecoBannerCards[activeEcoBannerIndex];
       const nextCard = ecoBannerCards[nextIndex];
@@ -4675,23 +5043,36 @@
       }
 
       const visualDir = direction * (document.documentElement.dir === 'rtl' ? -1 : 1);
-      const timing = { duration: 280, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'both' };
+      const width = startWidth || ecoCarouselStage?.clientWidth || 220;
+      const clampedStartDx = Math.max(-width, Math.min(width, startDx));
+      const remainingRatio = clampedStartDx ? Math.max(0.25, 1 - Math.abs(clampedStartDx) / width) : 1;
+      const timing = {
+        duration: Math.round(duration * remainingRatio),
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        fill: 'both'
+      };
 
       prevCard.classList.remove('active-slide');
       prevCard.classList.add('slide-exit');
       nextCard.classList.add('active-slide');
 
+      const outStartX = clampedStartDx ? `${clampedStartDx}px` : '0%';
+      const outEndX = `${-visualDir * 100}%`;
+      const inStartX = clampedStartDx ? `${visualDir * width + clampedStartDx}px` : `${visualDir * 100}%`;
+      const startOpacityOut = clampedStartDx ? Math.max(0.75, 1 - (Math.abs(clampedStartDx) / width) * 0.25) : 1;
+      const startOpacityIn = clampedStartDx ? Math.min(1, 0.85 + (Math.abs(clampedStartDx) / width) * 0.15) : 0.85;
+
       const outAnim = prevCard.animate(
         [
-          { transform: 'translateX(0)', opacity: 1 },
-          { transform: `translateX(${-visualDir * 100}%)`, opacity: 0.75 }
+          { transform: `translate3d(${outStartX}, 0, 0)`, opacity: startOpacityOut },
+          { transform: `translate3d(${outEndX}, 0, 0)`, opacity: 0.75 }
         ],
         timing
       );
       const inAnim = nextCard.animate(
         [
-          { transform: `translateX(${visualDir * 100}%)`, opacity: 0.85 },
-          { transform: 'translateX(0)', opacity: 1 }
+          { transform: `translate3d(${inStartX}, 0, 0)`, opacity: startOpacityIn },
+          { transform: 'translate3d(0, 0, 0)', opacity: 1 }
         ],
         timing
       );
@@ -4709,16 +5090,199 @@
       Promise.allSettled([outAnim.finished, inAnim.finished]).then(cleanup);
     }
 
+    function snapBackEcoDrag(drag) {
+      const activeCard = ecoBannerCards[activeEcoBannerIndex];
+      if (!activeCard) return;
+      const { leftCard, rightCard, width, dx } = drag;
+      clearEcoBannerTransition();
+
+      if (reducedMotionMq.matches || typeof activeCard.animate !== 'function' || !dx) {
+        ecoBannerCards.forEach((card, i) => {
+          card.classList.toggle('active-slide', i === activeEcoBannerIndex);
+        });
+        return;
+      }
+
+      const peekCard = dx > 0 ? leftCard : rightCard;
+      const peekEndX = dx > 0 ? -width : width;
+      const timing = { duration: 220, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'both' };
+      const anims = [];
+
+      activeCard.classList.add('active-slide');
+      anims.push(activeCard.animate(
+        [
+          { transform: `translate3d(${dx}px, 0, 0)` },
+          { transform: 'translate3d(0, 0, 0)' }
+        ],
+        timing
+      ));
+
+      if (peekCard && peekCard !== activeCard) {
+        peekCard.classList.add('drag-peek');
+        anims.push(peekCard.animate(
+          [
+            { transform: `translate3d(${peekEndX + dx}px, 0, 0)` },
+            { transform: `translate3d(${peekEndX}px, 0, 0)` }
+          ],
+          timing
+        ));
+      }
+
+      let cleaned = false;
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+        if (peekCard) peekCard.classList.remove('drag-peek');
+        anims.forEach((anim) => anim.cancel());
+        if (ecoBannerCleanup === cleanup) ecoBannerCleanup = null;
+      };
+      ecoBannerCleanup = cleanup;
+      Promise.allSettled(anims.map((anim) => anim.finished)).then(cleanup);
+    }
+
+    function stopEcoAutoTimer() {
+      if (ecoAutoTimer) {
+        clearInterval(ecoAutoTimer);
+        ecoAutoTimer = 0;
+      }
+    }
+
+    function autoAdvanceEcoBanner() {
+      if (!mobileSearchMq.matches || ecoDragState || document.hidden) return;
+      if (document.body.dataset.activeAudience !== 'home') return;
+      if (document.body.dataset.heroSearch === 'open' || document.body.dataset.mobileNav === 'open') return;
+      // direction = 1 slides right-to-left in LTR languages and left-to-right in RTL languages
+      setActiveEcoBanner(activeEcoBannerIndex + 1, 1);
+    }
+
+    function resetEcoAutoTimer() {
+      stopEcoAutoTimer();
+      if (mobileSearchMq.matches && ecoBannerCards.length > 1) {
+        ecoAutoTimer = setInterval(autoAdvanceEcoBanner, 5000);
+      }
+    }
+
+    if (ecoCarouselStage && ecoBannerCards.length > 1) {
+      ecoCarouselStage.addEventListener('pointerdown', (e) => {
+        if (!mobileSearchMq.matches || e.button > 0) return;
+        clearEcoBannerTransition();
+        stopEcoAutoTimer();
+        const { leftIndex, rightIndex, leftStep, rightStep } = getEcoNeighbors();
+        ecoDragState = {
+          pointerId: e.pointerId,
+          startX: e.clientX,
+          startY: e.clientY,
+          lastX: e.clientX,
+          lastTime: performance.now(),
+          dx: 0,
+          vx: 0,
+          locked: null,
+          width: ecoCarouselStage.clientWidth || 220,
+          activeCard: ecoBannerCards[activeEcoBannerIndex],
+          leftCard: ecoBannerCards[leftIndex],
+          rightCard: ecoBannerCards[rightIndex],
+          leftIndex,
+          rightIndex,
+          leftStep,
+          rightStep
+        };
+      });
+
+      ecoCarouselStage.addEventListener('pointermove', (e) => {
+        if (!ecoDragState || e.pointerId !== ecoDragState.pointerId) return;
+        const rawDx = e.clientX - ecoDragState.startX;
+        const rawDy = e.clientY - ecoDragState.startY;
+        if (ecoDragState.locked === null) {
+          if (Math.abs(rawDx) < 6 && Math.abs(rawDy) < 6) return;
+          if (Math.abs(rawDy) > Math.abs(rawDx)) {
+            ecoDragState = null;
+            resetEcoAutoTimer();
+            return;
+          }
+          ecoDragState.locked = 'x';
+          try { ecoCarouselStage.setPointerCapture(e.pointerId); } catch (_) {}
+          ecoDragState.leftCard?.classList.add('drag-peek');
+          ecoDragState.rightCard?.classList.add('drag-peek');
+        }
+
+        const now = performance.now();
+        const dt = Math.max(8, now - ecoDragState.lastTime);
+        const clampedDx = Math.max(-ecoDragState.width, Math.min(ecoDragState.width, rawDx));
+        ecoDragState.vx = (e.clientX - ecoDragState.lastX) / dt;
+        ecoDragState.lastX = e.clientX;
+        ecoDragState.lastTime = now;
+        ecoDragState.dx = clampedDx;
+
+        const { width, activeCard, leftCard, rightCard } = ecoDragState;
+        if (activeCard) activeCard.style.transform = `translate3d(${clampedDx}px, 0, 0)`;
+        if (leftCard) leftCard.style.transform = `translate3d(${-width + clampedDx}px, 0, 0)`;
+        if (rightCard) rightCard.style.transform = `translate3d(${width + clampedDx}px, 0, 0)`;
+      });
+
+      const endEcoDrag = (e) => {
+        if (!ecoDragState || e.pointerId !== ecoDragState.pointerId) return;
+        const drag = ecoDragState;
+        ecoDragState = null;
+        try { ecoCarouselStage.releasePointerCapture(e.pointerId); } catch (_) {}
+        if (drag.locked !== 'x') {
+          resetEcoAutoTimer();
+          return;
+        }
+
+        ecoSuppressClickUntil = performance.now() + 350;
+        resetEcoDragStyles();
+
+        const threshold = Math.max(28, drag.width * 0.22);
+        const isCancel = e.type === 'pointercancel';
+        if (!isCancel && (drag.dx <= -threshold || (drag.vx < -0.35 && drag.dx < -12))) {
+          setActiveEcoBanner(drag.rightIndex, drag.rightStep, {
+            startDx: drag.dx,
+            startWidth: drag.width
+          });
+        } else if (!isCancel && (drag.dx >= threshold || (drag.vx > 0.35 && drag.dx > 12))) {
+          setActiveEcoBanner(drag.leftIndex, drag.leftStep, {
+            startDx: drag.dx,
+            startWidth: drag.width
+          });
+        } else {
+          snapBackEcoDrag(drag);
+        }
+        resetEcoAutoTimer();
+      };
+
+      ecoCarouselStage.addEventListener('pointerup', endEcoDrag);
+      ecoCarouselStage.addEventListener('pointercancel', endEcoDrag);
+      ecoCarouselStage.addEventListener('click', (e) => {
+        if (performance.now() < ecoSuppressClickUntil) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }, true);
+    }
+
     mobileSearchMq.addEventListener('change', (e) => {
-      if (!e.matches) clearEcoBannerTransition();
+      if (!e.matches) {
+        ecoDragState = null;
+        clearEcoBannerTransition();
+        stopEcoAutoTimer();
+      } else {
+        resetEcoAutoTimer();
+      }
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopEcoAutoTimer();
+      else resetEcoAutoTimer();
     });
 
     document.getElementById('ecoBannerPrevBtn')?.addEventListener('click', () => {
       setActiveEcoBanner(activeEcoBannerIndex - 1, -1);
+      resetEcoAutoTimer();
     });
     document.getElementById('ecoBannerNextBtn')?.addEventListener('click', () => {
       setActiveEcoBanner(activeEcoBannerIndex + 1, 1);
+      resetEcoAutoTimer();
     });
+    resetEcoAutoTimer();
 
     // 13. Client-Side Localization (17 Live Locales)
     (() => {
