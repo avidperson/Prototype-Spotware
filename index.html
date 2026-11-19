@@ -2942,6 +2942,13 @@
       [dir="rtl"] .left-nav-panel {
         border-left: none;
       }
+      [dir="rtl"] .nav-panel-top {
+        direction: ltr;
+      }
+      [dir="rtl"] .sidebar-filter-box,
+      [dir="rtl"] .nav-home-btn {
+        direction: rtl;
+      }
       [dir="rtl"] .nav-links-list {
         border-right: none;
         margin-right: 0;
@@ -2949,26 +2956,6 @@
       }
       [dir="rtl"] .back-to-top-btn {
         left: 0.75rem;
-      }
-      [dir="rtl"] #themeToggleBtn {
-        left: 75%;
-        right: auto;
-      }
-      [dir="rtl"] #langTriggerBtn {
-        left: 25%;
-        right: auto;
-      }
-      [dir="rtl"] body:not([data-active-audience="home"]) #themeToggleBtn {
-        left: 80%;
-      }
-      [dir="rtl"] body:not([data-active-audience="home"]) #sidebarCycleBtn {
-        left: 60%;
-      }
-      [dir="rtl"] body:not([data-active-audience="home"]) #openAiCopilotBtn {
-        left: 40%;
-      }
-      [dir="rtl"] body:not([data-active-audience="home"]) #langTriggerBtn {
-        left: 20%;
       }
       [dir="rtl"] .eco-carousel-btn svg {
         transform: scaleX(-1);
@@ -4783,6 +4770,14 @@
       }
     }
 
+    function getMobileKeyboardGap() {
+      if (!mobileSearchMq.matches) return 10;
+      const vv = window.visualViewport;
+      const vvKeyboard = Boolean(vv && (vv.offsetTop + vv.height) < window.innerHeight - 24);
+      const inputFocused = document.activeElement === heroSearchInput || document.activeElement === headerSearchInput;
+      return (vvKeyboard || inputFocused) ? 0 : 10;
+    }
+
     function getMobileViewportMetrics() {
       const vv = window.visualViewport;
       const vvTop = vv ? Math.max(0, Math.round(vv.offsetTop)) : 0;
@@ -4839,7 +4834,7 @@
 
       let shift = 0;
       if (mobileSearchMq.matches) {
-        const limitBottom = vvBottom - 10;
+        const limitBottom = vvBottom - getMobileKeyboardGap();
         const minTop = visibleHeaderBottom + 8;
         shift = Math.max(
           Math.round(minTop - restingTop),
@@ -4953,8 +4948,8 @@
           const restBottom = window.innerHeight - 10;
           const restTop = restBottom - barH;
           const minShift = Math.round((visibleHeaderBottom + 8) - restTop);
-          const targetShift = Math.round((vvBottom - 10) - restBottom);
-          const shift = Math.max(minShift, Math.min(0, targetShift));
+          const targetShift = Math.round((vvBottom - getMobileKeyboardGap()) - restBottom);
+          const shift = Math.max(minShift, targetShift);
           const prevShift = parseFloat(headerSearchShell.style.getPropertyValue('--mobile-header-search-shift')) || 0;
           headerSearchShell.style.setProperty('--mobile-header-search-shift', `${shift}px`);
           if (document.body.dataset.headerSearch === 'open' && !reducedMotionMq.matches &&
