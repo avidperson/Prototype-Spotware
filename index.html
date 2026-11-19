@@ -197,10 +197,18 @@
     a {
       color: inherit;
       text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    button, input {
+    button, input, select, summary {
       font: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus:not(:focus-visible),
+    a:focus:not(:focus-visible),
+    summary:focus:not(:focus-visible) {
+      outline: none;
     }
 
     kbd {
@@ -328,13 +336,8 @@
       object-fit: contain;
     }
 
-    .main-container {
-      transition: filter 0.18s ease, opacity 0.18s ease;
-    }
     body:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
     body[data-mobile-nav="open"] .main-container {
-      filter: blur(5px);
-      opacity: 0.45;
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
@@ -343,11 +346,6 @@
     body:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
     body[data-mobile-nav="open"] .main-container {
       overflow-y: hidden;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .main-container {
-        transition: none;
-      }
     }
 
     .header-actions {
@@ -765,26 +763,8 @@
       flex-direction: column;
     }
 
-    .main-container > .main-inner,
-    .main-container > .site-footer {
-      transition: filter 0.18s ease, opacity 0.18s ease;
-    }
     .main-container:has(dialog.home-modal[open]) {
       overflow: hidden;
-    }
-    .main-container:has(dialog.home-modal[open]) > .main-inner,
-    .main-container:has(dialog.home-modal[open]) > .site-footer {
-      filter: blur(5px);
-      opacity: 0.45;
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .main-container > .main-inner,
-      .main-container > .site-footer {
-        transition: none;
-      }
     }
 
     body[data-active-audience="home"] .main-container {
@@ -866,10 +846,13 @@
       max-width: 720px;
       margin: 0 auto;
       transform: translateY(0);
-      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), filter 0.18s ease, opacity 0.18s ease;
     }
     body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell {
       transform: translateY(var(--hero-search-shift, 0px));
+      z-index: 39;
+    }
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .omni-search-shell {
       z-index: 39;
     }
     body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-bar {
@@ -886,7 +869,22 @@
     body[data-active-audience="home"][data-hero-search="open"] .hero-copy,
     body[data-active-audience="home"][data-hero-search="open"] .hero-quick-links,
     body[data-active-audience="home"][data-hero-search="open"] .ecosystem-banners-grid,
-    body[data-active-audience="home"][data-hero-search="open"] .site-footer {
+    body[data-active-audience="home"][data-hero-search="open"] .site-footer,
+    body:has(dialog.home-modal[open]) .hero-copy,
+    body:has(dialog.home-modal[open]) .omni-search-shell,
+    body:has(dialog.home-modal[open]) .hero-quick-links,
+    body:has(dialog.home-modal[open]) .ecosystem-banners-grid,
+    body:has(dialog.home-modal[open]) .site-footer,
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) .hero-copy,
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) .omni-search-shell,
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) .hero-quick-links,
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) .ecosystem-banners-grid,
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) .site-footer,
+    body[data-mobile-nav="open"] .hero-copy,
+    body[data-mobile-nav="open"] .omni-search-shell,
+    body[data-mobile-nav="open"] .hero-quick-links,
+    body[data-mobile-nav="open"] .ecosystem-banners-grid,
+    body[data-mobile-nav="open"] .site-footer {
       filter: blur(5px);
       opacity: 0.45;
       pointer-events: none;
@@ -1003,8 +1001,7 @@
       background: var(--bg-subtle);
       border-color: var(--border-strong);
     }
-    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-clear-btn,
-    .omni-search-shell .omni-bar:has(.omni-input:not(:placeholder-shown)) .omni-clear-btn {
+    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-clear-btn {
       display: inline-flex;
     }
 
@@ -1426,11 +1423,27 @@
       justify-content: center;
       overflow: hidden;
       opacity: 0;
-      transition: opacity 0.2s ease, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
+      transition: opacity 0.2s ease, filter 0.18s ease, overlay 0.2s allow-discrete, display 0.2s allow-discrete;
     }
     dialog.home-modal[open] {
       display: flex;
       opacity: 1;
+    }
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) dialog.home-modal[open],
+    body[data-mobile-nav="open"] dialog.home-modal[open] {
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) dialog.home-modal[open] .home-modal-surface,
+    body[data-mobile-nav="open"] dialog.home-modal[open] .home-modal-surface {
+      filter: blur(5px);
+    }
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) dialog.home-modal[open] .home-modal-header,
+    body:has(#langPopover:is(:popover-open, .\:popover-open)) dialog.home-modal[open] .home-modal-body,
+    body[data-mobile-nav="open"] dialog.home-modal[open] .home-modal-header,
+    body[data-mobile-nav="open"] dialog.home-modal[open] .home-modal-body {
+      opacity: 0.45;
     }
     .home-modal-surface {
       width: min(860px, 100%);
@@ -1446,7 +1459,7 @@
       overflow: hidden;
       opacity: 1;
       transform: translateY(0) scale(1);
-      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, filter 0.18s ease;
     }
     @starting-style {
       dialog.home-modal[open] {
@@ -1473,6 +1486,7 @@
       padding: 1rem 1.25rem;
       border-bottom: 1px solid var(--border);
       background: var(--bg-surface);
+      transition: opacity 0.18s ease;
     }
     .home-modal-title-wrap {
       flex: 1 1 240px;
@@ -1594,6 +1608,7 @@
       overflow-y: auto;
       overscroll-behavior: contain;
       padding: 1.1rem 1.25rem 1.25rem;
+      transition: opacity 0.18s ease;
     }
     .home-modal-body .faq-accordion-section {
       gap: 0.25rem;
@@ -1864,6 +1879,9 @@
     @media (max-width: 560px) {
       :root {
         --header-height: 48px;
+      }
+      * {
+        -webkit-tap-highlight-color: transparent;
       }
       html {
         height: 100%;
@@ -3242,8 +3260,7 @@
     function openSidebarMenu() {
       if (overlayDrawerMq.matches) {
         closeLangPopover();
-        document.getElementById('instantResultsBox')?.classList.remove('active');
-        delete document.body.dataset.heroSearch;
+        closeAllInlineResults();
         document.body.dataset.mobileNav = 'open';
         return;
       }
@@ -3262,7 +3279,11 @@
       document.body.dataset.sidebarMode = mode;
     }
 
-    mobileNavBackdrop?.addEventListener('click', closeMobileNav);
+    mobileNavBackdrop?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeMobileNav();
+    });
 
     function syncSidebarToViewport(isOverlay) {
       if (!isOverlay) {
@@ -3485,6 +3506,7 @@
         cancelModalResize(dialog);
         const trigger = lastModalTrigger.get(dialog);
         lastModalTrigger.delete(dialog);
+        if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
         if (trigger && (!document.activeElement || document.activeElement === document.body || dialog.contains(document.activeElement))) {
           trigger.focus({ preventScroll: true });
         }
@@ -3499,8 +3521,12 @@
         dialog.addEventListener('pointerdown', (e) => {
           pressedOutside = isOutsideSurface(e);
         });
-        dialog.addEventListener('pointerup', (e) => {
-          if (pressedOutside && isOutsideSurface(e)) dialog.close();
+        dialog.addEventListener('click', (e) => {
+          if (pressedOutside && isOutsideSurface(e)) {
+            e.preventDefault();
+            e.stopPropagation();
+            dialog.close();
+          }
           pressedOutside = false;
         });
       }
@@ -3772,7 +3798,7 @@
       const wasOpen = document.body.dataset.heroSearch === 'open';
       const isClosing = Boolean(document.body.dataset.heroSearchClosing);
 
-      if (immediate || !mobileSearchMq.matches || reducedMotionMq.matches || (!wasOpen && !isClosing)) {
+      if (immediate || reducedMotionMq.matches || (!wasOpen && !isClosing)) {
         cancelHeroClose();
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
@@ -4221,10 +4247,104 @@
     document.getElementById('heroClearSearchBtn')?.addEventListener('click', (e) => {
       e.stopPropagation();
       heroPointerStartedInside = false;
-      heroSearchInput.value = '';
       closeHeroResults();
       e.currentTarget.blur();
     });
+
+    const blurTargets = {
+      heroCopy: document.querySelector('.hero-copy'),
+      omniSearch: heroSearchShell,
+      heroQuickLinks: document.querySelector('.hero-quick-links'),
+      ecoBanners: document.querySelector('.ecosystem-banners-grid'),
+      siteFooter: document.querySelector('.site-footer'),
+      headerActions: document.querySelector('.header-actions'),
+      sidebarCycleBtn: document.getElementById('sidebarCycleBtn'),
+      popularDialog: popularGuidesDialog,
+      faqDialog: faqDialog,
+      langPopover: document.getElementById('langPopover'),
+      mainContent: document.getElementById('mainContent')
+    };
+
+    let suppressMainPointerUntil = 0;
+    let deferredInertSyncTimer = 0;
+
+    function isLangPopoverOpen() {
+      const pop = blurTargets.langPopover;
+      if (!pop) return false;
+      try {
+        return pop.matches(':popover-open') || pop.classList.contains(':popover-open');
+      } catch {
+        return false;
+      }
+    }
+
+    function isPointInsideRect(x, y, rect) {
+      return Boolean(rect && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
+    }
+
+    function syncBlurredInertState() {
+      const heroOpen = document.body.dataset.heroSearch === 'open' || document.body.dataset.heroSearchClosing === 'fading';
+      const modalOpen = Boolean(popularGuidesDialog?.open || faqDialog?.open);
+      const langOpen = isLangPopoverOpen();
+      const mobileNavOpen = document.body.dataset.mobileNav === 'open';
+      const keepMainSuppressed = suppressMainPointerUntil > Date.now();
+      const homeBlurred = heroOpen || modalOpen || langOpen || mobileNavOpen || keepMainSuppressed;
+      const searchBlurred = modalOpen || langOpen || mobileNavOpen || keepMainSuppressed;
+      const modalBlurred = langOpen || mobileNavOpen || keepMainSuppressed;
+      const mobileBottomBlurred = mobileSearchMq.matches && (heroOpen || modalOpen);
+
+      if (blurTargets.heroCopy) blurTargets.heroCopy.inert = homeBlurred;
+      if (blurTargets.heroQuickLinks) blurTargets.heroQuickLinks.inert = homeBlurred;
+      if (blurTargets.ecoBanners) blurTargets.ecoBanners.inert = homeBlurred;
+      if (blurTargets.siteFooter) blurTargets.siteFooter.inert = homeBlurred;
+      if (blurTargets.omniSearch) blurTargets.omniSearch.inert = searchBlurred;
+      if (blurTargets.popularDialog) blurTargets.popularDialog.inert = Boolean(popularGuidesDialog?.open && modalBlurred);
+      if (blurTargets.faqDialog) blurTargets.faqDialog.inert = Boolean(faqDialog?.open && modalBlurred);
+      if (blurTargets.headerActions) blurTargets.headerActions.inert = Boolean(mobileSearchMq.matches && heroOpen);
+      if (blurTargets.sidebarCycleBtn) blurTargets.sidebarCycleBtn.inert = mobileBottomBlurred;
+    }
+
+    if ('MutationObserver' in window) {
+      const blurObserver = new MutationObserver(() => syncBlurredInertState());
+      blurObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['data-hero-search', 'data-hero-search-closing', 'data-mobile-nav']
+      });
+      if (popularGuidesDialog) blurObserver.observe(popularGuidesDialog, { attributes: true, attributeFilter: ['open'] });
+      if (faqDialog) blurObserver.observe(faqDialog, { attributes: true, attributeFilter: ['open'] });
+    }
+    mobileSearchMq.addEventListener('change', syncBlurredInertState);
+
+    window.addEventListener('pointerdown', (e) => {
+      if (!isLangPopoverOpen()) return;
+      const pop = blurTargets.langPopover;
+      const trigger = document.getElementById('langTriggerBtn');
+      if (pop?.contains(e.target) || trigger?.contains(e.target)) return;
+      const mainRect = blurTargets.mainContent?.getBoundingClientRect();
+      if (isPointInsideRect(e.clientX, e.clientY, mainRect)) {
+        suppressMainPointerUntil = Date.now() + 450;
+        syncBlurredInertState();
+        clearTimeout(deferredInertSyncTimer);
+        deferredInertSyncTimer = setTimeout(() => {
+          suppressMainPointerUntil = 0;
+          syncBlurredInertState();
+        }, 460);
+      }
+    }, true);
+
+    window.addEventListener('click', (e) => {
+      if (suppressMainPointerUntil > Date.now()) {
+        const mainRect = blurTargets.mainContent?.getBoundingClientRect();
+        if (blurTargets.mainContent?.contains(e.target) || isPointInsideRect(e.clientX, e.clientY, mainRect)) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          suppressMainPointerUntil = 0;
+          clearTimeout(deferredInertSyncTimer);
+          setTimeout(syncBlurredInertState, 0);
+        }
+      }
+    }, true);
 
     document.getElementById('langPopover')?.addEventListener('toggle', (e) => {
       if (e.newState === 'open') {
@@ -4232,7 +4352,9 @@
         if (overlayDrawerMq.matches) closeMobileNav();
         SUPPORTED_LANGS.forEach(preloadBannerImages);
       }
+      syncBlurredInertState();
     });
+    syncBlurredInertState();
     document.getElementById('langTriggerBtn')?.addEventListener('pointerenter', () => {
       SUPPORTED_LANGS.forEach(preloadBannerImages);
     }, { once: true });
@@ -4471,11 +4593,11 @@
         }
         if (document.body.dataset.heroSearch === 'open') {
           e.preventDefault();
-          closeAllInlineResults();
+          closeHeroResults();
           return;
         }
       }
-      if (openModal) return;
+      if (openModal || isLangPopoverOpen() || document.body.dataset.mobileNav === 'open') return;
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         focusActiveSearchBar();
@@ -4488,6 +4610,7 @@
         e.preventDefault();
         focusActiveSearchBar();
       } else if (e.key === '[') {
+        if (document.body.dataset.heroSearch === 'open') return;
         e.preventDefault();
         sidebarCycleBtn.click();
       }
@@ -4663,7 +4786,7 @@
     function autoAdvanceEcoBanner() {
       if (!mobileSearchMq.matches || ecoDragState || document.hidden) return;
       if (document.body.dataset.activeAudience !== 'home') return;
-      if (document.body.dataset.heroSearch === 'open' || document.body.dataset.mobileNav === 'open' || document.querySelector('dialog.home-modal[open]')) return;
+      if (document.body.dataset.heroSearch === 'open' || document.body.dataset.mobileNav === 'open' || isLangPopoverOpen() || document.querySelector('dialog.home-modal[open]')) return;
       // direction = 1 slides right-to-left in LTR languages and left-to-right in RTL languages
       setActiveEcoBanner(activeEcoBannerIndex + 1, 1);
     }
