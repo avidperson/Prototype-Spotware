@@ -4770,12 +4770,40 @@
       }
     }
 
-    function getMobileKeyboardGap() {
-      if (!mobileSearchMq.matches) return 10;
+    let lastMobileViewportWidth = window.innerWidth;
+    let baselineMobileViewportHeight = Math.max(
+      window.innerHeight,
+      window.visualViewport ? Math.round(window.visualViewport.offsetTop + window.visualViewport.height) : 0
+    );
+
+    function syncBaselineMobileViewportHeight() {
       const vv = window.visualViewport;
-      const vvKeyboard = Boolean(vv && (vv.offsetTop + vv.height) < window.innerHeight - 24);
+      const vvExtent = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
+      if (Math.abs(window.innerWidth - lastMobileViewportWidth) > 2) {
+        lastMobileViewportWidth = window.innerWidth;
+        baselineMobileViewportHeight = Math.max(window.innerHeight, vvExtent);
+        return;
+      }
       const inputFocused = document.activeElement === heroSearchInput || document.activeElement === headerSearchInput;
-      return (vvKeyboard || inputFocused) ? 0 : 10;
+      const vvMatchesWindow = !vv || Math.abs(vvExtent - window.innerHeight) < 24;
+      if (!inputFocused && vvMatchesWindow) {
+        baselineMobileViewportHeight = Math.max(window.innerHeight, vvExtent);
+      } else {
+        baselineMobileViewportHeight = Math.max(baselineMobileViewportHeight, window.innerHeight, vvExtent);
+      }
+    }
+
+    function isMobileKeyboardOpen() {
+      if (!mobileSearchMq.matches) return false;
+      syncBaselineMobileViewportHeight();
+      const vv = window.visualViewport;
+      const vvBottomPx = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
+      return vvBottomPx < (baselineMobileViewportHeight - 60) ||
+             window.innerHeight < (baselineMobileViewportHeight - 60);
+    }
+
+    function getMobileKeyboardGap() {
+      return isMobileKeyboardOpen() ? 0 : 10;
     }
 
     function getMobileViewportMetrics() {
@@ -4944,12 +4972,16 @@
         if (mobileSearchMq.matches) {
           const barEl = headerSearchShell.querySelector('.omni-bar');
           const dropdownEl = headerResultsBox.parentElement;
-          const barH = barEl ? barEl.offsetHeight : 44;
-          const restBottom = window.innerHeight - 10;
-          const restTop = restBottom - barH;
-          const minShift = Math.round((visibleHeaderBottom + 8) - restTop);
-          const targetShift = Math.round((vvBottom - getMobileKeyboardGap()) - restBottom);
-          const shift = Math.max(minShift, targetShift);
+          const barRect = barEl ? barEl.getBoundingClientRect() : headerSearchShell.getBoundingClientRect();
+          const currentY = getCurrentTranslateY(headerSearchShell);
+          const restingTop = barRect.top - currentY;
+          const restingBottom = barRect.bottom - currentY;
+          const limitBottom = vvBottom - getMobileKeyboardGap();
+          const minTop = visibleHeaderBottom + 8;
+          const shift = Math.max(
+            Math.round(minTop - restingTop),
+            Math.round(limitBottom - restingBottom)
+          );
           const prevShift = parseFloat(headerSearchShell.style.getPropertyValue('--mobile-header-search-shift')) || 0;
           headerSearchShell.style.setProperty('--mobile-header-search-shift', `${shift}px`);
           if (document.body.dataset.headerSearch === 'open' && !reducedMotionMq.matches &&
@@ -4958,8 +4990,8 @@
           }
           const gapPx = dropdownEl ? (parseFloat(getComputedStyle(dropdownEl).rowGap) || 8) * 2 + 4 : 18;
           const topBound = visibleHeaderBottom + 8;
-          const finalBarTop = restTop + shift;
-          const currentBarTop = barEl ? barEl.getBoundingClientRect().top : finalBarTop;
+          const finalBarTop = restingTop + shift;
+          const currentBarTop = barRect.top;
           suggFits = (finalBarTop - topBound) >= (suggH + 8);
           available = Math.floor((finalBarTop - suggH - gapPx) - topBound);
           resFits = suggFits && available >= MIN_RESULTS_SPACE;
@@ -5020,7 +5052,7 @@
       syncSearchUiToScreenSize();
       if (!mobileSearchMq.matches) return;
       mobileViewportTimers.forEach((id) => clearTimeout(id));
-      mobileViewportTimers = [100, 260].map((delay) => setTimeout(() => {
+      mobileViewportTimers = [60, 160, 320, 480].map((delay) => setTimeout(() => {
         const vv = window.visualViewport;
         const keyboardProbablyClosed = !vv || vv.height >= window.innerHeight - 24;
         if (keyboardProbablyClosed && window.scrollY !== 0) {
