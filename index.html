@@ -372,10 +372,7 @@
       color: var(--text-primary);
     }
     #langTriggerBtn {
-      width: 36px;
-      height: 36px;
       padding: 0;
-      justify-content: center;
     }
 
     /* ==========================================================================
@@ -1852,11 +1849,29 @@
         padding-bottom: 52px;
         overflow: hidden;
       }
+      .workspace-shell {
+        flex: none;
+        height: calc(var(--mobile-full-height, 100dvh) - var(--header-height) - 52px);
+      }
       .main-inner {
         padding: 1.25rem 1.15rem 3.5rem;
       }
       body[data-active-audience="home"] .main-inner {
-        padding: clamp(0.25rem, 1.5vh, 1.1rem) 1.15rem;
+        padding: clamp(0.25rem, calc(var(--mobile-vh, 1vh) * 1.5), 1.1rem) 1.15rem;
+      }
+      .hero-section {
+        padding: clamp(0.15rem, var(--mobile-vh, 1vh), 1rem) 0;
+        gap: clamp(0.3rem, calc(var(--mobile-vh, 1vh) * 1.65), 1.5rem);
+      }
+      .hero-copy h1 {
+        margin: 0 0 clamp(0.55rem, calc(var(--mobile-vh, 1vh) * 1.7), 1.05rem);
+        font-size: clamp(1.32rem, min(5.6vw, calc(var(--mobile-vh, 1vh) * 4.6)), 2.55rem);
+      }
+      .hero-copy p {
+        font-size: clamp(0.78rem, min(3.4vw, calc(var(--mobile-vh, 1vh) * 2.15)), 0.98rem);
+      }
+      .omni-search-shell {
+        gap: clamp(0.3rem, calc(var(--mobile-vh, 1vh) * 1.2), 0.85rem);
       }
       .top-bar {
         position: fixed;
@@ -1898,7 +1913,7 @@
       #sidebarCycleBtn {
         position: fixed;
         left: 50%;
-        top: calc(var(--mobile-vv-bottom, 100dvh) - 44px);
+        top: calc(var(--mobile-vv-top, 0px) + var(--mobile-full-height, 100dvh) - 44px);
         bottom: auto;
         transform: translateX(-50%);
         z-index: 42;
@@ -1937,7 +1952,7 @@
         position: fixed;
         left: 0;
         right: 0;
-        top: calc(var(--mobile-vv-bottom, 100dvh) - 52px);
+        top: calc(var(--mobile-vv-top, 0px) + var(--mobile-full-height, 100dvh) - 52px);
         bottom: auto;
         width: 100%;
         height: 52px;
@@ -1970,16 +1985,16 @@
         left: 0;
         right: 0;
         bottom: auto;
-        height: calc(var(--mobile-vv-height, 100dvh) - var(--header-height) - 52px);
+        height: var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px));
       }
       .left-nav-panel {
-        top: calc(var(--mobile-vv-bottom, 100dvh) - 52px);
+        top: var(--mobile-nav-bottom, calc(100dvh - 52px));
         bottom: auto;
         left: 0;
         right: 0;
         width: 100%;
         height: auto;
-        max-height: calc(var(--mobile-vv-height, 100dvh) - var(--header-height) - 52px);
+        max-height: var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px));
         border-top: 1px solid var(--border);
         border-right: none;
         border-bottom: none;
@@ -2225,7 +2240,7 @@
         display: block;
         flex: 0 1 auto;
         min-width: 96px;
-        width: min(clamp(120px, 56vw, 240px), calc((100dvh - var(--header-height) - 300px) * 1.45));
+        width: min(clamp(120px, 56vw, 240px), calc((var(--mobile-full-height, 100dvh) - var(--header-height) - 300px) * 1.45));
         max-width: min(100%, clamp(120px, 56vw, 240px));
         overflow: hidden;
         border-radius: var(--radius-md);
@@ -2450,7 +2465,7 @@
       <button type="button" class="icon-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Switch color scheme">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </button>
-      <button type="button" class="ghost-btn" id="langTriggerBtn" popovertarget="langPopover" aria-label="Select Language"><img class="lang-flag-icon" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f1ec-1f1e7.svg" alt="EN" width="19" height="19"></button>
+      <button type="button" class="icon-btn" id="langTriggerBtn" popovertarget="langPopover" aria-label="Select Language"><img class="lang-flag-icon" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f1ec-1f1e7.svg" alt="EN" width="19" height="19"></button>
     </div>
   </header>
 
@@ -3113,13 +3128,15 @@
       syncSidebarToViewport(overlayDrawerMq.matches);
     });
 
-    // Clicking any section summary in the left menu expands/collapses its links in place
+    // Clicking any section summary in the left menu opens it exclusively (closing any previously open section)
     sidebarGroups.forEach((group) => {
       const summary = group.querySelector(':scope > summary');
       summary?.addEventListener('click', (e) => {
         e.preventDefault();
-        const isOpen = group.open && !group.classList.contains('is-closing');
-        setNavGroupOpen(group, !isOpen);
+        const willOpen = !(group.open && !group.classList.contains('is-closing'));
+        sidebarGroups.forEach((other) => {
+          setNavGroupOpen(other, other === group ? willOpen : false);
+        });
       });
     });
 
@@ -3663,16 +3680,43 @@
       return { vvTop, vvHeight, vvBottom, visibleHeaderBottom: vvTop + headerHeight };
     }
 
+    let lastMobileWidth = window.innerWidth;
+    let mobileFullHeight = 0;
+
     function syncMobileViewportVars(metrics) {
       const rootStyle = document.documentElement.style;
       if (mobileSearchMq.matches) {
+        const widthChanged = Math.abs(window.innerWidth - lastMobileWidth) > 2;
+        const filterInput = document.getElementById('sidebarFilterInput');
+        const inputFocused = document.activeElement === heroSearchInput || document.activeElement === filterInput;
+        const keyboardContext = inputFocused || document.body.dataset.heroSearch === 'open' || document.body.dataset.mobileNav === 'open';
+        if (widthChanged) {
+          lastMobileWidth = window.innerWidth;
+          mobileFullHeight = metrics.vvHeight;
+        } else if (!mobileFullHeight || !keyboardContext || metrics.vvHeight > mobileFullHeight) {
+          mobileFullHeight = metrics.vvHeight;
+        }
+        const keyboardOpen = mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50;
+        const headerH = Math.max(0, metrics.visibleHeaderBottom - metrics.vvTop);
+        const navBottom = keyboardOpen ? metrics.vvBottom : (metrics.vvBottom - 52);
+        const navMaxHeight = Math.max(120, metrics.vvHeight - headerH - (keyboardOpen ? 0 : 52));
         rootStyle.setProperty('--mobile-vv-top', `${metrics.vvTop}px`);
         rootStyle.setProperty('--mobile-vv-height', `${metrics.vvHeight}px`);
         rootStyle.setProperty('--mobile-vv-bottom', `${metrics.vvBottom}px`);
+        rootStyle.setProperty('--mobile-full-height', `${mobileFullHeight}px`);
+        rootStyle.setProperty('--mobile-vh', `${mobileFullHeight / 100}px`);
+        rootStyle.setProperty('--mobile-nav-bottom', `${navBottom}px`);
+        rootStyle.setProperty('--mobile-nav-max-height', `${navMaxHeight}px`);
       } else {
+        mobileFullHeight = 0;
+        lastMobileWidth = window.innerWidth;
         rootStyle.removeProperty('--mobile-vv-top');
         rootStyle.removeProperty('--mobile-vv-height');
         rootStyle.removeProperty('--mobile-vv-bottom');
+        rootStyle.removeProperty('--mobile-full-height');
+        rootStyle.removeProperty('--mobile-vh');
+        rootStyle.removeProperty('--mobile-nav-bottom');
+        rootStyle.removeProperty('--mobile-nav-max-height');
       }
     }
 
