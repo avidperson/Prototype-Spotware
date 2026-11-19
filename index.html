@@ -4770,42 +4770,6 @@
       }
     }
 
-    let lastMobileViewportWidth = window.innerWidth;
-    let baselineMobileViewportHeight = Math.max(
-      window.innerHeight,
-      window.visualViewport ? Math.round(window.visualViewport.offsetTop + window.visualViewport.height) : 0
-    );
-
-    function syncBaselineMobileViewportHeight() {
-      const vv = window.visualViewport;
-      const vvExtent = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
-      if (Math.abs(window.innerWidth - lastMobileViewportWidth) > 2) {
-        lastMobileViewportWidth = window.innerWidth;
-        baselineMobileViewportHeight = Math.max(window.innerHeight, vvExtent);
-        return;
-      }
-      const inputFocused = document.activeElement === heroSearchInput || document.activeElement === headerSearchInput;
-      const vvMatchesWindow = !vv || Math.abs(vvExtent - window.innerHeight) < 24;
-      if (!inputFocused && vvMatchesWindow) {
-        baselineMobileViewportHeight = Math.max(window.innerHeight, vvExtent);
-      } else {
-        baselineMobileViewportHeight = Math.max(baselineMobileViewportHeight, window.innerHeight, vvExtent);
-      }
-    }
-
-    function isMobileKeyboardOpen() {
-      if (!mobileSearchMq.matches) return false;
-      syncBaselineMobileViewportHeight();
-      const vv = window.visualViewport;
-      const vvBottomPx = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
-      return vvBottomPx < (baselineMobileViewportHeight - 60) ||
-             window.innerHeight < (baselineMobileViewportHeight - 60);
-    }
-
-    function getMobileKeyboardGap() {
-      return isMobileKeyboardOpen() ? 0 : 10;
-    }
-
     function getMobileViewportMetrics() {
       const vv = window.visualViewport;
       const vvTop = vv ? Math.max(0, Math.round(vv.offsetTop)) : 0;
@@ -4862,7 +4826,7 @@
 
       let shift = 0;
       if (mobileSearchMq.matches) {
-        const limitBottom = vvBottom - getMobileKeyboardGap();
+        const limitBottom = vvBottom - 10;
         const minTop = visibleHeaderBottom + 8;
         shift = Math.max(
           Math.round(minTop - restingTop),
@@ -4976,7 +4940,7 @@
           const currentY = getCurrentTranslateY(headerSearchShell);
           const restingTop = barRect.top - currentY;
           const restingBottom = barRect.bottom - currentY;
-          const limitBottom = vvBottom - getMobileKeyboardGap();
+          const limitBottom = vvBottom - 10;
           const minTop = visibleHeaderBottom + 8;
           const shift = Math.max(
             Math.round(minTop - restingTop),
