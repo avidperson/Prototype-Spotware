@@ -870,6 +870,10 @@
     body[data-active-audience="home"][data-hero-search="open"] .hero-quick-links,
     body[data-active-audience="home"][data-hero-search="open"] .ecosystem-banners-grid,
     body[data-active-audience="home"][data-hero-search="open"] .site-footer,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .hero-copy,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .hero-quick-links,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .ecosystem-banners-grid,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .site-footer,
     body:has(dialog.home-modal[open]) .hero-copy,
     body:has(dialog.home-modal[open]) .omni-search-shell,
     body:has(dialog.home-modal[open]) .hero-quick-links,
@@ -2050,7 +2054,9 @@
         transition: filter 0.18s ease, opacity 0.18s ease;
       }
       body[data-hero-search="open"] .header-actions,
-      body[data-hero-search="open"] #sidebarCycleBtn {
+      body[data-hero-search="open"] #sidebarCycleBtn,
+      body[data-hero-search-closing="sliding"] .header-actions,
+      body[data-hero-search-closing="sliding"] #sidebarCycleBtn {
         filter: blur(5px);
         opacity: 0.45;
         pointer-events: none;
@@ -2058,7 +2064,9 @@
         -webkit-user-select: none;
       }
       body[data-hero-search="open"] #themeToggleBtn,
-      body[data-hero-search="open"] #langTriggerBtn {
+      body[data-hero-search="open"] #langTriggerBtn,
+      body[data-hero-search-closing="sliding"] #themeToggleBtn,
+      body[data-hero-search-closing="sliding"] #langTriggerBtn {
         pointer-events: none;
       }
       body[data-active-audience="home"][data-hero-search="open"] .workspace-shell,
@@ -2303,7 +2311,28 @@
       }
       .home-modal-select {
         width: 100%;
-        font-size: 0.75rem;
+        font-size: 0.84rem;
+        padding: 0.44rem 0.72rem;
+      }
+      .home-modal-controls .ghost-btn {
+        font-size: 0.84rem;
+        line-height: 1.3;
+        padding: 0.44rem 0.72rem;
+      }
+      .home-modal-select option {
+        font-size: 0.9rem;
+        padding: 0.52rem 0.72rem;
+        line-height: 1.35;
+      }
+      @supports (appearance: base-select) {
+        .home-modal-select::picker(select) {
+          padding: 0.35rem;
+        }
+        .home-modal-select option {
+          font-size: 0.9rem;
+          padding: 0.52rem 0.72rem;
+          line-height: 1.35;
+        }
       }
       .home-modal-close {
         display: none;
@@ -4283,7 +4312,7 @@
     }
 
     function syncBlurredInertState() {
-      const heroOpen = document.body.dataset.heroSearch === 'open' || document.body.dataset.heroSearchClosing === 'fading';
+      const heroOpen = document.body.dataset.heroSearch === 'open' || Boolean(document.body.dataset.heroSearchClosing);
       const modalOpen = Boolean(popularGuidesDialog?.open || faqDialog?.open);
       const langOpen = isLangPopoverOpen();
       const mobileNavOpen = document.body.dataset.mobileNav === 'open';
