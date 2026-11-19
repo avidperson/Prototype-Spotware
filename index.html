@@ -18,12 +18,7 @@
         document.documentElement.dir = savedLang === "ar" ? "rtl" : "ltr";
         document.documentElement.classList.add("i18n-pending");
       }
-      var validAuds = ["home", "traders", "algo", "developers", "partners", "resources"];
-      var hashAud = (location.hash || "").replace(/^#/, "");
-      var savedAud = validAuds.indexOf(hashAud) !== -1 ? hashAud : sessionStorage.getItem("ctrader_help_audience");
-      if (savedAud && validAuds.indexOf(savedAud) !== -1 && savedAud !== "home") {
-        document.documentElement.classList.add("view-pending");
-      }
+      sessionStorage.removeItem("ctrader_help_audience");
     } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -162,12 +157,11 @@
       }
     }
 
-    html.i18n-pending body,
-    html.view-pending body {
+    html.i18n-pending body {
       opacity: 0;
     }
 
-    [hidden]:not([hidden="until-found"]) {
+    [hidden] {
       display: none !important;
     }
 
@@ -334,114 +328,8 @@
       object-fit: contain;
     }
 
-    .header-search-shell {
-      position: relative;
-      flex: 1;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      min-width: 0;
-      max-width: 520px;
-      z-index: 45;
-    }
-    .header-search-shell .omni-bar {
-      width: 100%;
-      border-radius: var(--radius-md);
-      padding: 0.24rem 0.34rem 0.24rem 0.7rem;
-      gap: 0.4rem;
-    }
-    .header-search-shell .omni-input {
-      font-size: 0.8rem;
-      padding: 0.22rem 0;
-    }
-    .header-search-shell .btn-subtle-accent {
-      border-radius: var(--radius-sm);
-      padding: 0.28rem 0.65rem;
-      font-size: 0.74rem;
-      flex-shrink: 0;
-    }
-    body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-bar {
-      border-color: var(--accent);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
-    }
-    .header-search-dropdown {
-      position: absolute;
-      top: calc(100% + 12px);
-      left: 0;
-      right: 0;
-      z-index: 50;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      pointer-events: none;
-    }
-    .header-suggestions-card {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-md);
-      padding: 0.38rem 0.65rem;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-      min-width: 0;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateY(-6px);
-      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
-    }
-    body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-sugg-fit="true"] .header-suggestions-card {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateY(0);
-      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
-    }
-    .header-suggestions-label {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      flex-shrink: 0;
-    }
-    .header-suggestions-card .prompt-chips-row {
-      flex: 1;
-      min-width: 0;
-      padding: 0.05rem 0.25rem;
-      justify-content: flex-start;
-    }
-    .header-suggestions-card .prompt-chip {
-      background: var(--bg-subtle);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      padding: 0.18rem 0.52rem;
-      font-size: 0.68rem;
-      font-weight: 500;
-    }
-    .header-suggestions-card .prompt-chip:hover {
-      border-color: var(--border-strong);
-      color: var(--text-primary);
-    }
-    .header-search-dropdown .instant-results-box {
-      position: static;
-      max-height: none;
-    }
-    body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-res-fit="true"] .header-search-dropdown .instant-results-box.active {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateY(0);
-      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
-    }
-
     .main-container {
       transition: filter 0.18s ease, opacity 0.18s ease;
-    }
-    body:not([data-active-audience="home"])[data-header-search="open"] .main-container,
-    body:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
-    body[data-mobile-nav="open"] .main-container {
-      filter: blur(5px);
-      opacity: 0.45;
-      pointer-events: none;
     }
     body:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
     body[data-mobile-nav="open"] .main-container {
@@ -449,7 +337,6 @@
       opacity: 0.75;
     }
     body[data-hero-search="open"] .main-container,
-    body[data-header-search="open"] .main-container,
     body:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
     body[data-mobile-nav="open"] .main-container {
       overflow-y: hidden;
@@ -458,22 +345,6 @@
       .main-container {
         transition: none;
       }
-    }
-
-    /* Hide top AI search bar when on the Home page; show it when viewing any section */
-    body[data-active-audience="home"] .header-search-shell,
-    body[data-active-audience="home"] #openAiCopilotBtn {
-      display: none;
-    }
-    @media (min-width: 561px) {
-      #openAiCopilotBtn {
-        display: none;
-      }
-    }
-
-    /* Hide Home AI hero when viewing a section */
-    body:not([data-active-audience="home"]) .hero-section {
-      display: none;
     }
 
     .header-actions {
@@ -786,10 +657,6 @@
       overflow: visible;
       contain: none;
     }
-    .nav-group.audience-prioritized > summary {
-      color: var(--accent);
-      background: var(--accent-soft);
-    }
 
     .nav-group > summary {
       list-style: none;
@@ -922,55 +789,6 @@
       overflow-y: hidden;
     }
 
-    .back-to-top-btn {
-      position: fixed;
-      right: 1.15rem;
-      bottom: 12px;
-      z-index: 25;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-strong);
-      background: var(--bg-surface);
-      color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
-      cursor: pointer;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(6px);
-      pointer-events: none;
-      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s, color 0.15s, border-color 0.15s;
-    }
-    .back-to-top-btn.visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-      pointer-events: auto;
-      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s, color 0.15s, border-color 0.15s;
-    }
-    .back-to-top-btn:hover {
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-    body[data-hero-search="open"] .back-to-top-btn,
-    body[data-header-search="open"] .back-to-top-btn,
-    body:has(#langPopover:is(:popover-open, .\:popover-open)) .back-to-top-btn,
-    body[data-mobile-nav="open"] .back-to-top-btn {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .back-to-top-btn {
-        transition: none;
-        transform: none;
-      }
-    }
-
     .main-inner {
       flex: 1 0 auto;
       width: 100%;
@@ -1070,7 +888,6 @@
     @media (prefers-reduced-motion: reduce) {
       .omni-search-shell,
       .omni-search-shell .suggestions-bar,
-      .header-suggestions-card,
       .instant-results-box,
       .hero-copy,
       .hero-quick-links,
@@ -1176,9 +993,7 @@
       border-color: var(--border);
     }
     body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-clear-btn,
-    .omni-search-shell .omni-bar:has(.omni-input:not(:placeholder-shown)) .omni-clear-btn,
-    body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell .omni-clear-btn,
-    .header-search-shell .omni-bar:has(.omni-input:not(:placeholder-shown)) .omni-clear-btn {
+    .omni-search-shell .omni-bar:has(.omni-input:not(:placeholder-shown)) .omni-clear-btn {
       display: inline-flex;
     }
 
@@ -1352,149 +1167,6 @@
       flex-shrink: 0;
     }
 
-    /* ==========================================================================
-       5. SECTION HEADERS & AUDIENCE WORKSPACE BLOCKS
-       ========================================================================== */
-    .section-header-bar {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .section-header-bar h2 {
-      margin: 0;
-      font-size: 1.02rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .section-header-bar p {
-      margin: 0;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .audience-sections-stack {
-      display: block;
-    }
-
-    /* Do NOT set display:none on [hidden="until-found"] */
-    .audience-panel-inner {
-      display: flex;
-      flex-direction: column;
-      gap: 1.15rem;
-    }
-
-    .audience-banner-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.6rem;
-      cursor: pointer;
-    }
-    .audience-banner-head:hover h3 {
-      color: var(--accent);
-    }
-    .audience-banner-head h3 {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      transition: color 0.15s;
-    }
-    .audience-sub-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-left: 0.6rem;
-      font-weight: 400;
-    }
-
-    /* Minimal 3-Step Onboarding Strip */
-    .guided-journey-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-    .journey-step-card {
-      background: var(--bg-surface);
-      padding: 0.75rem 0.95rem;
-      display: flex;
-      align-items: baseline;
-      gap: 0.6rem;
-      transition: background 0.15s;
-    }
-    .journey-step-card:hover {
-      background: var(--bg-subtle);
-    }
-    .step-num {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--accent);
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-    .step-body h4 {
-      margin: 0 0 0.12rem;
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-    .step-body p {
-      margin: 0;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    /* Minimal Documentation Cards */
-    .doc-cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
-    .doc-block-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1.15rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 0.85rem;
-      transition: border-color 0.15s;
-    }
-    .doc-block-card:hover {
-      border-color: var(--border-strong);
-    }
-
-    .doc-card-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-
-    .doc-card-title {
-      margin: 0;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-    .doc-card-title a:hover {
-      color: var(--accent);
-    }
-
-    .doc-card-desc {
-      margin: 0;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
     .doc-sublinks {
       display: flex;
       flex-wrap: wrap;
@@ -1513,16 +1185,6 @@
       background: var(--accent-soft);
     }
 
-    .doc-card-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 0.65rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.73rem;
-      color: var(--text-muted);
-    }
-
     .primary-hub-link {
       font-size: 0.76rem;
       font-weight: 500;
@@ -1530,69 +1192,6 @@
     }
     .primary-hub-link:hover {
       text-decoration: underline;
-    }
-
-    /* ==========================================================================
-       7. MINIMAL INTERACTIVE DIAGNOSTICS & MCP SNIPPET BUILDER
-       ========================================================================== */
-    .tool-panel {
-      min-width: 0;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .tool-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-    .tool-head h3 {
-      margin: 0;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .symptom-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 0.4rem;
-    }
-    .symptom-btn {
-      text-align: left;
-      padding: 0.5rem 0.65rem;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text-secondary);
-      font-size: 0.76rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.12s;
-    }
-    .symptom-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--border-strong);
-    }
-    .symptom-btn[aria-pressed="true"] {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .diagnostic-output {
-      background: var(--bg-subtle);
-      border-radius: var(--radius-sm);
-      padding: 0.85rem;
-      font-size: 0.79rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
     }
 
     pre,
@@ -1622,9 +1221,6 @@
       overflow: hidden;
       margin: 0;
       transition: border-color 0.15s;
-    }
-    #builderCodeBox {
-      max-height: 165px;
     }
     .code-snippet-box.scroll-active {
       overflow: auto;
@@ -2118,17 +1714,6 @@
     .social-links a[href*="youtube.com"] { --social-brand: #FF0000; }
 
     @media (max-width: 960px) {
-      .doc-cards-grid,
-      .guided-journey-strip {
-        grid-template-columns: 1fr;
-      }
-      .header-search-shell {
-        max-width: 360px;
-      }
-      .header-search-shell .btn-subtle-accent {
-        padding: 0.24rem 0.52rem;
-        font-size: 0.71rem;
-      }
       .omni-search-shell {
         max-width: min(600px, 100%);
       }
@@ -2214,9 +1799,6 @@
       body[data-active-audience="home"] .main-inner {
         padding: clamp(0.25rem, 1.5vh, 1.1rem) 3.25rem;
       }
-      .header-search-shell {
-        max-width: 290px;
-      }
       .site-footer {
         padding: 0.6rem 1.15rem;
         font-size: 0.64rem;
@@ -2229,12 +1811,6 @@
       }
       .left-nav-panel {
         width: var(--nav-drawer-width);
-      }
-      .header-search-dropdown {
-        width: clamp(100%, 380px, calc(100vw - 1.5rem));
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
       }
     }
 
@@ -2348,14 +1924,6 @@
         transform: translateX(-50%);
         z-index: 42;
       }
-      #openAiCopilotBtn {
-        position: fixed;
-        left: 60%;
-        top: 7px;
-        bottom: auto;
-        transform: translateX(-50%);
-        z-index: 42;
-      }
       #langTriggerBtn {
         position: fixed;
         left: 75%;
@@ -2364,15 +1932,6 @@
         height: 36px;
         transform: translateX(-50%);
         z-index: 42;
-      }
-      body:not([data-active-audience="home"]) #themeToggleBtn {
-        left: 20%;
-      }
-      body:not([data-active-audience="home"]) #sidebarCycleBtn {
-        left: 40%;
-      }
-      body:not([data-active-audience="home"]) #langTriggerBtn {
-        left: 80%;
       }
       .header-actions {
         position: fixed;
@@ -2391,9 +1950,7 @@
         transition: filter 0.18s ease, opacity 0.18s ease;
       }
       body[data-hero-search="open"] .header-actions,
-      body[data-hero-search="open"] #sidebarCycleBtn,
-      body[data-header-search="open"] .header-actions,
-      body[data-header-search="open"] #sidebarCycleBtn {
+      body[data-hero-search="open"] #sidebarCycleBtn {
         filter: blur(5px);
         opacity: 0.45;
         pointer-events: none;
@@ -2407,97 +1964,6 @@
       }
       body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell {
         z-index: 45;
-      }
-      body:not([data-active-audience="home"])[data-header-search="open"] .top-bar {
-        z-index: 45;
-      }
-      body:not([data-active-audience="home"]) .header-search-shell {
-        display: flex;
-        position: fixed;
-        left: 0.75rem;
-        right: 0.75rem;
-        top: var(--mobile-header-bar-bottom, calc(var(--mobile-vv-bottom, 100dvh) - 10px));
-        bottom: auto;
-        max-width: none;
-        height: auto;
-        z-index: 43;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transform: translateY(calc(-100% + 18px));
-        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
-      }
-      body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: translateY(-100%);
-        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s;
-      }
-      body:not([data-active-audience="home"]) .header-search-shell .omni-bar {
-        padding: 0.3rem 0.4rem 0.3rem 0.65rem;
-        gap: 0.4rem;
-      }
-      body:not([data-active-audience="home"]) .header-search-shell .omni-input {
-        font-size: 16px;
-        line-height: 1.25;
-        padding: 0.14rem 0;
-      }
-      body:not([data-active-audience="home"]) .header-search-shell .btn-subtle-accent {
-        padding: 0.34rem 0.6rem;
-        font-size: 0.74rem;
-      }
-      .header-search-dropdown {
-        display: flex;
-        top: auto;
-        bottom: calc(100% + 0.45rem);
-        left: 0;
-        right: 0;
-        width: auto;
-        transform: none;
-        flex-direction: column-reverse;
-        gap: 0.45rem;
-        pointer-events: none;
-      }
-      .header-suggestions-label {
-        display: none;
-      }
-      .header-suggestions-card {
-        padding: 0.36rem 0.55rem;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transform: translateY(6px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
-      }
-      body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-sugg-fit="true"] .header-suggestions-card {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: translateY(0);
-        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
-      }
-      .header-suggestions-card .prompt-chip {
-        padding: 0.18rem 0.52rem;
-        font-size: 0.68rem;
-      }
-      .header-search-dropdown .instant-results-box {
-        display: flex;
-        padding: 0.85rem 0.9rem 0.55rem;
-        gap: 0.35rem;
-        box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.2);
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transform: translateY(6px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-res-fit="true"] .header-search-dropdown .instant-results-box.active {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: translateY(0);
-        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .mobile-nav-backdrop {
         top: calc(var(--mobile-vv-top, 0px) + var(--header-height));
@@ -2658,21 +2124,16 @@
         visibility: hidden;
         pointer-events: none;
         transform: translateY(6px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
       }
       body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transform: translateY(0);
-        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
       }
       @media (prefers-reduced-motion: reduce) {
-        body:not([data-active-audience="home"]) .header-search-shell,
-        .header-suggestions-card,
-        body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-sugg-fit="true"] .header-suggestions-card,
-        .header-search-dropdown .instant-results-box,
-        body:not([data-active-audience="home"])[data-header-search="open"][data-header-bar-settled="true"][data-header-res-fit="true"] .header-search-dropdown .instant-results-box.active,
         .omni-search-shell .suggestions-bar,
         body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar,
         body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar,
@@ -2840,13 +2301,6 @@
         width: 16px;
         height: 16px;
       }
-      .back-to-top-btn {
-        right: 0.75rem;
-        top: calc(var(--mobile-vv-bottom, 100dvh) - 92px);
-        bottom: auto;
-        width: 28px;
-        height: 28px;
-      }
       #langPopover {
         position: fixed;
         inset: auto 0.75rem 62px 0.75rem;
@@ -2905,14 +2359,8 @@
     [dir="rtl"] .faq-body {
       padding: 0 1.35rem 0.85rem 0;
     }
-    [dir="rtl"] .instant-results-box,
-    [dir="rtl"] .doc-block-card,
-    [dir="rtl"] .journey-step-card {
+    [dir="rtl"] .instant-results-box {
       text-align: right;
-    }
-    [dir="rtl"] .back-to-top-btn {
-      right: auto;
-      left: 1.15rem;
     }
     [dir="rtl"] .sidebar-icon-arrow {
       transform-box: fill-box;
@@ -2979,9 +2427,6 @@
         margin-right: 0;
         padding: 0;
       }
-      [dir="rtl"] .back-to-top-btn {
-        left: 0.75rem;
-      }
       [dir="rtl"] .eco-carousel-btn svg {
         transform: scaleX(-1);
       }
@@ -3001,34 +2446,7 @@
       </a>
     </div>
 
-    <div class="header-search-shell" id="headerSearchShell">
-      <div class="omni-bar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="search" id="headerSearchInput" class="omni-input" placeholder="Search docs or ask AI..." aria-label="Search documentation or ask AI">
-        <button type="button" class="icon-btn omni-clear-btn" id="headerClearSearchBtn" aria-label="Close" title="Close">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
-        </button>
-        <button type="button" class="btn-subtle-accent" id="headerAskAiBtn">Ask AI</button>
-      </div>
-      <div class="header-search-dropdown" id="headerSearchDropdown">
-        <div class="header-suggestions-card">
-          <span class="header-suggestions-label">Suggested:</span>
-          <div class="prompt-chips-row">
-            <button type="button" class="prompt-chip" data-header-query="How do I create a cBot in Python?">Create a cBot in Python</button>
-            <button type="button" class="prompt-chip" data-header-query="How do I connect Claude or Cursor to cTrader MCP servers?">Connect AI Agent via MCP</button>
-            <button type="button" class="prompt-chip" data-header-query="How do pending orders and stop loss work in cTrader?">Orders &amp; Stop Loss</button>
-            <button type="button" class="prompt-chip" data-header-query="How do cTrader Invite and partner deeplinks work?">Partner Invite &amp; Deeplinks</button>
-            <button type="button" class="prompt-chip" data-header-query="Open API vs FIX API: which should I choose?">Open API vs FIX API</button>
-          </div>
-        </div>
-        <div class="instant-results-box" id="headerResultsBox" aria-live="polite"></div>
-      </div>
-    </div>
-
     <div class="header-actions">
-      <button type="button" class="icon-btn" id="openAiCopilotBtn" title="Search documentation or ask AI" aria-label="Search documentation or ask AI">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
       <button type="button" class="icon-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Switch color scheme">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </button>
@@ -3217,402 +2635,6 @@
           </button>
         </div>
       </section>
-
-      <!-- 2. AUDIENCE WORKSPACES (Click any section in the menu to view its content) -->
-      <div class="audience-sections-stack" id="audiencePanelsContainer" hidden>
-
-        <!-- AUDIENCE 1: TRADERS -->
-        <section class="audience-panel" id="panel-traders" data-audience-panel="traders" aria-labelledby="heading-traders" hidden="until-found">
-          <div class="audience-panel-inner">
-            <div class="audience-banner-head">
-              <h3>
-                <span id="heading-traders">Manual &amp; Copy Traders</span>
-                <span class="audience-sub-label">Account setup, desktop/web/mobile apps, execution &amp; social copy trading</span>
-              </h3>
-              <a href="https://help.ctrader.com/trading-with-ctrader/" class="primary-hub-link" target="_blank" rel="noopener">Trading Hub →</a>
-            </div>
-
-            <div class="guided-journey-strip" aria-label="Recommended Onboarding Path for New Traders">
-              <a class="journey-step-card" href="https://help.ctrader.com/ctrader-id/create-a-new-ctrader-id/" target="_blank" rel="noopener">
-                <span class="step-num">01</span>
-                <div class="step-body">
-                  <h4>Create cTrader ID →</h4>
-                  <p>Set up unified single sign-on credentials.</p>
-                </div>
-              </a>
-              <a class="journey-step-card" href="https://help.ctrader.com/ctrader-web/" target="_blank" rel="noopener">
-                <span class="step-num">02</span>
-                <div class="step-body">
-                  <h4>Select Platform App →</h4>
-                  <p>Log in on Web, Windows, Mac, or Mobile.</p>
-                </div>
-              </a>
-              <a class="journey-step-card" href="https://help.ctrader.com/trading-with-ctrader/orders/" target="_blank" rel="noopener">
-                <span class="step-num">03</span>
-                <div class="step-body">
-                  <h4>Execute or Copy Trades →</h4>
-                  <p>Place Market/Limit orders or copy strategies.</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="doc-cards-grid">
-              <article class="doc-block-card" data-card-id="ctid-trading">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/trading-with-ctrader/" target="_blank" rel="noopener">Quick Start &amp; Trading Basics</a></h4>
-                </div>
-                <p class="doc-card-desc">Create your universal cTrader ID, connect a broker account, and manage orders, positions, and charts.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-id/" target="_blank" rel="noopener">cTrader ID</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-id/create-a-new-ctrader-id/" target="_blank" rel="noopener">Create cTID</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/trading-with-ctrader/" target="_blank" rel="noopener">Trading Guide</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/trading-with-ctrader/orders/" target="_blank" rel="noopener">Orders</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Fundamentals</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/trading-with-ctrader/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="platform-apps">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader/" target="_blank" rel="noopener">Platform Applications</a></h4>
-                </div>
-                <p class="doc-card-desc">Dedicated guides for desktop workspaces, browser trading, and iOS/Android mobile execution.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader/" target="_blank" rel="noopener">Windows</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-mac/" target="_blank" rel="noopener">Mac</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-web/" target="_blank" rel="noopener">Web</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-mobile/" target="_blank" rel="noopener">Mobile</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Desktop, Web &amp; Mobile</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-web/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="copy-analyze">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader-copy/" target="_blank" rel="noopener">Copy Trading &amp; Analytics</a></h4>
-                </div>
-                <p class="doc-card-desc">Mirror verified strategy providers with equity stop controls, or audit account performance metrics.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-copy/" target="_blank" rel="noopener">cTrader Copy</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-copy/investing-in-strategies/" target="_blank" rel="noopener">Invest in Strategies</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-analyze/" target="_blank" rel="noopener">cTrader Analyze</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/bonuses/" target="_blank" rel="noopener">Bonuses</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Social &amp; Stats</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-copy/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- AUDIENCE 2: ALGO TRADERS & QUANTS -->
-        <section class="audience-panel" id="panel-algo" data-audience-panel="algo" aria-labelledby="heading-algo" hidden="until-found">
-          <div class="audience-panel-inner">
-            <div class="audience-banner-head">
-              <h3>
-                <span id="heading-algo">Algo Traders &amp; Quants</span>
-                <span class="audience-sub-label">C# &amp; Python cBots, custom indicators, headless CLI &amp; MCP AI agents</span>
-              </h3>
-              <a href="https://help.ctrader.com/ctrader-algo/" class="primary-hub-link" target="_blank" rel="noopener">Algo Hub →</a>
-            </div>
-
-            <div class="guided-journey-strip" aria-label="Recommended Path for Algo Traders">
-              <a class="journey-step-card" href="https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/" target="_blank" rel="noopener">
-                <span class="step-num">01</span>
-                <div class="step-body">
-                  <h4>Start &amp; Backtest a cBot →</h4>
-                  <p>Configure parameters and run tick backtests.</p>
-                </div>
-              </a>
-              <a class="journey-step-card" href="https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/" target="_blank" rel="noopener">
-                <span class="step-num">02</span>
-                <div class="step-body">
-                  <h4>Write C# or Python →</h4>
-                  <p>Develop automated strategies and indicators.</p>
-                </div>
-              </a>
-              <a class="journey-step-card" href="https://help.ctrader.com/ctrader-ai-agent-connect/" target="_blank" rel="noopener">
-                <span class="step-num">03</span>
-                <div class="step-body">
-                  <h4>Connect MCP &amp; CLI →</h4>
-                  <p>Automate via terminal or AI coding assistants.</p>
-                </div>
-              </a>
-            </div>
-
-            <div class="doc-cards-grid">
-              <article class="doc-block-card" data-card-id="ctrader-algo">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader-algo/" target="_blank" rel="noopener">cTrader Algo &amp; cBots</a></h4>
-                </div>
-                <p class="doc-card-desc">Develop, backtest, optimize, and deploy automated trading robots in C# and Python with 24/7 Cloud execution.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-algo/" target="_blank" rel="noopener">cTrader Algo</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/cbots/" target="_blank" rel="noopener">cBots</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/" target="_blank" rel="noopener">Start a cBot</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/" target="_blank" rel="noopener">Python cBot</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>C# &amp; Python</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-algo/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="custom-indicators">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/indicators/" target="_blank" rel="noopener">Indicators &amp; Studies</a></h4>
-                </div>
-                <p class="doc-card-desc">Use built-in oscillators and overlays or code custom multi-timeframe technical analysis indicators.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/indicators/" target="_blank" rel="noopener">Indicators Hub</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/knowledge-base/indicators/" target="_blank" rel="noopener">Indicator Reference</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-store/how-tos/use-a-product/" target="_blank" rel="noopener">Use Store Product</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Technical Analysis</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/indicators/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="mcp-cli">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader-ai-agent-connect/" target="_blank" rel="noopener">MCP Servers &amp; CLI</a></h4>
-                </div>
-                <p class="doc-card-desc">Link AI agents (Claude, Cursor) via Model Context Protocol or execute headless cBot tasks from the shell.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-ai-agent-connect/" target="_blank" rel="noopener">cTrader MCP Servers</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-cli/" target="_blank" rel="noopener">cTrader CLI</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>AI &amp; CLI Automation</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-ai-agent-connect/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-            </div>
-
-            <div class="tool-panel" id="mcpToolPanel">
-              <div class="tool-head">
-                <h3>AI Context &amp; MCP Config</h3>
-                <div style="display:flex;gap:0.35rem;">
-                  <button type="button" class="ghost-btn" id="builderTabMcp">MCP JSON</button>
-                  <button type="button" class="ghost-btn" id="builderTabLlm">LLM Context</button>
-                </div>
-              </div>
-              <pre class="code-snippet-box" id="builderCodeBox" dir="ltr"><code>{
-  "mcpServers": {
-    "ctrader-agent": {
-      "command": "npx",
-      "args": ["-y", "@spotware/ctrader-mcp-server"],
-      "env": {
-        "CTRADER_CL_ENV": "demo"
-      }
-    }
-  }
-}</code></pre>
-              <div style="display:flex;align-items:center;justify-content:space-between;">
-                <a href="https://help.ctrader.com/ctrader-ai-agent-connect/" class="primary-hub-link" target="_blank" rel="noopener">MCP Server Documentation →</a>
-                <button type="button" class="ghost-btn" id="copyBuilderBtn">Copy</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- AUDIENCE 3: DEVELOPERS & STORE SELLERS -->
-        <section class="audience-panel" id="panel-developers" data-audience-panel="developers" aria-labelledby="heading-developers" hidden="until-found">
-          <div class="audience-panel-inner">
-            <div class="audience-banner-head">
-              <h3>
-                <span id="heading-developers">Developers &amp; Store Sellers</span>
-                <span class="audience-sub-label">Open API, FIX connectivity, WebView plugins &amp; Store monetization</span>
-              </h3>
-              <a href="https://help.ctrader.com/open-api/" class="primary-hub-link" target="_blank" rel="noopener">Open API →</a>
-            </div>
-
-            <div class="doc-cards-grid">
-              <article class="doc-block-card" data-card-id="open-fix-api">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/open-api/" target="_blank" rel="noopener">Open API &amp; FIX API</a></h4>
-                </div>
-                <p class="doc-card-desc">Build external trading interfaces and institutional execution bridges over Protobuf/WebSockets or FIX 4.4.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/open-api/" target="_blank" rel="noopener">Open API</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/fix/" target="_blank" rel="noopener">FIX API</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Protocols</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/open-api/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="plugins-webview">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/plugins/" target="_blank" rel="noopener">Plugins &amp; WebViews</a></h4>
-                </div>
-                <p class="doc-card-desc">Extend the cTrader UI with custom panels, web applications, and embedded research tools.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/plugins/" target="_blank" rel="noopener">Plugins Hub</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/webview-plugins/how-tos/add-wv-plugins/" target="_blank" rel="noopener">Add a WebView Plugin</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>UI Extensions</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/plugins/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="store-marketplace">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader-store/" target="_blank" rel="noopener">cTrader Store Marketplace</a></h4>
-                </div>
-                <p class="doc-card-desc">Publish, license, and sell cBots, indicators, and plugins to traders worldwide.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-store/" target="_blank" rel="noopener">cTrader Store</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-store/how-tos/become-a-seller/" target="_blank" rel="noopener">Become a Seller</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-store/how-tos/use-a-product/" target="_blank" rel="noopener">Use a Product</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Marketplace</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-store/how-tos/become-a-seller/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- AUDIENCE 4: PARTNERS & IBS -->
-        <section class="audience-panel" id="panel-partners" data-audience-panel="partners" aria-labelledby="heading-partners" hidden="until-found">
-          <div class="audience-panel-inner">
-            <div class="audience-banner-head">
-              <h3>
-                <span id="heading-partners">Partners &amp; IBs</span>
-                <span class="audience-sub-label">Referral attribution, invite workflows &amp; cross-platform deeplinks</span>
-              </h3>
-              <a href="https://help.ctrader.com/partner-tools/" class="primary-hub-link" target="_blank" rel="noopener">Partner Hub →</a>
-            </div>
-
-            <div class="doc-cards-grid">
-              <article class="doc-block-card" data-card-id="partner-tools">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/partner-tools/" target="_blank" rel="noopener">Partner Tools</a></h4>
-                </div>
-                <p class="doc-card-desc">Overview of the toolkit for Introducing Brokers and affiliates to attract and retain traders.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/partner-tools/" target="_blank" rel="noopener">Partner Tools</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/partner-tools/list-of-tools/" target="_blank" rel="noopener">List of Tools</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Acquisition</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/partner-tools/list-of-tools/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="ctrader-invite">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader-invite/" target="_blank" rel="noopener">cTrader Invite</a></h4>
-                </div>
-                <p class="doc-card-desc">Generate invite links, QR codes, and attributed trading tools that convert prospects into referrals.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-invite/" target="_blank" rel="noopener">cTrader Invite</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Attribution</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-invite/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="ctrader-deeplinks">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/ctrader-deeplinks/" target="_blank" rel="noopener">cTrader Deeplinks</a></h4>
-                </div>
-                <p class="doc-card-desc">Direct action links that open specific symbols, copy strategies, or store products across devices.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/ctrader-deeplinks/" target="_blank" rel="noopener">Deeplinks Guide</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Routing</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/ctrader-deeplinks/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- AUDIENCE 5: RESOURCES -->
-        <section class="audience-panel" id="panel-resources" data-audience-panel="resources" aria-labelledby="heading-resources" hidden="until-found">
-          <div class="audience-panel-inner">
-            <div class="audience-banner-head">
-              <h3>
-                <span id="heading-resources">Resources</span>
-                <span class="audience-sub-label">Platform glossary, promotional bonus mechanics &amp; troubleshooting guides</span>
-              </h3>
-              <a href="https://help.ctrader.com/knowledge-base/" class="primary-hub-link" target="_blank" rel="noopener">Knowledge Base →</a>
-            </div>
-
-            <div class="doc-cards-grid">
-              <article class="doc-block-card" data-card-id="knowledge-base">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/knowledge-base/" target="_blank" rel="noopener">Knowledge Base</a></h4>
-                </div>
-                <p class="doc-card-desc">Reference articles covering chart types, line studies, technical indicators, and market terminology.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/knowledge-base/" target="_blank" rel="noopener">Knowledge Base</a>
-                  <a class="sublink-pill" href="https://help.ctrader.com/knowledge-base/indicators/" target="_blank" rel="noopener">Indicators Reference</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Reference</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/knowledge-base/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="ctrader-bonuses">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/bonuses/" target="_blank" rel="noopener">cTrader Bonuses</a></h4>
-                </div>
-                <p class="doc-card-desc">Learn how promotional broker bonus credits work, how they convert to balance, and how they affect margin.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/bonuses/" target="_blank" rel="noopener">Bonuses Guide</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Account Credits</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/bonuses/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-
-              <article class="doc-block-card" data-card-id="troubleshooting-hub">
-                <div class="doc-card-head">
-                  <h4 class="doc-card-title"><a href="https://help.ctrader.com/troubleshooting/" target="_blank" rel="noopener">Troubleshooting</a></h4>
-                </div>
-                <p class="doc-card-desc">Solutions for common connectivity, login, chart rendering, and platform performance issues.</p>
-                <div class="doc-sublinks">
-                  <a class="sublink-pill" href="https://help.ctrader.com/troubleshooting/" target="_blank" rel="noopener">Troubleshooting</a>
-                </div>
-                <div class="doc-card-footer">
-                  <span>Support</span>
-                  <a class="primary-hub-link" href="https://help.ctrader.com/troubleshooting/" target="_blank" rel="noopener">Open →</a>
-                </div>
-              </article>
-            </div>
-
-            <div class="tool-panel" id="triageToolPanel">
-              <div class="tool-head">
-                <h3>Issue Triage</h3>
-              </div>
-              <div class="symptom-buttons" role="group" aria-label="Select issue symptom">
-                <button type="button" class="symptom-btn" data-symptom="login" aria-pressed="true">cTID &amp; Login</button>
-                <button type="button" class="symptom-btn" data-symptom="orders" aria-pressed="false">Orders &amp; Margin</button>
-                <button type="button" class="symptom-btn" data-symptom="cbot" aria-pressed="false">cBot &amp; Python</button>
-                <button type="button" class="symptom-btn" data-symptom="plugin" aria-pressed="false">Store &amp; Plugins</button>
-              </div>
-              <div class="diagnostic-output" id="diagnosticOutput" aria-live="polite"></div>
-            </div>
-          </div>
-        </section>
-      </div>
 
       </div>
 
@@ -3831,10 +2853,6 @@
     </main>
   </div>
 
-  <button type="button" class="back-to-top-btn" id="backToTopBtn" title="Back to top" aria-label="Back to top" aria-hidden="true">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-  </button>
-
   <!-- ========================================================================
        POPOVER: 17 LIVE LOCALES
        ======================================================================== -->
@@ -3870,9 +2888,6 @@
       import("https://unpkg.com/@oddbird/popover-polyfill@latest/dist/popover.min.js").catch(() => {});
     }
 
-    // 2. `hidden="until-found"` Support Check
-    const supportsUntilFound = ('onbeforematch' in HTMLElement.prototype);
-
     // 4. Two-State Dark/Light Mode Override Toggle (starts in light theme)
     const metaScheme = document.querySelector('meta[name="color-scheme"]');
     const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -3890,9 +2905,7 @@
       } catch (e) {}
     });
 
-    // 5. Section-Based View Routing (Home shows only AI Search; clicking any menu section shows its content)
-    const audiencePanelsContainer = document.getElementById('audiencePanelsContainer');
-    const audiencePanels = document.querySelectorAll('.audience-panel');
+    // 5. Left Navigation Tree Accordion & Home Reset
     const popularGuides = document.querySelectorAll('.guide-card');
     const sidebarGroups = document.querySelectorAll('.nav-group');
     const navAllAudiencesBtn = document.getElementById('navAllAudiencesBtn');
@@ -3926,65 +2939,24 @@
 
     function resetAiSearchState() {
       const heroInput = document.getElementById('heroSearchInput');
-      const headerInput = document.getElementById('headerSearchInput');
       const heroBox = document.getElementById('instantResultsBox');
-      const headerBox = document.getElementById('headerResultsBox');
 
       if (heroInput) heroInput.value = '';
-      if (headerInput) headerInput.value = '';
       if (heroBox) {
         heroBox.classList.remove('active');
         heroBox.innerHTML = '';
       }
-      if (headerBox) {
-        headerBox.classList.remove('active');
-        headerBox.innerHTML = '';
-      }
       delete document.body.dataset.heroSearch;
-      delete document.body.dataset.headerSearch;
       document.querySelectorAll('.prompt-chips-row').forEach((row) => {
         row.scrollLeft = 0;
         if (typeof updateChipRowFades === 'function') updateChipRowFades(row);
       });
     }
 
-    function updateBackToTopVisibility() {
-      const mainEl = document.getElementById('mainContent');
-      const topBtn = document.getElementById('backToTopBtn');
-      const footerEl = mainEl?.querySelector('.site-footer');
-      if (!mainEl || !topBtn) return;
-      const maxScroll = mainEl.scrollHeight - mainEl.clientHeight;
-      const isScrollable = maxScroll > 24;
-      const threshold = Math.min(80, Math.max(24, Math.round(Math.min(mainEl.clientHeight * 0.1, maxScroll * 0.35))));
-      const show = isScrollable && mainEl.scrollTop >= threshold;
-      topBtn.classList.toggle('visible', show);
-      topBtn.setAttribute('aria-hidden', String(!show));
-
-      const footerClearance = 12; // matches #langPopover offset below .top-bar
-      const minBottom = window.matchMedia('(max-width: 560px)').matches ? 52 + footerClearance : footerClearance;
-      const footerTop = footerEl ? footerEl.getBoundingClientRect().top : window.innerHeight;
-      const bottomPx = Math.max(minBottom, Math.round(window.innerHeight - footerTop + footerClearance));
-      topBtn.style.bottom = `${bottomPx}px`;
-    }
-
-    const AUDIENCE_STORAGE_KEY = 'ctrader_help_audience';
-    const VALID_AUDIENCES = ['home', 'traders', 'algo', 'developers', 'partners', 'resources'];
-
-    function getInitialAudience() {
-      const fromHash = (location.hash || '').replace(/^#/, '');
-      if (VALID_AUDIENCES.includes(fromHash)) return fromHash;
-      try {
-        const saved = sessionStorage.getItem(AUDIENCE_STORAGE_KEY);
-        if (saved && VALID_AUDIENCES.includes(saved)) return saved;
-      } catch {}
-      return 'home';
-    }
-
     const reduceMotionNavMq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const navGroupAnimCleanups = new WeakMap();
 
     function isNavPanelVisible() {
-      if (document.documentElement.classList.contains('view-pending')) return false;
       return window.innerWidth <= 960
         ? document.body.dataset.mobileNav === 'open'
         : document.body.dataset.sidebarMode !== 'hidden';
@@ -4115,91 +3087,40 @@
       });
     });
 
-    function selectAudience(audience) {
-      if (!VALID_AUDIENCES.includes(audience)) audience = 'home';
-      document.body.dataset.activeAudience = audience;
+    function resetToHome() {
+      document.body.dataset.activeAudience = 'home';
       try {
-        sessionStorage.setItem(AUDIENCE_STORAGE_KEY, audience);
-      } catch {}
-      try {
-        const nextHash = audience === 'home' ? '' : `#${audience}`;
-        if (location.hash !== nextHash) {
-          history.replaceState(null, '', nextHash || (location.pathname + location.search));
+        if (location.hash && location.hash !== '#home') {
+          history.replaceState(null, '', location.pathname + location.search);
         }
       } catch {}
       resetAiSearchState();
       if (typeof closeAllHomeModals === 'function') closeAllHomeModals({ restoreFocus: false });
-      const isHome = audience === 'home';
-
-      navAllAudiencesBtn?.classList.toggle('active', isHome);
-
-      if (audiencePanelsContainer) {
-        audiencePanelsContainer.hidden = isHome;
-      }
-
-      // Show only the selected audience panel (none on Home)
-      audiencePanels.forEach((panel) => {
-        const panelAudience = panel.dataset.audiencePanel;
-        const visible = (!isHome && panelAudience === audience);
-        if (visible) {
-          panel.removeAttribute('hidden');
-        } else {
-          panel.setAttribute('hidden', supportsUntilFound ? 'until-found' : '');
-        }
-      });
-
-      // Sync Left Menu groups
-      sidebarGroups.forEach((group) => {
-        const groupAud = group.dataset.navAudience;
-        const isActive = !isHome && groupAud === audience;
-        group.classList.toggle('audience-prioritized', isActive);
-        setNavGroupOpen(group, isActive);
-      });
-
+      navAllAudiencesBtn?.classList.add('active');
       document.getElementById('mainContent')?.scrollTo({ top: 0 });
-      requestAnimationFrame(updateBackToTopVisibility);
     }
 
-    // Restore current section on load/refresh (defaults to Home)
-    selectAudience(getInitialAudience());
-    window.addEventListener('hashchange', () => {
-      const h = (location.hash || '').replace(/^#/, '');
-      selectAudience(VALID_AUDIENCES.includes(h) ? h : 'home');
-    });
+    resetToHome();
 
-    // Clicking "Home" or logo switches view
+    // Clicking "Home" or logo resets home state
     navAllAudiencesBtn?.addEventListener('click', () => {
-      selectAudience('home');
+      resetToHome();
       if (overlayDrawerMq.matches) closeMobileNav();
     });
     brandHomeLink?.addEventListener('click', (e) => {
       e.preventDefault();
-      selectAudience('home');
+      resetToHome();
       syncSidebarToViewport(overlayDrawerMq.matches);
     });
 
-    // Clicking any section summary in the left menu displays that section's content
+    // Clicking any section summary in the left menu expands/collapses its links in place
     sidebarGroups.forEach((group) => {
       const summary = group.querySelector(':scope > summary');
-      const groupAud = group.dataset.navAudience;
       summary?.addEventListener('click', (e) => {
-        if (!groupAud) return;
         e.preventDefault();
-        const current = document.body.dataset.activeAudience || 'home';
-        if (current !== groupAud) {
-          selectAudience(groupAud);
-        } else {
-          const isOpen = group.open && !group.classList.contains('is-closing');
-          setNavGroupOpen(group, !isOpen);
-        }
+        const isOpen = group.open && !group.classList.contains('is-closing');
+        setNavGroupOpen(group, !isOpen);
       });
-    });
-
-    document.getElementById('audiencePanelsContainer').addEventListener('beforematch', (e) => {
-      const matchedPanel = e.target.closest('.audience-panel');
-      if (matchedPanel && matchedPanel.dataset.audiencePanel) {
-        selectAudience(matchedPanel.dataset.audiencePanel);
-      }
     });
 
     // 6. Left Navigation Panel Controls
@@ -4223,9 +3144,7 @@
       if (overlayDrawerMq.matches) {
         closeLangPopover();
         document.getElementById('instantResultsBox')?.classList.remove('active');
-        document.getElementById('headerResultsBox')?.classList.remove('active');
         delete document.body.dataset.heroSearch;
-        delete document.body.dataset.headerSearch;
         document.body.dataset.mobileNav = 'open';
         return;
       }
@@ -4262,7 +3181,6 @@
 
     sidebarFilterInput.addEventListener('input', () => {
       const q = sidebarFilterInput.value.trim().toLowerCase();
-      const activeAud = document.body.dataset.activeAudience || 'home';
       sidebarGroups.forEach((group) => {
         const items = group.querySelectorAll('.nav-links-list li');
         let anyVisible = false;
@@ -4273,11 +3191,7 @@
           if (match) anyVisible = true;
         });
         group.style.display = anyVisible ? '' : 'none';
-        if (q) {
-          setNavGroupOpen(group, anyVisible);
-        } else {
-          setNavGroupOpen(group, group.dataset.navAudience === activeAud);
-        }
+        setNavGroupOpen(group, q ? anyVisible : false);
       });
     });
 
@@ -4671,37 +3585,20 @@
     const heroSearchInput = document.getElementById('heroSearchInput');
     const heroSearchShell = document.querySelector('.omni-search-shell');
     const instantResultsBox = document.getElementById('instantResultsBox');
-    const headerSearchShell = document.getElementById('headerSearchShell');
-    const headerSearchInput = document.getElementById('headerSearchInput');
-    const headerResultsBox = document.getElementById('headerResultsBox');
     const mobileSearchMq = window.matchMedia('(max-width: 560px)');
     const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     let heroBarSettleTimer = 0;
-    let headerBarSettleTimer = 0;
 
     function cancelHeroBarSettle() {
       clearTimeout(heroBarSettleTimer);
       heroBarSettleTimer = 0;
     }
 
-    function cancelHeaderBarSettle() {
-      clearTimeout(headerBarSettleTimer);
-      headerBarSettleTimer = 0;
-    }
-
     function settleHeroBar() {
       cancelHeroBarSettle();
       if (document.body.dataset.heroSearch === 'open') {
         document.body.dataset.heroBarSettled = 'true';
-        fitHeroResultsHeight();
-      }
-    }
-
-    function settleHeaderBar() {
-      cancelHeaderBarSettle();
-      if (document.body.dataset.headerSearch === 'open') {
-        document.body.dataset.headerBarSettled = 'true';
         fitHeroResultsHeight();
       }
     }
@@ -4715,27 +3612,11 @@
       heroBarSettleTimer = setTimeout(settleHeroBar, 310);
     }
 
-    function scheduleHeaderBarSettle(waitForMove) {
-      cancelHeaderBarSettle();
-      if (!mobileSearchMq.matches || reducedMotionMq.matches || !waitForMove) {
-        settleHeaderBar();
-        return;
-      }
-      headerBarSettleTimer = setTimeout(settleHeaderBar, 310);
-    }
-
     heroSearchShell?.addEventListener('transitionend', (e) => {
       if (e.target === heroSearchShell && e.propertyName === 'transform' &&
           document.body.dataset.heroSearch === 'open' &&
           document.body.dataset.heroBarSettled !== 'true') {
         settleHeroBar();
-      }
-    });
-    headerSearchShell?.addEventListener('transitionend', (e) => {
-      if (e.target === headerSearchShell && e.propertyName === 'transform' &&
-          document.body.dataset.headerSearch === 'open' &&
-          document.body.dataset.headerBarSettled !== 'true') {
-        settleHeaderBar();
       }
     });
 
@@ -4753,25 +3634,8 @@
       }
     }
 
-    function closeHeaderResults() {
-      cancelHeaderBarSettle();
-      headerResultsBox.classList.remove('active');
-      delete headerResultsBox.dataset.renderedHtml;
-      delete document.body.dataset.headerSearch;
-      delete document.body.dataset.headerBarSettled;
-      delete document.body.dataset.headerSuggFit;
-      delete document.body.dataset.headerResFit;
-      if (!mobileSearchMq.matches) {
-        headerSearchShell?.style.removeProperty('--mobile-header-bar-bottom');
-      }
-      if (document.activeElement === headerSearchInput) {
-        headerSearchInput.blur();
-      }
-    }
-
     function closeAllInlineResults() {
       closeHeroResults();
-      closeHeaderResults();
     }
 
     function getCurrentTranslateY(el) {
@@ -4809,37 +3673,11 @@
         rootStyle.removeProperty('--mobile-vv-top');
         rootStyle.removeProperty('--mobile-vv-height');
         rootStyle.removeProperty('--mobile-vv-bottom');
-        headerSearchShell?.style.removeProperty('--mobile-header-bar-bottom');
       }
     }
 
     let lastHeroRestingTop = null;
     let mobileSnapHeroOnViewport = false;
-
-    function setResultsMaxHeightSmooth(boxEl, targetMaxHeight, maxAllowedNow) {
-      if (!boxEl) return;
-      const clampedTarget = Math.max(0, Math.round(targetMaxHeight));
-      const nextPx = `${clampedTarget}px`;
-      if (boxEl.style.maxHeight === nextPx) return;
-      if (!mobileSearchMq.matches || reducedMotionMq.matches || !boxEl.classList.contains('active')) {
-        boxEl.style.maxHeight = nextPx;
-        return;
-      }
-      const currentMax = parseFloat(boxEl.style.maxHeight);
-      const renderedHeight = Math.round(boxEl.getBoundingClientRect().height);
-      const nowCap = Number.isFinite(maxAllowedNow) ? Math.max(0, Math.round(maxAllowedNow)) : renderedHeight;
-      const clampedStart = Math.min(renderedHeight, nowCap);
-      const needsSlackSnap = Number.isFinite(currentMax) && currentMax > renderedHeight + 1 && clampedTarget < renderedHeight;
-      const needsHeaderCapSnap = nowCap < renderedHeight - 1;
-      if (renderedHeight > 0 && (needsSlackSnap || needsHeaderCapSnap)) {
-        const prevTransition = boxEl.style.transition;
-        boxEl.style.transition = 'none';
-        boxEl.style.maxHeight = `${clampedStart}px`;
-        boxEl.getBoundingClientRect();
-        boxEl.style.transition = prevTransition;
-      }
-      boxEl.style.maxHeight = nextPx;
-    }
 
     function updateHeroSearchPosition() {
       const metrics = getMobileViewportMetrics();
@@ -4935,84 +3773,41 @@
 
     function fitHeroResultsHeight() {
       const metrics = getMobileViewportMetrics();
-      const { vvBottom, visibleHeaderBottom } = metrics;
+      const { visibleHeaderBottom } = metrics;
       syncMobileViewportVars(metrics);
       const MIN_RESULTS_SPACE = 76;
 
-      if (document.body.dataset.activeAudience === 'home') {
-        const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
-        const suggEl = heroSearchShell?.querySelector('.suggestions-bar');
-        const suggH = suggEl ? suggEl.offsetHeight : 38;
-        let suggFits = false;
-        let resFits = false;
-        let available = 0;
+      const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
+      const suggEl = heroSearchShell?.querySelector('.suggestions-bar');
+      const suggH = suggEl ? suggEl.offsetHeight : 38;
+      let suggFits = false;
+      let resFits = false;
+      let available = 0;
 
-        if (mobileSearchMq.matches) {
-          const topBound = visibleHeaderBottom + 8;
-          suggFits = (finalBarTop - topBound) >= (suggH + 8);
-          available = Math.floor((finalBarTop - suggOffset) - topBound);
-          resFits = suggFits && available >= MIN_RESULTS_SPACE;
-          if (resFits && instantResultsBox.classList.contains('active')) {
-            setResultsMaxHeightSmooth(instantResultsBox, available, Math.floor((currentBarTop - suggOffset) - topBound));
-          }
-        } else {
-          const mainEl = document.getElementById('mainContent');
-          const mainRect = mainEl ? mainEl.getBoundingClientRect() : { top: 48, bottom: window.innerHeight };
-          const bottomBound = Math.min(mainRect.bottom, window.innerHeight) - 16;
-          suggFits = (window.innerHeight - 8 - finalBarBottom) >= (suggH + 8);
-          available = Math.floor(bottomBound - (finalBarBottom + suggOffset));
-          resFits = suggFits && available >= MIN_RESULTS_SPACE;
-          if (resFits && instantResultsBox.classList.contains('active')) {
-            instantResultsBox.style.maxHeight = `${available}px`;
-          }
+      if (mobileSearchMq.matches) {
+        const topBound = visibleHeaderBottom + 8;
+        suggFits = (finalBarTop - topBound) >= (suggH + 8);
+        available = Math.floor((finalBarTop - suggOffset) - topBound);
+        resFits = suggFits && available >= MIN_RESULTS_SPACE;
+        if (resFits && instantResultsBox.classList.contains('active')) {
+          instantResultsBox.style.maxHeight = `${Math.max(0, Math.round(available))}px`;
         }
-
-        if (suggFits) document.body.dataset.heroSuggFit = 'true';
-        else delete document.body.dataset.heroSuggFit;
-        if (resFits) document.body.dataset.heroResFit = 'true';
-        else delete document.body.dataset.heroResFit;
-      } else if (headerSearchShell) {
-        const suggEl = headerSearchShell.querySelector('.header-suggestions-card');
-        const suggH = suggEl ? suggEl.offsetHeight : 38;
-        let suggFits = false;
-        let resFits = false;
-        let available = 0;
-
-        if (mobileSearchMq.matches) {
-          const barEl = headerSearchShell.querySelector('.omni-bar');
-          const dropdownEl = headerResultsBox.parentElement;
-          const barRect = (barEl || headerSearchShell).getBoundingClientRect();
-          const barH = Math.round(barRect.height) || 40;
-          const minBottom = visibleHeaderBottom + 8 + barH;
-          const finalBarBottom = Math.max(minBottom, Math.round(vvBottom - 10));
-          const finalBarTop = finalBarBottom - barH;
-          headerSearchShell.style.setProperty('--mobile-header-bar-bottom', `${finalBarBottom}px`);
-          const gapPx = dropdownEl ? (parseFloat(getComputedStyle(dropdownEl).rowGap) || 8) * 2 + 4 : 18;
-          const topBound = visibleHeaderBottom + 8;
-          suggFits = (finalBarTop - topBound) >= (suggH + 8);
-          available = Math.floor((finalBarTop - suggH - gapPx) - topBound);
-          resFits = suggFits && available >= MIN_RESULTS_SPACE;
-          if (resFits && headerResultsBox.classList.contains('active')) {
-            setResultsMaxHeightSmooth(headerResultsBox, available, available);
-          }
-        } else {
-          headerSearchShell.style.removeProperty('--mobile-header-bar-bottom');
-          const topBarRect = document.querySelector('.top-bar')?.getBoundingClientRect();
-          const suggBaseTop = topBarRect ? topBarRect.bottom + 12 : 66;
-          suggFits = (window.innerHeight - 8 - suggBaseTop) >= suggH;
-          const resultsTop = suggBaseTop + suggH + 8;
-          available = Math.floor(window.innerHeight - resultsTop - 16);
-          resFits = suggFits && available >= MIN_RESULTS_SPACE;
-          if (resFits && headerResultsBox.classList.contains('active')) {
-            headerResultsBox.style.maxHeight = `${available}px`;
-          }
+      } else {
+        const mainEl = document.getElementById('mainContent');
+        const mainRect = mainEl ? mainEl.getBoundingClientRect() : { top: 48, bottom: window.innerHeight };
+        const bottomBound = Math.min(mainRect.bottom, window.innerHeight) - 16;
+        suggFits = (window.innerHeight - 8 - finalBarBottom) >= (suggH + 8);
+        available = Math.floor(bottomBound - (finalBarBottom + suggOffset));
+        resFits = suggFits && available >= MIN_RESULTS_SPACE;
+        if (resFits && instantResultsBox.classList.contains('active')) {
+          instantResultsBox.style.maxHeight = `${available}px`;
         }
-
-        if (suggFits) document.body.dataset.headerSuggFit = 'true';
-        else delete document.body.dataset.headerSuggFit;
-        if (resFits) document.body.dataset.headerResFit = 'true';
-        else delete document.body.dataset.headerResFit;
       }
+
+      if (suggFits) document.body.dataset.heroSuggFit = 'true';
+      else delete document.body.dataset.heroSuggFit;
+      if (resFits) document.body.dataset.heroResFit = 'true';
+      else delete document.body.dataset.heroResFit;
       document.querySelectorAll('.results-scroll-body').forEach(updateResultsScrollFades);
     }
 
@@ -5020,27 +3815,18 @@
     let heroPointerStartedInside = false;
 
     function syncSearchUiToScreenSize() {
-      const mainPlaceholder = t(mobileSearchMq.matches
-        ? 'Search or ask AI...'
-        : 'Search docs or ask AI...');
-      heroSearchInput.placeholder = mainPlaceholder;
-      headerSearchInput.placeholder = t(window.innerWidth <= 720
+      heroSearchInput.placeholder = t(mobileSearchMq.matches
         ? 'Search or ask AI...'
         : 'Search docs or ask AI...');
 
-      if (document.body.dataset.activeAudience === 'home' && document.activeElement === heroSearchInput && !heroPointerDown) {
+      if (document.activeElement === heroSearchInput && !heroPointerDown) {
         if (document.body.dataset.heroSearch !== 'open') {
           openHeroSearchOnInteract();
           return;
         }
       }
-      if (!mobileSearchMq.matches) {
-        if (document.body.dataset.heroSearch === 'open' && !heroBarSettleTimer) {
-          document.body.dataset.heroBarSettled = 'true';
-        }
-        if (document.body.dataset.headerSearch === 'open' && !headerBarSettleTimer) {
-          document.body.dataset.headerBarSettled = 'true';
-        }
+      if (!mobileSearchMq.matches && document.body.dataset.heroSearch === 'open' && !heroBarSettleTimer) {
+        document.body.dataset.heroBarSettled = 'true';
       }
       fitHeroResultsHeight();
     }
@@ -5065,7 +3851,7 @@
     }
 
     function scheduleMobileViewportSync(e) {
-      const isViewportEvent = Boolean(e && (e.target === window.visualViewport || e.type === 'scroll'));
+      const isViewportEvent = Boolean(e && (e.target === window.visualViewport || e.type === 'resize' || e.type === 'scroll'));
       runMobileViewportSync(isViewportEvent);
       if (!mobileSearchMq.matches) return;
       cancelAnimationFrame(mobileViewportRaf1);
@@ -5089,17 +3875,8 @@
     window.visualViewport?.addEventListener('scroll', scheduleMobileViewportSync);
     heroSearchInput.addEventListener('focus', scheduleMobileViewportSync);
     heroSearchInput.addEventListener('blur', scheduleMobileViewportSync);
-    headerSearchInput.addEventListener('focus', scheduleMobileViewportSync);
-    headerSearchInput.addEventListener('blur', scheduleMobileViewportSync);
     document.getElementById('sidebarFilterInput')?.addEventListener('focus', scheduleMobileViewportSync);
     document.getElementById('sidebarFilterInput')?.addEventListener('blur', scheduleMobileViewportSync);
-    [instantResultsBox, headerResultsBox].forEach((box) => {
-      box?.addEventListener('transitionend', (e) => {
-        if (e.target === box && e.propertyName === 'max-height') {
-          updateResultsScrollFades(box.querySelector('.results-scroll-body'));
-        }
-      });
-    });
     syncSearchUiToScreenSize();
 
     function runInlineBoxQuery({ inputEl, boxEl, bodyStateKey, queryText }) {
@@ -5111,8 +3888,7 @@
         const wasOpen = document.body.dataset[bodyStateKey] === 'open';
         const isSameRendered = boxEl.classList.contains('active') && boxEl.dataset.renderedHtml === html;
         if (!wasOpen) {
-          if (bodyStateKey === 'heroSearch') delete document.body.dataset.heroBarSettled;
-          if (bodyStateKey === 'headerSearch') delete document.body.dataset.headerBarSettled;
+          delete document.body.dataset.heroBarSettled;
         }
         if (!isSameRendered) {
           boxEl.innerHTML = html;
@@ -5123,16 +3899,12 @@
         document.body.dataset[bodyStateKey] = 'open';
         fitHeroResultsHeight();
         if (!wasOpen) {
-          if (bodyStateKey === 'heroSearch') scheduleHeroBarSettle(true);
-          if (bodyStateKey === 'headerSearch') scheduleHeaderBarSettle(true);
+          scheduleHeroBarSettle(true);
         }
       } else {
         boxEl.classList.remove('active');
         delete boxEl.dataset.renderedHtml;
-        if (boxEl === headerResultsBox && (document.activeElement === headerSearchInput || document.body.dataset.headerSearch === 'open')) {
-          document.body.dataset.headerSearch = 'open';
-          fitHeroResultsHeight();
-        } else if (boxEl === instantResultsBox && (document.activeElement === heroSearchInput || document.body.dataset.heroSearch === 'open')) {
+        if (document.activeElement === heroSearchInput || document.body.dataset.heroSearch === 'open') {
           document.body.dataset.heroSearch = 'open';
           fitHeroResultsHeight();
         } else {
@@ -5150,26 +3922,11 @@
       });
     }
 
-    function triggerHeaderQuery(queryText) {
-      runInlineBoxQuery({
-        inputEl: headerSearchInput,
-        boxEl: headerResultsBox,
-        bodyStateKey: 'headerSearch',
-        queryText
-      });
-    }
-
     document.getElementById('heroClearSearchBtn')?.addEventListener('click', (e) => {
       e.stopPropagation();
       heroPointerStartedInside = false;
       heroSearchInput.value = '';
       closeHeroResults();
-      e.currentTarget.blur();
-    });
-    document.getElementById('headerClearSearchBtn')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      headerSearchInput.value = '';
-      closeHeaderResults();
       e.currentTarget.blur();
     });
 
@@ -5194,9 +3951,6 @@
       if (document.body.dataset.heroSearch === 'open' && !startedInside && !heroSearchShell?.contains(e.target)) {
         closeHeroResults();
       }
-      if (document.body.dataset.headerSearch === 'open' && !headerSearchShell?.contains(e.target) && !e.target.closest('#openAiCopilotBtn')) {
-        closeHeaderResults();
-      }
     });
 
     heroSearchInput.addEventListener('pointerdown', () => {
@@ -5207,22 +3961,20 @@
     });
     function openHeroSearchOnInteract() {
       const hasQuery = Boolean(heroSearchInput.value.trim());
-      if (document.body.dataset.activeAudience === 'home') {
-        const wasOpen = document.body.dataset.heroSearch === 'open';
-        const startY = getCurrentTranslateY(heroSearchShell);
-        if (!wasOpen) delete document.body.dataset.heroBarSettled;
-        document.body.dataset.heroSearch = 'open';
-        const { shift } = updateHeroSearchPosition();
-        if (hasQuery) {
-          triggerHeroQuery();
-        } else {
-          instantResultsBox.classList.remove('active');
-          delete instantResultsBox.dataset.renderedHtml;
-          fitHeroResultsHeight();
-        }
-        if (!wasOpen) {
-          scheduleHeroBarSettle(Math.abs(shift - startY) > 1);
-        }
+      const wasOpen = document.body.dataset.heroSearch === 'open';
+      const startY = getCurrentTranslateY(heroSearchShell);
+      if (!wasOpen) delete document.body.dataset.heroBarSettled;
+      document.body.dataset.heroSearch = 'open';
+      const { shift } = updateHeroSearchPosition();
+      if (hasQuery) {
+        triggerHeroQuery();
+      } else {
+        instantResultsBox.classList.remove('active');
+        delete instantResultsBox.dataset.renderedHtml;
+        fitHeroResultsHeight();
+      }
+      if (!wasOpen) {
+        scheduleHeroBarSettle(Math.abs(shift - startY) > 1);
       }
     }
 
@@ -5249,59 +4001,17 @@
       triggerHeroQuery(heroSearchInput.value.trim() ? heroSearchInput.value : t('Create a cBot in Python'));
     });
 
-    function openHeaderSuggestions() {
-      if (document.body.dataset.activeAudience === 'home') return;
-      const wasOpen = document.body.dataset.headerSearch === 'open';
-      if (!wasOpen) delete document.body.dataset.headerBarSettled;
-      document.body.dataset.headerSearch = 'open';
-      fitHeroResultsHeight();
-      if (!wasOpen) {
-        scheduleHeaderBarSettle(true);
-      }
-    }
-
-    let headerPointerDown = false;
-
-    headerSearchInput.addEventListener('pointerdown', () => {
-      headerPointerDown = true;
-    });
-    headerSearchInput.addEventListener('input', () => {
-      triggerHeaderQuery();
-    });
-    headerSearchInput.addEventListener('focus', () => {
-      if (headerPointerDown) return;
-      openHeaderSuggestions();
-      if (headerSearchInput.value.trim()) triggerHeaderQuery();
-    });
-    headerSearchInput.addEventListener('click', () => {
-      headerPointerDown = false;
-      openHeaderSuggestions();
-      if (headerSearchInput.value.trim()) triggerHeaderQuery();
-    });
     function clearPointerFlags() {
       setTimeout(() => {
         heroPointerDown = false;
         heroPointerStartedInside = false;
-        headerPointerDown = false;
       }, 0);
     }
     window.addEventListener('pointerup', clearPointerFlags);
     window.addEventListener('pointercancel', clearPointerFlags);
-    headerSearchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        triggerHeaderQuery(headerSearchInput.value);
-      }
-    });
-    document.getElementById('headerAskAiBtn').addEventListener('click', () => {
-      triggerHeaderQuery(headerSearchInput.value.trim() ? headerSearchInput.value : t('Create a cBot in Python'));
-    });
 
     document.querySelectorAll('[data-quick-query]').forEach((chip) => {
       chip.addEventListener('click', () => triggerHeroQuery(chip.textContent.trim() || chip.dataset.quickQuery));
-    });
-    document.querySelectorAll('[data-header-query]').forEach((chip) => {
-      chip.addEventListener('click', () => triggerHeaderQuery(chip.textContent.trim() || chip.dataset.headerQuery));
     });
 
     function normalizeWheelDelta(delta, deltaMode, pageSize) {
@@ -5319,7 +4029,7 @@
     }
 
     document.querySelectorAll('.prompt-chips-row').forEach((row) => {
-      const wheelTarget = row.closest('.header-suggestions-card, .suggestions-bar') || row;
+      const wheelTarget = row.closest('.suggestions-bar') || row;
       let targetLeft = 0;
       let currentLeft = 0;
       let rafId = 0;
@@ -5383,144 +4093,9 @@
     });
 
     function focusActiveSearchBar() {
-      if (document.body.dataset.activeAudience === 'home') {
-        heroSearchInput.focus();
-        openHeroSearchOnInteract();
-      } else {
-        openHeaderSuggestions();
-        headerSearchInput.focus();
-        if (headerSearchInput.value.trim()) triggerHeaderQuery();
-      }
+      heroSearchInput.focus();
+      openHeroSearchOnInteract();
     }
-
-    document.getElementById('openAiCopilotBtn').addEventListener('click', () => {
-      if (document.body.dataset.headerSearch === 'open') {
-        closeHeaderResults();
-      } else {
-        openHeaderSuggestions();
-        headerSearchInput.focus();
-        if (headerSearchInput.value.trim()) triggerHeaderQuery();
-      }
-    });
-
-    // 9. Issue Triage
-    const diagnosticFlows = {
-      login: {
-        title: "cTrader ID (cTID) & Account Access",
-        steps: [
-          "1. Sign in with your cTrader ID email rather than a broker account number.",
-          "2. Confirm your broker trading account is linked to your cTID profile.",
-          "3. Use cTID recovery if two-factor or password verification fails."
-        ],
-        links: [
-          { label: "cTrader ID", url: "https://help.ctrader.com/ctrader-id/" },
-          { label: "Create a new cTID", url: "https://help.ctrader.com/ctrader-id/create-a-new-ctrader-id/" },
-          { label: "Troubleshooting", url: "https://help.ctrader.com/troubleshooting/" }
-        ]
-      },
-      orders: {
-        title: "Order Execution & Margin",
-        steps: [
-          "1. Check Free Margin and active market session hours for the symbol.",
-          "2. Verify Stop Loss / Take Profit respects minimum broker distance.",
-          "3. Check how promotional bonuses impact available margin."
-        ],
-        links: [
-          { label: "Orders Guide", url: "https://help.ctrader.com/trading-with-ctrader/orders/" },
-          { label: "cTrader Bonuses", url: "https://help.ctrader.com/bonuses/" },
-          { label: "Knowledge Base", url: "https://help.ctrader.com/knowledge-base/" }
-        ]
-      },
-      cbot: {
-        title: "cBot & Python Execution",
-        steps: [
-          "1. Inspect the cBot Log tab in cTrader Algo for compile or runtime errors.",
-          "2. Verify Python environment configuration for Python cBots.",
-          "3. Confirm the cBot instance is attached to an active chart and started."
-        ],
-        links: [
-          { label: "Start a cBot", url: "https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/" },
-          { label: "Create a cBot in Python", url: "https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/" },
-          { label: "cTrader CLI", url: "https://help.ctrader.com/ctrader-cli/" }
-        ]
-      },
-      plugin: {
-        title: "Store Products & WebView Plugins",
-        steps: [
-          "1. Sign in with the same cTID used to acquire the Store product.",
-          "2. Enable WebView plugin permissions in platform settings.",
-          "3. Review buyer and seller installation guides."
-        ],
-        links: [
-          { label: "Use a Store Product", url: "https://help.ctrader.com/ctrader-store/how-tos/use-a-product/" },
-          { label: "Add a WebView Plugin", url: "https://help.ctrader.com/webview-plugins/how-tos/add-wv-plugins/" },
-          { label: "Plugins Hub", url: "https://help.ctrader.com/plugins/" }
-        ]
-      }
-    };
-
-    const diagnosticOutput = document.getElementById('diagnosticOutput');
-    const symptomBtns = document.querySelectorAll('.symptom-btn');
-
-    let currentDiagnosticSymptom = 'login';
-
-    function renderDiagnostic(symptomKey) {
-      currentDiagnosticSymptom = symptomKey;
-      const item = diagnosticFlows[symptomKey];
-      const arrow = currentLang === 'ar' ? '←' : '→';
-      symptomBtns.forEach((b) => b.setAttribute('aria-pressed', b.dataset.symptom === symptomKey ? 'true' : 'false'));
-      diagnosticOutput.innerHTML = `
-        <strong style="font-size:0.8rem;">${t(item.title)}</strong>
-        <div style="display:flex;flex-direction:column;gap:0.2rem;color:var(--text-secondary);">
-          ${item.steps.map((s) => `<span>${t(s)}</span>`).join('')}
-        </div>
-        <div class="doc-sublinks" style="margin-top:0.2rem;">
-          ${item.links.map((l) => `<a class="sublink-pill" href="${localizeDocUrl(l.url)}" target="_blank" rel="noopener">${t(l.label)} ${arrow}</a>`).join('')}
-        </div>
-      `;
-    }
-    symptomBtns.forEach((btn) => btn.addEventListener('click', () => renderDiagnostic(btn.dataset.symptom)));
-    renderDiagnostic('login');
-
-    // 10. MCP / LLM Context Builder
-    const builderCodeBox = document.getElementById('builderCodeBox');
-    const copyBuilderBtn = document.getElementById('copyBuilderBtn');
-    const mcpSnippet = `{
-  "mcpServers": {
-    "ctrader-agent": {
-      "command": "npx",
-      "args": ["-y", "@spotware/ctrader-mcp-server"],
-      "env": {
-        "CTRADER_CL_ENV": "demo"
-      }
-    }
-  }
-}`;
-    const llmContextSnippet = `# cTrader Help Centre — Context Links
-- cTrader ID: https://help.ctrader.com/ctrader-id/
-- Trading & Orders: https://help.ctrader.com/trading-with-ctrader/orders/
-- cTrader Algo (C# & Python): https://help.ctrader.com/ctrader-algo/
-- Create a cBot in Python: https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/
-- cTrader MCP Servers: https://help.ctrader.com/ctrader-ai-agent-connect/
-- cTrader CLI: https://help.ctrader.com/ctrader-cli/
-- Open API: https://help.ctrader.com/open-api/ | FIX API: https://help.ctrader.com/fix/
-- Partner Tools: https://help.ctrader.com/partner-tools/`;
-
-    document.getElementById('builderTabMcp').addEventListener('click', () => {
-      builderCodeBox.textContent = mcpSnippet;
-      builderCodeBox.scrollTop = 0;
-      builderCodeBox.scrollLeft = 0;
-    });
-    document.getElementById('builderTabLlm').addEventListener('click', () => {
-      builderCodeBox.textContent = llmContextSnippet;
-      builderCodeBox.scrollTop = 0;
-      builderCodeBox.scrollLeft = 0;
-    });
-    copyBuilderBtn.addEventListener('click', () => {
-      navigator.clipboard?.writeText(builderCodeBox.textContent);
-      copyBuilderBtn.textContent = t('Copied');
-      setTimeout(() => { copyBuilderBtn.textContent = t('Copy'); }, 1500);
-    });
 
     // Enable scrolling on a code section only after the user clicks on it (and only if its content overflows)
     function isCodeBoxOverflowing(box) {
@@ -5552,7 +4127,7 @@
           openModal.close();
           return;
         }
-        if (document.body.dataset.heroSearch === 'open' || document.body.dataset.headerSearch === 'open') {
+        if (document.body.dataset.heroSearch === 'open') {
           e.preventDefault();
           closeAllInlineResults();
           return;
@@ -5573,30 +4148,8 @@
       } else if (e.key === '[') {
         e.preventDefault();
         sidebarCycleBtn.click();
-      } else if (['1', '2', '3', '4', '5', '6'].includes(e.key)) {
-        const map = { '1': 'home', '2': 'traders', '3': 'algo', '4': 'developers', '5': 'partners', '6': 'resources' };
-        selectAudience(map[e.key]);
       }
     });
-
-    // 12. Back to Top Button
-    const mainContentEl = document.getElementById('mainContent');
-    const mainInnerEl = mainContentEl?.querySelector('.main-inner');
-    mainContentEl?.addEventListener('scroll', () => {
-      updateBackToTopVisibility();
-      fitHeroResultsHeight();
-    }, { passive: true });
-    window.addEventListener('resize', updateBackToTopVisibility);
-    if ('ResizeObserver' in window && mainInnerEl) {
-      new ResizeObserver(updateBackToTopVisibility).observe(mainInnerEl);
-    }
-    document.getElementById('backToTopBtn')?.addEventListener('click', () => {
-      mainContentEl?.scrollTo({
-        top: 0,
-        behavior: reducedMotionMq.matches ? 'auto' : 'smooth'
-      });
-    });
-    updateBackToTopVisibility();
 
     // Home Ecosystem Banner Carousel (single-card view on <= 560px)
     const ecoCarouselStage = document.getElementById('ecoCarouselStage');
@@ -6131,13 +4684,9 @@
 
       // Re-render dynamic widgets and open search views
       syncSearchUiToScreenSize();
-      renderDiagnostic(currentDiagnosticSymptom);
 
       if (document.body.dataset.heroSearch === 'open') {
         triggerHeroQuery();
-      }
-      if (document.body.dataset.headerSearch === 'open') {
-        triggerHeaderQuery();
       }
 
       // Re-run active sidebar filter if populated
@@ -6146,7 +4695,6 @@
         document.getElementById('sidebarFilterInput')?.dispatchEvent(new Event('input'));
       }
 
-      updateBackToTopVisibility();
       document.querySelectorAll('.prompt-chips-row').forEach((row) => updateChipRowFades(row));
     }
 
@@ -6157,10 +4705,8 @@
       item.addEventListener('click', (e) => {
         e.preventDefault();
         const nextLang = item.dataset.lang || 'en';
-        const activeAud = document.body.dataset.activeAudience || 'home';
         try {
           localStorage.setItem(I18N_STORAGE_KEY, nextLang);
-          sessionStorage.setItem(AUDIENCE_STORAGE_KEY, activeAud);
         } catch {}
         closeLangPopover();
         window.location.reload();
@@ -6183,7 +4729,7 @@
     try {
       applyLanguage(initialLang, { persist: false });
     } finally {
-      document.documentElement.classList.remove('i18n-pending', 'view-pending');
+      document.documentElement.classList.remove('i18n-pending');
     }
   </script>
 </body>
