@@ -674,8 +674,18 @@
     .nav-group > summary::-webkit-details-marker {
       display: none;
     }
-    .nav-group > summary:hover {
-      background: var(--bg-subtle);
+    @media (hover: hover) and (pointer: fine) {
+      .nav-group > summary:hover {
+        background: var(--bg-subtle);
+      }
+    }
+    @media (max-width: 560px), (hover: none) {
+      .nav-group > summary:hover {
+        background: transparent;
+      }
+      .nav-group[open]:not(.is-closing) > summary {
+        background: var(--bg-subtle);
+      }
     }
 
     .nav-group > summary::before {
@@ -770,6 +780,49 @@
     body[data-active-audience="home"] .main-container {
       scrollbar-gutter: auto;
       overflow-y: hidden;
+    }
+    body[data-active-audience="home"][data-home-scroll="true"] .main-container {
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    body[data-active-audience="home"][data-home-scroll-x="true"] .main-container {
+      overflow-x: auto;
+    }
+    body[data-active-audience="home"][data-home-scroll="true"][data-hero-search="open"] .main-container,
+    body[data-active-audience="home"][data-home-scroll="true"]:has(dialog.home-modal[open]) .main-container,
+    body[data-active-audience="home"][data-home-scroll="true"]:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
+    body[data-active-audience="home"][data-home-scroll="true"][data-mobile-nav="open"] .main-container {
+      overflow: hidden;
+    }
+    body[data-active-audience="home"][data-home-scroll="true"] .main-inner {
+      flex: 1 0 auto;
+      min-height: auto;
+      padding-top: 1.15rem;
+      padding-bottom: 1.25rem;
+    }
+    body[data-active-audience="home"][data-home-scroll="true"] .hero-section {
+      flex: 1 0 auto;
+      min-height: auto;
+      justify-content: center;
+      padding: 0.5rem 0;
+      gap: 1.1rem;
+    }
+    body[data-active-audience="home"][data-home-scroll="true"] .hero-copy h1 {
+      margin: 0 0 0.65rem;
+      font-size: clamp(1.32rem, 4.2vw, 1.95rem);
+    }
+    body[data-active-audience="home"][data-home-scroll="true"] .hero-copy p {
+      font-size: clamp(0.8rem, 2.2vw, 0.92rem);
+      line-height: 1.45;
+    }
+    body[data-active-audience="home"][data-home-scroll="true"] .ecosystem-banners-grid {
+      max-width: min(720px, 100%);
+    }
+    body[data-active-audience="home"][data-home-scroll-x="true"] .main-inner,
+    body[data-active-audience="home"][data-home-scroll-x="true"] .site-footer {
+      min-width: 300px;
     }
 
     .main-inner {
@@ -1721,11 +1774,15 @@
     .footer-links {
       display: flex;
       align-items: center;
-      gap: 0.35rem 0.85rem;
+      gap: 0.35rem 0.5rem;
       flex-wrap: wrap;
       margin: 0;
       padding: 0;
       text-indent: 0;
+    }
+    .footer-sep {
+      color: var(--border-strong);
+      user-select: none;
     }
     .social-links {
       flex-shrink: 0;
@@ -2433,7 +2490,7 @@
       }
       .footer-links {
         justify-content: center;
-        gap: 0.35rem 0.85rem;
+        gap: 0.3rem 0.45rem;
       }
       .social-links {
         justify-content: center;
@@ -2479,6 +2536,44 @@
           padding: 0.42rem 0.7rem;
           font-size: 0.62rem;
         }
+      }
+      body[data-active-audience="home"][data-home-scroll="true"] .main-container {
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+      }
+      body[data-active-audience="home"][data-home-scroll-x="true"] .main-container {
+        overflow-x: auto;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"] .main-inner {
+        padding: 0.95rem 1rem 1.1rem;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"] .hero-section {
+        gap: 0.95rem;
+        padding: 0.35rem 0;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"] .hero-copy h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.28rem;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"] .hero-copy p {
+        font-size: 0.78rem;
+        line-height: 1.4;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"] .eco-carousel-stage {
+        width: clamp(165px, 52vw, 220px);
+        max-width: 220px;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"][data-hero-search="open"] .main-container,
+      body[data-active-audience="home"][data-home-scroll="true"][data-hero-search-closing="sliding"] .main-container {
+        overflow-x: clip;
+        overflow-y: visible;
+      }
+      body[data-active-audience="home"][data-home-scroll="true"]:has(dialog.home-modal[open]) .main-container,
+      body[data-active-audience="home"][data-home-scroll="true"]:has(#langPopover:is(:popover-open, .\:popover-open)) .main-container,
+      body[data-active-audience="home"][data-home-scroll="true"][data-mobile-nav="open"] .main-container {
+        overflow: hidden;
       }
     }
 
@@ -2802,7 +2897,9 @@
             <span>Copyright © 2026 <a href="https://www.spotware.com/" target="_blank" rel="noopener">Spotware Systems Ltd</a>. cTrader®, Traders First®, Open Trading Platform®. All rights reserved.</span>
             <span class="footer-links">
               <a href="https://ctrader.com/legal-notices/" target="_blank" rel="noopener">Legal notices</a>
+              <span class="footer-sep" aria-hidden="true">|</span>
               <a href="https://ctrader.com/eula/" target="_blank" rel="noopener">EULA</a>
+              <span class="footer-sep" aria-hidden="true">|</span>
               <a href="https://ctrader.com/copyright-infringement/" target="_blank" rel="noopener">Copyright infringement notification</a>
             </span>
           </div>
@@ -3275,6 +3372,7 @@
         sidebarGroups.forEach((other) => {
           setNavGroupOpen(other, other === group ? willOpen : false);
         });
+        if (!willOpen) summary.blur();
       });
     });
 
@@ -3573,6 +3671,16 @@
         filterFaqItems('all');
       }
       if (triggerEl) lastModalTrigger.set(dialog, triggerEl);
+      const mainEl = document.getElementById('mainContent');
+      if (mainEl && document.body.dataset.homeScroll === 'true') {
+        dialog.style.top = `${mainEl.scrollTop}px`;
+        dialog.style.bottom = 'auto';
+        dialog.style.height = `${mainEl.clientHeight}px`;
+      } else {
+        dialog.style.top = '';
+        dialog.style.bottom = '';
+        dialog.style.height = '';
+      }
       if (!dialog.open) {
         dialog.show();
       }
@@ -3596,6 +3704,9 @@
       if (!dialog) return;
       dialog.addEventListener('close', () => {
         cancelModalResize(dialog);
+        dialog.style.top = '';
+        dialog.style.bottom = '';
+        dialog.style.height = '';
         if (dialog === faqDialog) {
           if (faqCollapseTimer) clearTimeout(faqCollapseTimer);
           if (reducedMotionMq.matches) {
@@ -3976,6 +4087,25 @@
 
     let lastMobileWidth = document.documentElement.clientWidth || window.innerWidth;
     let mobileFullHeight = 0;
+    const MIN_HOME_WIDTH = 300;
+    const MIN_HOME_HEIGHT = 540;
+
+    function syncHomeScrollMode(metrics) {
+      const currentWidth = document.documentElement.clientWidth || window.innerWidth;
+      const effectiveHeight = mobileSearchMq.matches
+        ? (mobileFullHeight || metrics.vvHeight)
+        : window.innerHeight;
+      const tooNarrow = currentWidth < MIN_HOME_WIDTH;
+      const tooShort = effectiveHeight < MIN_HOME_HEIGHT;
+      if (tooNarrow || tooShort) {
+        document.body.dataset.homeScroll = 'true';
+        if (tooNarrow) document.body.dataset.homeScrollX = 'true';
+        else delete document.body.dataset.homeScrollX;
+      } else {
+        delete document.body.dataset.homeScroll;
+        delete document.body.dataset.homeScrollX;
+      }
+    }
 
     function syncMobileViewportVars(metrics) {
       const rootStyle = document.documentElement.style;
@@ -4013,6 +4143,7 @@
         rootStyle.removeProperty('--mobile-nav-bottom');
         rootStyle.removeProperty('--mobile-nav-max-height');
       }
+      syncHomeScrollMode(metrics);
     }
 
     let lastHeroRestingTop = null;
@@ -4244,7 +4375,7 @@
         if (shellEl.scrollLeft !== 0) shellEl.scrollLeft = 0;
       }
       const mainEl = document.getElementById('mainContent');
-      if (mainEl) {
+      if (mainEl && document.body.dataset.homeScroll !== 'true') {
         if (mainEl.scrollTop !== 0) mainEl.scrollTop = 0;
         if (mainEl.scrollLeft !== 0) mainEl.scrollLeft = 0;
       }
