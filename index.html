@@ -243,8 +243,8 @@
       width: 36px;
       height: 36px;
       border-radius: var(--radius-sm);
-      border: 1px solid transparent;
-      background: transparent;
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
       color: var(--text-secondary);
       cursor: pointer;
       transition: color 0.15s, background 0.15s, border-color 0.15s;
@@ -252,7 +252,7 @@
     .icon-btn:hover {
       color: var(--text-primary);
       background: var(--bg-subtle);
-      border-color: var(--border);
+      border-color: var(--border-strong);
     }
 
     .sidebar-icon-top {
@@ -1001,7 +1001,7 @@
     .omni-clear-btn:hover {
       color: var(--text-primary);
       background: var(--bg-subtle);
-      border-color: var(--border);
+      border-color: var(--border-strong);
     }
     body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-clear-btn,
     .omni-search-shell .omni-bar:has(.omni-input:not(:placeholder-shown)) .omni-clear-btn {
@@ -2044,14 +2044,18 @@
         pointer-events: none;
       }
       body[data-active-audience="home"][data-hero-search="open"] .workspace-shell,
-      body[data-active-audience="home"][data-hero-search="open"] .main-container {
+      body[data-active-audience="home"][data-hero-search="open"] .main-container,
+      body[data-active-audience="home"][data-hero-search-closing="sliding"] .workspace-shell,
+      body[data-active-audience="home"][data-hero-search-closing="sliding"] .main-container {
         overflow-x: clip;
         overflow-y: visible;
       }
-      body[data-active-audience="home"][data-hero-search="open"] .main-inner {
+      body[data-active-audience="home"][data-hero-search="open"] .main-inner,
+      body[data-active-audience="home"][data-hero-search-closing="sliding"] .main-inner {
         z-index: auto;
       }
-      body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell {
+      body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell,
+      body[data-active-audience="home"][data-hero-search-closing="sliding"] .omni-search-shell {
         z-index: 45;
       }
       .mobile-nav-backdrop {
@@ -2790,7 +2794,6 @@
                   <option value="algo">Algo Traders &amp; Quants</option>
                   <option value="developers">Developers &amp; Store Sellers</option>
                   <option value="partners">Partners &amp; IBs</option>
-                  <option value="resources">Resources</option>
                 </select>
               </div>
               <button type="button" class="icon-btn home-modal-close" data-close-dialog="popularGuidesDialog" aria-label="Close" title="Close">
@@ -2842,7 +2845,7 @@
                 </div>
                 <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
               </a>
-              <a class="guide-card" data-guide-audience="traders algo resources" href="https://help.ctrader.com/knowledge-base/indicators/" target="_blank" rel="noopener">
+              <a class="guide-card" data-guide-audience="traders algo" href="https://help.ctrader.com/knowledge-base/indicators/" target="_blank" rel="noopener">
                 <div class="guide-card-head">
                   <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 2h2v18h18v2H2zm7 8a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m4-8a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m5 10a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3"/></svg>
                   <h4>Indicators | Knowledge base</h4>
@@ -2893,7 +2896,6 @@
                   <option value="algo">Algo Traders &amp; Quants</option>
                   <option value="developers">Developers &amp; Store Sellers</option>
                   <option value="partners">Partners &amp; IBs</option>
-                  <option value="resources">Resources</option>
                 </select>
               </div>
               <button type="button" class="ghost-btn" commandfor="faqAccordionGroup" command="--toggle-all" aria-expanded="false" id="faqToggleAllBtn">
@@ -2907,7 +2909,7 @@
           </div>
           <div class="home-modal-body">
             <section class="faq-accordion-section" id="faqAccordionGroup" aria-labelledby="faqHeading">
-              <details id="faq-ctid" data-faq-audience="traders algo partners resources">
+              <details id="faq-ctid" data-faq-audience="traders algo partners">
                 <summary>What is the difference between a broker trading account and a cTrader ID (cTID)?</summary>
                 <div class="faq-body">
                   Your <a href="https://help.ctrader.com/ctrader-id/" class="primary-hub-link" target="_blank" rel="noopener">cTrader ID (cTID)</a> is your single sign-on login across the cTrader ecosystem. Broker demo and live accounts link to your cTID so charts, workspaces, and Cloud cBots synchronize across <a href="https://help.ctrader.com/ctrader/" class="primary-hub-link" target="_blank" rel="noopener">Windows</a>, <a href="https://help.ctrader.com/ctrader-mac/" class="primary-hub-link" target="_blank" rel="noopener">Mac</a>, <a href="https://help.ctrader.com/ctrader-web/" class="primary-hub-link" target="_blank" rel="noopener">Web</a>, and <a href="https://help.ctrader.com/ctrader-mobile/" class="primary-hub-link" target="_blank" rel="noopener">Mobile</a>.
@@ -3714,30 +3716,108 @@
     }
 
     heroSearchShell?.addEventListener('transitionend', (e) => {
-      if (e.target === heroSearchShell && e.propertyName === 'transform' &&
-          document.body.dataset.heroSearch === 'open' &&
-          document.body.dataset.heroBarSettled !== 'true') {
+      if (e.target !== heroSearchShell || e.propertyName !== 'transform') return;
+      if (document.body.dataset.heroSearch === 'open' &&
+          document.body.dataset.heroBarSettled !== 'true' &&
+          !document.body.dataset.heroSearchClosing) {
         settleHeroBar();
+      } else if (document.body.dataset.heroSearchClosing === 'sliding') {
+        finishHeroCloseSlide();
       }
     });
 
-    function closeHeroResults() {
-      cancelHeroPendingKeyboard();
-      cancelHeroBarSettle();
+    let heroCloseFadeTimer = 0;
+    let heroCloseSlideTimer = 0;
+
+    function cancelHeroClose() {
+      if (heroCloseFadeTimer) {
+        clearTimeout(heroCloseFadeTimer);
+        heroCloseFadeTimer = 0;
+      }
+      if (heroCloseSlideTimer) {
+        clearTimeout(heroCloseSlideTimer);
+        heroCloseSlideTimer = 0;
+      }
+      delete document.body.dataset.heroSearchClosing;
+    }
+
+    function finishHeroCloseSlide() {
+      cancelHeroClose();
       instantResultsBox.classList.remove('active');
       delete instantResultsBox.dataset.renderedHtml;
+      lastHeroRestingTop = null;
+      syncSearchUiToScreenSize();
+    }
+
+    function startHeroCloseSlide() {
+      heroCloseFadeTimer = 0;
+      if (document.body.dataset.heroSearchClosing !== 'fading') return;
+      const currentY = getCurrentTranslateY(heroSearchShell);
+      const needsSlide = Math.abs(currentY) > 1;
       delete document.body.dataset.heroSearch;
       delete document.body.dataset.heroBarSettled;
       delete document.body.dataset.heroSuggFit;
       delete document.body.dataset.heroResFit;
-      lastHeroRestingTop = null;
+      if (needsSlide) {
+        document.body.dataset.heroSearchClosing = 'sliding';
+        heroCloseSlideTimer = setTimeout(finishHeroCloseSlide, 320);
+      } else {
+        finishHeroCloseSlide();
+      }
+    }
+
+    function closeHeroResults({ immediate = false } = {}) {
+      cancelHeroPendingKeyboard();
+      cancelHeroBarSettle();
+      const wasOpen = document.body.dataset.heroSearch === 'open';
+      const isClosing = Boolean(document.body.dataset.heroSearchClosing);
+
+      if (immediate || !mobileSearchMq.matches || reducedMotionMq.matches || (!wasOpen && !isClosing)) {
+        cancelHeroClose();
+        instantResultsBox.classList.remove('active');
+        delete instantResultsBox.dataset.renderedHtml;
+        delete document.body.dataset.heroSearch;
+        delete document.body.dataset.heroBarSettled;
+        delete document.body.dataset.heroSuggFit;
+        delete document.body.dataset.heroResFit;
+        lastHeroRestingTop = null;
+        if (document.activeElement === heroSearchInput) {
+          heroSearchInput.blur();
+        }
+        return;
+      }
+
+      if (isClosing) return;
+
+      const hadVisibleOverlays = document.body.dataset.heroBarSettled === 'true' && (
+        document.body.dataset.heroSuggFit === 'true' ||
+        (document.body.dataset.heroResFit === 'true' && instantResultsBox.classList.contains('active'))
+      );
+
+      const frozenShift = Math.round(getCurrentTranslateY(heroSearchShell));
+      if (heroSearchShell) {
+        heroSearchShell.style.setProperty('--hero-search-shift', `${frozenShift}px`);
+      }
+
+      document.body.dataset.heroSearchClosing = 'fading';
+      instantResultsBox.classList.remove('active');
+      delete document.body.dataset.heroBarSettled;
+      delete document.body.dataset.heroSuggFit;
+      delete document.body.dataset.heroResFit;
+
       if (document.activeElement === heroSearchInput) {
         heroSearchInput.blur();
+      }
+
+      if (hadVisibleOverlays) {
+        heroCloseFadeTimer = setTimeout(startHeroCloseSlide, 210);
+      } else {
+        startHeroCloseSlide();
       }
     }
 
     function closeAllInlineResults() {
-      closeHeroResults();
+      closeHeroResults({ immediate: true });
     }
 
     function getCurrentTranslateY(el) {
@@ -3775,7 +3855,7 @@
         const widthChanged = Math.abs(currentWidth - lastMobileWidth) > 20;
         const filterInput = document.getElementById('sidebarFilterInput');
         const inputFocused = document.activeElement === heroSearchInput || document.activeElement === filterInput;
-        const keyboardContext = inputFocused || document.body.dataset.heroSearch === 'open' || document.body.dataset.mobileNav === 'open';
+        const keyboardContext = inputFocused || document.body.dataset.heroSearch === 'open' || Boolean(document.body.dataset.heroSearchClosing) || document.body.dataset.mobileNav === 'open';
         if (widthChanged) {
           lastMobileWidth = currentWidth;
           mobileFullHeight = metrics.vvHeight;
@@ -3846,6 +3926,16 @@
       const suggH = suggEl ? suggEl.offsetHeight : 38;
       const suggOffset = suggH + 14;
 
+      if (document.body.dataset.heroSearchClosing) {
+        return {
+          shift: currentY,
+          currentBarTop: barRect.top,
+          finalBarTop: restingTop + currentY,
+          finalBarBottom: restingBottom + currentY,
+          suggOffset,
+          visibleHeaderBottom
+        };
+      }
       if (heroAwaitingKeyboard && !mobileSearchMq.matches) {
         cancelHeroPendingKeyboard();
       }
@@ -3950,6 +4040,7 @@
       const metrics = getMobileViewportMetrics();
       const { visibleHeaderBottom } = metrics;
       syncMobileViewportVars(metrics);
+      if (document.body.dataset.heroSearchClosing) return;
       const MIN_RESULTS_SPACE = 76;
 
       const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition();
@@ -3994,7 +4085,7 @@
         ? 'Search or ask AI...'
         : 'Search docs or ask AI...');
 
-      if (document.activeElement === heroSearchInput && !heroPointerDown) {
+      if (document.activeElement === heroSearchInput && !heroPointerDown && !document.body.dataset.heroSearchClosing) {
         if (document.body.dataset.heroSearch !== 'open') {
           openHeroSearchOnInteract();
           return;
@@ -4083,6 +4174,7 @@
     function runInlineBoxQuery({ inputEl, boxEl, bodyStateKey, queryText }) {
       if (queryText !== undefined) inputEl.value = queryText;
       const val = inputEl.value.trim();
+      if (val) cancelHeroClose();
       if (val && heroAwaitingKeyboard) {
         cancelHeroPendingKeyboard();
       }
@@ -4187,6 +4279,7 @@
     }
 
     function openHeroSearchOnInteract() {
+      cancelHeroClose();
       if (heroAwaitingKeyboard) return;
       const hasQuery = Boolean(heroSearchInput.value.trim());
       const wasOpen = document.body.dataset.heroSearch === 'open';
