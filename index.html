@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
   <title>cTrader Help Centre</title>
   <link rel="icon" href="https://help.ctrader.com/img/logo.png">
   <!-- Default to light theme; supports toggling between light and dark -->
@@ -2261,9 +2261,20 @@
       :root {
         --header-height: 48px;
       }
+      html {
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+      }
       body {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: var(--mobile-vv-top, 0px);
+        height: var(--mobile-vv-height, 100dvh);
         padding-top: var(--header-height);
         padding-bottom: 52px;
+        overflow: hidden;
       }
       .main-inner {
         padding: 1.25rem 1.15rem 3.5rem;
@@ -2311,8 +2322,8 @@
       #sidebarCycleBtn {
         position: fixed;
         left: 50%;
-        top: auto;
-        bottom: 8px;
+        top: calc(var(--mobile-vv-bottom, 100dvh) - 44px);
+        bottom: auto;
         transform: translateX(-50%);
         z-index: 42;
         transition: filter 0.18s ease, opacity 0.18s ease, color 0.15s, background 0.15s, border-color 0.15s;
@@ -2332,21 +2343,24 @@
       #themeToggleBtn {
         position: fixed;
         left: 25%;
-        bottom: 8px;
+        top: 7px;
+        bottom: auto;
         transform: translateX(-50%);
         z-index: 42;
       }
       #openAiCopilotBtn {
         position: fixed;
         left: 60%;
-        bottom: 8px;
+        top: 7px;
+        bottom: auto;
         transform: translateX(-50%);
         z-index: 42;
       }
       #langTriggerBtn {
         position: fixed;
         left: 75%;
-        bottom: 8px;
+        top: 7px;
+        bottom: auto;
         height: 36px;
         transform: translateX(-50%);
         z-index: 42;
@@ -2364,7 +2378,8 @@
         position: fixed;
         left: 0;
         right: 0;
-        bottom: 0;
+        top: calc(var(--mobile-vv-bottom, 100dvh) - 52px);
+        bottom: auto;
         width: 100%;
         height: 52px;
         padding: 0 0.75rem;
@@ -2401,21 +2416,22 @@
         position: fixed;
         left: 0.75rem;
         right: 0.75rem;
-        bottom: 10px;
+        top: var(--mobile-header-bar-bottom, calc(var(--mobile-vv-bottom, 100dvh) - 10px));
+        bottom: auto;
         max-width: none;
         height: auto;
         z-index: 43;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transform: translateY(18px);
+        transform: translateY(calc(-100% + 18px));
         transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
       }
       body:not([data-active-audience="home"])[data-header-search="open"] .header-search-shell {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transform: translateY(var(--mobile-header-search-shift, 0px));
+        transform: translateY(-100%);
         transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s;
       }
       body:not([data-active-audience="home"]) .header-search-shell .omni-bar {
@@ -2423,8 +2439,9 @@
         gap: 0.4rem;
       }
       body:not([data-active-audience="home"]) .header-search-shell .omni-input {
-        font-size: 0.8rem;
-        padding: 0.26rem 0;
+        font-size: 16px;
+        line-height: 1.25;
+        padding: 0.14rem 0;
       }
       body:not([data-active-audience="home"]) .header-search-shell .btn-subtle-accent {
         padding: 0.34rem 0.6rem;
@@ -2437,6 +2454,7 @@
         left: 0;
         right: 0;
         width: auto;
+        transform: none;
         flex-direction: column-reverse;
         gap: 0.45rem;
         pointer-events: none;
@@ -2482,24 +2500,28 @@
         transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s, max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .mobile-nav-backdrop {
-        inset: calc(var(--mobile-vv-top, 0px) + var(--header-height)) 0 52px 0;
+        top: calc(var(--mobile-vv-top, 0px) + var(--header-height));
+        left: 0;
+        right: 0;
+        bottom: auto;
+        height: calc(var(--mobile-vv-height, 100dvh) - var(--header-height) - 52px);
       }
       .left-nav-panel {
-        top: auto;
-        bottom: 52px;
+        top: calc(var(--mobile-vv-bottom, 100dvh) - 52px);
+        bottom: auto;
         left: 0;
         right: 0;
         width: 100%;
         height: auto;
-        max-height: calc(100dvh - var(--header-height) - 52px);
+        max-height: calc(var(--mobile-vv-height, 100dvh) - var(--header-height) - 52px);
         border-top: 1px solid var(--border);
         border-right: none;
         border-bottom: none;
         box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.16);
-        transform: translateY(calc(100% + 52px));
+        transform: translateY(52px);
       }
       body[data-mobile-nav="open"] .left-nav-panel {
-        transform: translateY(0);
+        transform: translateY(-100%);
       }
       .nav-panel-top {
         order: 2;
@@ -2518,7 +2540,8 @@
         padding: 0.42rem 0.6rem;
       }
       .sidebar-filter-input {
-        font-size: 0.84rem;
+        font-size: 16px;
+        line-height: 1.25;
       }
       .nav-home-btn {
         flex: 1 1 0;
@@ -2584,8 +2607,9 @@
         gap: 0.4rem;
       }
       .omni-search-shell .omni-input {
-        font-size: 0.8rem;
-        padding: 0.26rem 0;
+        font-size: 16px;
+        line-height: 1.25;
+        padding: 0.14rem 0;
       }
       .omni-search-shell .btn-subtle-accent {
         padding: 0.34rem 0.6rem;
@@ -2818,7 +2842,8 @@
       }
       .back-to-top-btn {
         right: 0.75rem;
-        bottom: 64px;
+        top: calc(var(--mobile-vv-bottom, 100dvh) - 92px);
+        bottom: auto;
         width: 28px;
         height: 28px;
       }
@@ -4736,7 +4761,9 @@
       delete document.body.dataset.headerBarSettled;
       delete document.body.dataset.headerSuggFit;
       delete document.body.dataset.headerResFit;
-      headerSearchShell?.style.removeProperty('--mobile-header-search-shift');
+      if (!mobileSearchMq.matches) {
+        headerSearchShell?.style.removeProperty('--mobile-header-bar-bottom');
+      }
       if (document.activeElement === headerSearchInput) {
         headerSearchInput.blur();
       }
@@ -4762,24 +4789,32 @@
       return 0;
     }
 
-    function syncMobileHeaderPin(vvTop) {
-      if (mobileSearchMq.matches) {
-        document.documentElement.style.setProperty('--mobile-vv-top', `${vvTop}px`);
-      } else {
-        document.documentElement.style.removeProperty('--mobile-vv-top');
-      }
-    }
-
     function getMobileViewportMetrics() {
       const vv = window.visualViewport;
       const vvTop = vv ? Math.max(0, Math.round(vv.offsetTop)) : 0;
-      const vvBottom = vv ? (vv.offsetTop + vv.height) : window.innerHeight;
+      const vvBottom = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
+      const vvHeight = Math.max(0, vvBottom - vvTop);
       const topBarEl = document.querySelector('.top-bar');
       const headerHeight = topBarEl ? Math.round(topBarEl.getBoundingClientRect().height) : 48;
-      return { vvTop, vvBottom, visibleHeaderBottom: vvTop + headerHeight };
+      return { vvTop, vvHeight, vvBottom, visibleHeaderBottom: vvTop + headerHeight };
+    }
+
+    function syncMobileViewportVars(metrics) {
+      const rootStyle = document.documentElement.style;
+      if (mobileSearchMq.matches) {
+        rootStyle.setProperty('--mobile-vv-top', `${metrics.vvTop}px`);
+        rootStyle.setProperty('--mobile-vv-height', `${metrics.vvHeight}px`);
+        rootStyle.setProperty('--mobile-vv-bottom', `${metrics.vvBottom}px`);
+      } else {
+        rootStyle.removeProperty('--mobile-vv-top');
+        rootStyle.removeProperty('--mobile-vv-height');
+        rootStyle.removeProperty('--mobile-vv-bottom');
+        headerSearchShell?.style.removeProperty('--mobile-header-bar-bottom');
+      }
     }
 
     let lastHeroRestingTop = null;
+    let mobileSnapHeroOnViewport = false;
 
     function setResultsMaxHeightSmooth(boxEl, targetMaxHeight, maxAllowedNow) {
       if (!boxEl) return;
@@ -4807,8 +4842,9 @@
     }
 
     function updateHeroSearchPosition() {
-      const { vvTop, vvBottom, visibleHeaderBottom } = getMobileViewportMetrics();
-      syncMobileHeaderPin(vvTop);
+      const metrics = getMobileViewportMetrics();
+      const { vvBottom, visibleHeaderBottom } = metrics;
+      syncMobileViewportVars(metrics);
       if (!heroSearchShell) return { shift: 0, currentBarTop: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
       if (document.body.dataset.activeAudience !== 'home') {
         heroSearchShell.style.setProperty('--hero-search-shift', '0px');
@@ -4841,18 +4877,26 @@
 
       const prevShift = parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || 0;
       const isHeroOpen = document.body.dataset.heroSearch === 'open';
-      if (mobileSearchMq.matches && !reducedMotionMq.matches && isHeroOpen && lastHeroRestingTop !== null && Math.abs(restingTop - lastHeroRestingTop) > 1) {
-        const visualTopBefore = barRect.top;
-        const compensatingShift = Math.round(visualTopBefore - restingTop);
+      const snapToViewport = mobileSearchMq.matches && isHeroOpen && mobileSnapHeroOnViewport && document.body.dataset.heroBarSettled === 'true';
+      if (snapToViewport) {
         const prevTransition = heroSearchShell.style.transition;
         heroSearchShell.style.transition = 'none';
-        heroSearchShell.style.setProperty('--hero-search-shift', `${compensatingShift}px`);
+        heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
         heroSearchShell.getBoundingClientRect();
         heroSearchShell.style.transition = prevTransition;
+      } else {
+        if (mobileSearchMq.matches && !reducedMotionMq.matches && isHeroOpen && lastHeroRestingTop !== null && Math.abs(restingTop - lastHeroRestingTop) > 1) {
+          const visualTopBefore = barRect.top;
+          const compensatingShift = Math.round(visualTopBefore - restingTop);
+          const prevTransition = heroSearchShell.style.transition;
+          heroSearchShell.style.transition = 'none';
+          heroSearchShell.style.setProperty('--hero-search-shift', `${compensatingShift}px`);
+          heroSearchShell.getBoundingClientRect();
+          heroSearchShell.style.transition = prevTransition;
+        }
+        heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
       }
       lastHeroRestingTop = isHeroOpen ? restingTop : null;
-
-      heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
       heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
 
       if (!reducedMotionMq.matches && isHeroOpen &&
@@ -4862,7 +4906,7 @@
 
       return {
         shift,
-        currentBarTop: barRect.top,
+        currentBarTop: snapToViewport ? (restingTop + shift) : barRect.top,
         finalBarTop: restingTop + shift,
         finalBarBottom: restingBottom + shift,
         suggOffset,
@@ -4890,8 +4934,9 @@
     }
 
     function fitHeroResultsHeight() {
-      const { vvTop, vvBottom, visibleHeaderBottom } = getMobileViewportMetrics();
-      syncMobileHeaderPin(vvTop);
+      const metrics = getMobileViewportMetrics();
+      const { vvBottom, visibleHeaderBottom } = metrics;
+      syncMobileViewportVars(metrics);
       const MIN_RESULTS_SPACE = 76;
 
       if (document.body.dataset.activeAudience === 'home') {
@@ -4936,34 +4981,22 @@
         if (mobileSearchMq.matches) {
           const barEl = headerSearchShell.querySelector('.omni-bar');
           const dropdownEl = headerResultsBox.parentElement;
-          const barRect = barEl ? barEl.getBoundingClientRect() : headerSearchShell.getBoundingClientRect();
-          const currentY = getCurrentTranslateY(headerSearchShell);
-          const restingTop = barRect.top - currentY;
-          const restingBottom = barRect.bottom - currentY;
-          const limitBottom = vvBottom - 10;
-          const minTop = visibleHeaderBottom + 8;
-          const shift = Math.max(
-            Math.round(minTop - restingTop),
-            Math.round(limitBottom - restingBottom)
-          );
-          const prevShift = parseFloat(headerSearchShell.style.getPropertyValue('--mobile-header-search-shift')) || 0;
-          headerSearchShell.style.setProperty('--mobile-header-search-shift', `${shift}px`);
-          if (document.body.dataset.headerSearch === 'open' && !reducedMotionMq.matches &&
-              document.body.dataset.headerBarSettled !== 'true' && Math.abs(shift - prevShift) > 1) {
-            scheduleHeaderBarSettle(true);
-          }
+          const barRect = (barEl || headerSearchShell).getBoundingClientRect();
+          const barH = Math.round(barRect.height) || 40;
+          const minBottom = visibleHeaderBottom + 8 + barH;
+          const finalBarBottom = Math.max(minBottom, Math.round(vvBottom - 10));
+          const finalBarTop = finalBarBottom - barH;
+          headerSearchShell.style.setProperty('--mobile-header-bar-bottom', `${finalBarBottom}px`);
           const gapPx = dropdownEl ? (parseFloat(getComputedStyle(dropdownEl).rowGap) || 8) * 2 + 4 : 18;
           const topBound = visibleHeaderBottom + 8;
-          const finalBarTop = restingTop + shift;
-          const currentBarTop = barRect.top;
           suggFits = (finalBarTop - topBound) >= (suggH + 8);
           available = Math.floor((finalBarTop - suggH - gapPx) - topBound);
           resFits = suggFits && available >= MIN_RESULTS_SPACE;
           if (resFits && headerResultsBox.classList.contains('active')) {
-            setResultsMaxHeightSmooth(headerResultsBox, available, Math.floor((currentBarTop - suggH - gapPx) - topBound));
+            setResultsMaxHeightSmooth(headerResultsBox, available, available);
           }
         } else {
-          headerSearchShell.style.removeProperty('--mobile-header-search-shift');
+          headerSearchShell.style.removeProperty('--mobile-header-bar-bottom');
           const topBarRect = document.querySelector('.top-bar')?.getBoundingClientRect();
           const suggBaseTop = topBarRect ? topBarRect.bottom + 12 : 66;
           suggFits = (window.innerHeight - 8 - suggBaseTop) >= suggH;
@@ -5012,29 +5045,54 @@
       fitHeroResultsHeight();
     }
     let mobileViewportTimers = [];
-    function scheduleMobileViewportSync() {
-      syncSearchUiToScreenSize();
-      if (!mobileSearchMq.matches) return;
-      mobileViewportTimers.forEach((id) => clearTimeout(id));
-      mobileViewportTimers = [60, 160, 320, 480].map((delay) => setTimeout(() => {
-        const vv = window.visualViewport;
-        const keyboardProbablyClosed = !vv || vv.height >= window.innerHeight - 24;
-        if (keyboardProbablyClosed && window.scrollY !== 0) {
-          window.scrollTo(0, 0);
-        }
+    let mobileViewportRaf1 = 0;
+    let mobileViewportRaf2 = 0;
+
+    function resetMobileWindowScroll() {
+      if (mobileSearchMq.matches && (window.scrollY !== 0 || window.scrollX !== 0)) {
+        window.scrollTo(0, 0);
+      }
+    }
+
+    function runMobileViewportSync(snapHero) {
+      resetMobileWindowScroll();
+      mobileSnapHeroOnViewport = Boolean(snapHero);
+      try {
         syncSearchUiToScreenSize();
+      } finally {
+        mobileSnapHeroOnViewport = false;
+      }
+    }
+
+    function scheduleMobileViewportSync(e) {
+      const isViewportEvent = Boolean(e && (e.target === window.visualViewport || e.type === 'scroll'));
+      runMobileViewportSync(isViewportEvent);
+      if (!mobileSearchMq.matches) return;
+      cancelAnimationFrame(mobileViewportRaf1);
+      cancelAnimationFrame(mobileViewportRaf2);
+      mobileViewportRaf1 = requestAnimationFrame(() => {
+        mobileViewportRaf2 = requestAnimationFrame(() => {
+          runMobileViewportSync(isViewportEvent);
+        });
+      });
+      mobileViewportTimers.forEach((id) => clearTimeout(id));
+      mobileViewportTimers = [60, 160, 320, 500, 750].map((delay) => setTimeout(() => {
+        runMobileViewportSync(isViewportEvent);
       }, delay));
     }
 
     mobileSearchMq.addEventListener('change', syncSearchUiToScreenSize);
     overlayDrawerMq.addEventListener('change', syncSearchUiToScreenSize);
-    window.addEventListener('resize', syncSearchUiToScreenSize);
+    window.addEventListener('resize', scheduleMobileViewportSync);
+    window.addEventListener('scroll', scheduleMobileViewportSync, { passive: true });
     window.visualViewport?.addEventListener('resize', scheduleMobileViewportSync);
     window.visualViewport?.addEventListener('scroll', scheduleMobileViewportSync);
     heroSearchInput.addEventListener('focus', scheduleMobileViewportSync);
     heroSearchInput.addEventListener('blur', scheduleMobileViewportSync);
     headerSearchInput.addEventListener('focus', scheduleMobileViewportSync);
     headerSearchInput.addEventListener('blur', scheduleMobileViewportSync);
+    document.getElementById('sidebarFilterInput')?.addEventListener('focus', scheduleMobileViewportSync);
+    document.getElementById('sidebarFilterInput')?.addEventListener('blur', scheduleMobileViewportSync);
     [instantResultsBox, headerResultsBox].forEach((box) => {
       box?.addEventListener('transitionend', (e) => {
         if (e.target === box && e.propertyName === 'max-height') {
