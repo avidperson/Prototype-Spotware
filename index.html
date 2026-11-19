@@ -2267,17 +2267,17 @@
         }
       }
       .hero-quick-links {
-        gap: 0.5rem;
+        gap: 0.6rem;
         margin-top: 0;
       }
       .hero-resource-btn {
-        padding: 0.34rem 0.72rem;
-        font-size: 0.74rem;
-        gap: 0.36rem;
+        padding: 0.48rem 0.96rem;
+        font-size: 0.84rem;
+        gap: 0.42rem;
       }
       .hero-resource-btn svg {
-        width: 13px;
-        height: 13px;
+        width: 15px;
+        height: 15px;
       }
       dialog.home-modal {
         padding: 0.55rem 0.5rem;
@@ -3275,8 +3275,41 @@
     const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
     const overlayDrawerMq = window.matchMedia('(max-width: 960px)');
 
+    let menuCollapseTimer = 0;
+
+    function cancelPendingMenuCollapse() {
+      if (menuCollapseTimer) {
+        clearTimeout(menuCollapseTimer);
+        menuCollapseTimer = 0;
+      }
+    }
+
+    function collapseAllMenuSections() {
+      cancelPendingMenuCollapse();
+      sidebarGroups.forEach((group) => {
+        cancelNavGroupAnimation(group);
+        group.open = false;
+      });
+    }
+
+    function scheduleMenuCollapse(shouldStillBeClosed) {
+      cancelPendingMenuCollapse();
+      if (reducedMotionMq.matches) {
+        if (shouldStillBeClosed()) collapseAllMenuSections();
+        return;
+      }
+      menuCollapseTimer = setTimeout(() => {
+        menuCollapseTimer = 0;
+        if (shouldStillBeClosed()) collapseAllMenuSections();
+      }, 230);
+    }
+
     function closeMobileNav() {
+      const wasOpen = document.body.dataset.mobileNav === 'open';
       document.body.dataset.mobileNav = 'closed';
+      if (wasOpen) {
+        scheduleMenuCollapse(() => document.body.dataset.mobileNav !== 'open');
+      }
     }
 
     function closeLangPopover() {
@@ -3287,6 +3320,7 @@
     }
 
     function openSidebarMenu() {
+      cancelPendingMenuCollapse();
       if (overlayDrawerMq.matches) {
         closeLangPopover();
         closeAllInlineResults();
@@ -3305,7 +3339,13 @@
         }
         return;
       }
+      if (mode === 'full') {
+        cancelPendingMenuCollapse();
+      }
       document.body.dataset.sidebarMode = mode;
+      if (mode === 'hidden') {
+        scheduleMenuCollapse(() => document.body.dataset.sidebarMode === 'hidden');
+      }
     }
 
     mobileNavBackdrop?.addEventListener('click', (e) => {
@@ -3480,6 +3520,19 @@
     }
 
     const lastModalTrigger = new WeakMap();
+    let faqCollapseTimer = 0;
+
+    function collapseAllFaqItems() {
+      if (faqCollapseTimer) {
+        clearTimeout(faqCollapseTimer);
+        faqCollapseTimer = 0;
+      }
+      if (!faqGroup) return;
+      faqGroup.querySelectorAll('details').forEach((d) => {
+        d.open = false;
+      });
+      syncFaqToggleBtn(faqGroup);
+    }
 
     function closeAllHomeModals({ restoreFocus = true } = {}) {
       const openModals = document.querySelectorAll('dialog.home-modal[open]');
@@ -3506,6 +3559,7 @@
         guidesAudienceSelect.value = 'all';
         filterPopularGuides('all');
       } else if (dialog === faqDialog && faqAudienceSelect) {
+        collapseAllFaqItems();
         faqAudienceSelect.value = 'all';
         filterFaqItems('all');
       }
@@ -3533,6 +3587,17 @@
       if (!dialog) return;
       dialog.addEventListener('close', () => {
         cancelModalResize(dialog);
+        if (dialog === faqDialog) {
+          if (faqCollapseTimer) clearTimeout(faqCollapseTimer);
+          if (reducedMotionMq.matches) {
+            collapseAllFaqItems();
+          } else {
+            faqCollapseTimer = setTimeout(() => {
+              faqCollapseTimer = 0;
+              if (!faqDialog.open) collapseAllFaqItems();
+            }, 210);
+          }
+        }
         const trigger = lastModalTrigger.get(dialog);
         lastModalTrigger.delete(dialog);
         if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
