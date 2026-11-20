@@ -2034,6 +2034,35 @@
       appearance: none;
       display: none;
     }
+    .omni-kbd-hint {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 5px;
+      border-radius: 6px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1;
+      flex-shrink: 0;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .omni-search-shell[data-has-query="true"] .omni-kbd-hint,
+    .omni-bar:focus-within .omni-kbd-hint {
+      display: none;
+    }
+    @media (pointer: coarse), (max-width: 560px) {
+      .omni-kbd-hint {
+        display: none;
+      }
+    }
     .omni-clear-btn {
       display: none;
       width: 30px;
@@ -2331,7 +2360,7 @@
       width: 100%;
       max-width: 100%;
       height: auto;
-      max-height: 204px;
+      max-height: 260px;
       overflow-x: auto;
       overflow-y: auto;
       overscroll-behavior-x: contain;
@@ -2359,6 +2388,200 @@
     }
     .code-snippet-box.scroll-active {
       border-color: var(--border-strong);
+    }
+    .code-block-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+    }
+    .code-block-wrap .code-snippet-box {
+      padding-right: 4.2rem;
+    }
+    [dir="rtl"] .code-block-wrap .code-snippet-box {
+      padding-right: 0.8rem;
+      padding-left: 4.2rem;
+    }
+    .code-copy-btn {
+      position: absolute;
+      top: 0.45rem;
+      right: 0.45rem;
+      z-index: 2;
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.68rem;
+      font-weight: 600;
+      line-height: 1.25;
+      cursor: pointer;
+      transition: color 0.14s ease, border-color 0.14s ease, background-color 0.14s ease;
+    }
+    [dir="rtl"] .code-copy-btn {
+      right: auto;
+      left: 0.45rem;
+    }
+    .code-copy-btn:hover {
+      color: var(--text-primary);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border-strong));
+      background: var(--bg-canvas);
+    }
+    .code-copy-btn.is-copied {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 42%, var(--border-strong));
+      background: var(--accent-soft);
+    }
+    .code-copy-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .ai-summary-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.52rem;
+    }
+    .ai-summary-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.18rem;
+    }
+    .ai-summary-title-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+    .ai-summary-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.22rem;
+      padding: 0.12rem 0.48rem;
+      border-radius: 9999px;
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+      color: var(--accent);
+      font-size: 0.67rem;
+      font-weight: 700;
+      line-height: 1.3;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    [data-theme="dark"] .ai-summary-badge {
+      background: rgba(244, 63, 94, 0.16);
+      border-color: rgba(244, 63, 94, 0.34);
+      color: #fb7185;
+    }
+    .ai-summary-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .ai-grounding-note {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+    .ai-summary-answer {
+      margin: 0;
+      font-size: 0.81rem;
+      line-height: 1.48;
+      color: var(--text-secondary);
+    }
+    .ai-section-label {
+      margin: 0;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+    .ai-sources-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .ai-followups-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.34rem;
+      padding-top: 0.12rem;
+    }
+    .ai-followups-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .ai-followup-chip {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid var(--border);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      padding: 0.22rem 0.56rem;
+      border-radius: 9999px;
+      font-family: inherit;
+      font-size: 0.71rem;
+      font-weight: 500;
+      line-height: 1.3;
+      cursor: pointer;
+      text-align: start;
+      transition: border-color 0.14s ease, color 0.14s ease, background-color 0.14s ease;
+    }
+    .ai-followup-chip:hover {
+      border-color: color-mix(in srgb, var(--accent) 36%, var(--border-strong));
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    [data-theme="dark"] .ai-followup-chip:hover {
+      background: rgba(244, 63, 94, 0.14);
+      color: #fb7185;
+    }
+    .ai-followup-chip:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .ai-docs-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+    }
+    .ai-docs-section--divider {
+      margin-top: 0.25rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid var(--border);
+    }
+    .ai-doc-hit {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.3rem 0.42rem;
+      margin: 0 -0.42rem;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      transition: background-color 0.12s ease;
+    }
+    .ai-doc-hit:hover {
+      background: var(--bg-subtle);
+    }
+    .ai-doc-hit-cat {
+      font-size: 0.7rem;
+      color: var(--accent);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ai-empty-state {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.15rem 0;
     }
 
     /* ==========================================================================
@@ -6260,6 +6483,7 @@
           <div class="omni-bar">
             <svg class="omni-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="search" id="heroSearchInput" class="omni-input" placeholder="Search documentation or ask our AI assistant..." aria-label="Search cTrader Help Centre or ask AI">
+            <kbd class="omni-kbd-hint" aria-hidden="true">/</kbd>
             <button type="button" class="icon-btn omni-clear-btn" id="heroClearSearchBtn" aria-label="Clear search" title="Clear">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
             </button>
@@ -8261,144 +8485,477 @@
 
     // 8. Search & AI Answer Engine
     const searchIndex = [
-      { title: "cTrader ID (cTID)", category: "Traders", url: "https://help.ctrader.com/ctrader-id/", keywords: "ctid login account password 2fa sign in create", summary: "Unified login across Web, Desktop, and Mobile." },
+      { title: "cTrader ID (cTID)", category: "Traders", url: "https://help.ctrader.com/ctrader-id/", keywords: "ctid login account password reset forgot 2fa sign in create", summary: "Unified login across Web, Desktop, and Mobile." },
       { title: "Create a new cTID", category: "Guide", url: "https://help.ctrader.com/ctrader-id/create-a-new-ctrader-id/", keywords: "register sign up new ctid account", summary: "Register your cTrader ID in under two minutes." },
-      { title: "Trading with cTrader", category: "Traders", url: "https://help.ctrader.com/trading-with-ctrader/", keywords: "orders positions charts margin leverage execution", summary: "Walkthrough of manual trading, order types, and charting." },
-      { title: "Orders in cTrader", category: "Guide", url: "https://help.ctrader.com/trading-with-ctrader/orders/", keywords: "market limit stop loss take profit pending order", summary: "Market, Limit, Stop, and Stop-Limit orders with SL/TP." },
-      { title: "cTrader Web", category: "Apps", url: "https://help.ctrader.com/ctrader-web/", keywords: "browser web app macos linux", summary: "Full-featured trading and charting in any browser." },
-      { title: "cTrader Windows", category: "Apps", url: "https://help.ctrader.com/ctrader/", keywords: "desktop windows pc download install", summary: "Desktop platform with multi-monitor and local Algo support." },
-      { title: "cTrader Mac", category: "Apps", url: "https://help.ctrader.com/ctrader-mac/", keywords: "macos apple silicon dmg desktop", summary: "Native macOS application for manual and algo trading." },
-      { title: "cTrader Mobile", category: "Apps", url: "https://help.ctrader.com/ctrader-mobile/", keywords: "ios android phone tablet app", summary: "Mobile trading, charting, and alerts on iOS and Android." },
-      { title: "cTrader Copy", category: "Traders", url: "https://help.ctrader.com/ctrader-copy/", keywords: "social copy trading strategy provider investor", summary: "Copy strategies or provide strategies for commissions." },
-      { title: "Invest in strategies", category: "Guide", url: "https://help.ctrader.com/ctrader-copy/investing-in-strategies/", keywords: "copy allocate funds stop equity", summary: "Evaluate strategy metrics and allocate capital." },
-      { title: "cTrader Analyze", category: "Traders", url: "https://help.ctrader.com/ctrader-analyze/", keywords: "analytics statistics drawdown journal", summary: "Performance metrics, equity curves, and risk analytics." },
-      { title: "cTrader Algo", category: "Algo", url: "https://help.ctrader.com/ctrader-algo/", keywords: "automate cbots indicators c# python backtesting cloud", summary: "Automated trading bots and custom indicators in C# and Python." },
-      { title: "Start a cBot", category: "Guide", url: "https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/", keywords: "run launch cbot instance cloud local", summary: "Attach a cBot to a chart and start automated execution." },
-      { title: "Create a cBot in Python", category: "Guide", url: "https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/", keywords: "python script bot algorithm coding", summary: "Build and run a Python trading bot in cTrader Algo." },
-      { title: "cBots", category: "Algo", url: "https://help.ctrader.com/cbots/", keywords: "automated robots algo trading", summary: "Acquiring, managing, and running cBots." },
+      { title: "Trading with cTrader", category: "Traders", url: "https://help.ctrader.com/trading-with-ctrader/", keywords: "orders positions charts margin leverage execution history trade watch", summary: "Walkthrough of manual trading, order types, and charting." },
+      { title: "Orders in cTrader", category: "Guide", url: "https://help.ctrader.com/trading-with-ctrader/orders/", keywords: "market limit stop loss take profit trailing pending order orders", summary: "Market, Limit, Stop, and Stop-Limit orders with SL/TP." },
+      { title: "cTrader Web", category: "Apps", url: "https://help.ctrader.com/ctrader-web/", keywords: "browser web app apps macos linux", summary: "Full-featured trading and charting in any browser." },
+      { title: "cTrader Windows", category: "Apps", url: "https://help.ctrader.com/ctrader/", keywords: "desktop windows pc download install app apps", summary: "Desktop platform with multi-monitor and local Algo support." },
+      { title: "cTrader Mac", category: "Apps", url: "https://help.ctrader.com/ctrader-mac/", keywords: "mac macos apple silicon dmg desktop app apps", summary: "Native macOS application for manual and algo trading." },
+      { title: "cTrader Mobile", category: "Apps", url: "https://help.ctrader.com/ctrader-mobile/", keywords: "mobile ios android phone tablet app apps", summary: "Mobile trading, charting, and alerts on iOS and Android." },
+      { title: "cTrader Copy", category: "Traders", url: "https://help.ctrader.com/ctrader-copy/", keywords: "social copy copying trading strategy strategies provider investor fees risk equity", summary: "Copy strategies or provide strategies for commissions." },
+      { title: "Invest in strategies", category: "Guide", url: "https://help.ctrader.com/ctrader-copy/investing-in-strategies/", keywords: "copy copying allocate funds stop equity risk fees strategies", summary: "Evaluate strategy metrics and allocate capital." },
+      { title: "cTrader Analyze", category: "Traders", url: "https://help.ctrader.com/ctrader-analyze/", keywords: "analytics statistics drawdown journal history statement performance", summary: "Performance metrics, equity curves, and risk analytics." },
+      { title: "cTrader Algo", category: "Algo", url: "https://help.ctrader.com/ctrader-algo/", keywords: "automate cbot cbots indicators c# python backtesting cloud bot", summary: "Automated trading bots and custom indicators in C# and Python." },
+      { title: "Start a cBot", category: "Guide", url: "https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/", keywords: "run launch install cbot instance cloud local bot", summary: "Attach a cBot to a chart and start automated execution." },
+      { title: "Create a cBot in Python", category: "Guide", url: "https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/", keywords: "python script cbot bot algorithm coding", summary: "Build and run a Python trading bot in cTrader Algo." },
+      { title: "cBots", category: "Algo", url: "https://help.ctrader.com/cbots/", keywords: "automated robots cbot cbots algo trading bot", summary: "Acquiring, managing, and running cBots." },
       { title: "Indicators", category: "Algo", url: "https://help.ctrader.com/indicators/", keywords: "technical analysis custom indicators oscillators", summary: "Built-in and custom technical indicators." },
-      { title: "cTrader MCP Servers", category: "Algo & AI", url: "https://help.ctrader.com/ctrader-ai-agent-connect/", keywords: "mcp ai agent claude cursor llm model context protocol", summary: "Connect AI assistants directly to cTrader via MCP." },
-      { title: "cTrader CLI", category: "Algo & Dev", url: "https://help.ctrader.com/ctrader-cli/", keywords: "command line interface terminal headless automation", summary: "Run cTrader workflows from the command line." },
-      { title: "Open API", category: "Developers", url: "https://help.ctrader.com/open-api/", keywords: "protobuf grpc websocket rest oauth third party app", summary: "Build custom trading applications using cTrader Open API." },
-      { title: "FIX API", category: "Developers", url: "https://help.ctrader.com/fix/", keywords: "fix 4.4 institutional low latency direct market", summary: "FIX 4.4 protocol documentation for direct connectivity." },
-      { title: "Plugins", category: "Developers", url: "https://help.ctrader.com/plugins/", keywords: "webview plugin ui extension sdk", summary: "Extend the cTrader UI with custom WebView plugins." },
-      { title: "Add a WebView plugin", category: "Guide", url: "https://help.ctrader.com/webview-plugins/how-tos/add-wv-plugins/", keywords: "install add webview plugin", summary: "Install and manage WebView plugins in cTrader." },
-      { title: "cTrader Store", category: "Store", url: "https://help.ctrader.com/ctrader-store/", keywords: "marketplace sell monetize buy use product", summary: "Marketplace for buying and selling trading tools." },
-      { title: "Partner Tools & cTrader Invite", category: "Partners", url: "https://help.ctrader.com/partner-tools/", keywords: "ib affiliate referral invite attribution", summary: "Tools for IBs and affiliates to grow trader referrals." },
-      { title: "cTrader Deeplinks", category: "Partners", url: "https://help.ctrader.com/ctrader-deeplinks/", keywords: "deeplink url share link campaign", summary: "Direct action links into symbols, strategies, and apps." },
+      { title: "cTrader MCP Servers", category: "Algo & AI", url: "https://help.ctrader.com/ctrader-ai-agent-connect/", keywords: "mcp ai agent claude cursor llm copilot model context protocol", summary: "Connect AI assistants directly to cTrader via MCP." },
+      { title: "cTrader CLI", category: "Algo & Dev", url: "https://help.ctrader.com/ctrader-cli/", keywords: "cli command line interface terminal headless automation", summary: "Run cTrader workflows from the command line." },
+      { title: "Open API", category: "Developers", url: "https://help.ctrader.com/open-api/", keywords: "open api apis protobuf grpc websocket rest oauth third party app", summary: "Build custom trading applications using cTrader Open API." },
+      { title: "FIX API", category: "Developers", url: "https://help.ctrader.com/fix/", keywords: "fix api apis 4.4 institutional low latency direct market protocol", summary: "FIX 4.4 protocol documentation for direct connectivity." },
+      { title: "Plugins", category: "Developers", url: "https://help.ctrader.com/plugins/", keywords: "webview plugin plugins ui extension sdk", summary: "Extend the cTrader UI with custom WebView plugins." },
+      { title: "Add a WebView plugin", category: "Guide", url: "https://help.ctrader.com/webview-plugins/how-tos/add-wv-plugins/", keywords: "install add webview plugin plugins", summary: "Install and manage WebView plugins in cTrader." },
+      { title: "cTrader Store", category: "Store", url: "https://help.ctrader.com/ctrader-store/", keywords: "store marketplace sell seller monetize monetise buy publish use product", summary: "Marketplace for buying and selling trading tools." },
+      { title: "Partner Tools & cTrader Invite", category: "Partners", url: "https://help.ctrader.com/partner-tools/", keywords: "ib affiliate referral invite partner attribution", summary: "Tools for IBs and affiliates to grow trader referrals." },
+      { title: "cTrader Deeplinks", category: "Partners", url: "https://help.ctrader.com/ctrader-deeplinks/", keywords: "deeplink deeplinks url share link campaign partner", summary: "Direct action links into symbols, strategies, and apps." },
       { title: "Troubleshooting & Knowledge Base", category: "Resources", url: "https://help.ctrader.com/troubleshooting/", keywords: "faq help error connection bonus credit glossary", summary: "Reference articles and troubleshooting solutions." }
     ];
 
+    const SEARCH_STOP_WORDS = new Set([
+      'how', 'do', 'i', 'a', 'an', 'the', 'to', 'in', 'on', 'of', 'for',
+      'is', 'are', 'can', 'my', 'with', 'and', 'or', 'vs', 'what', 'where', 'when'
+    ]);
+
+    function normalizeSearchText(str) {
+      return String(str || '')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}#\s]+/gu, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function tokenizeSearchQuery(str) {
+      const norm = normalizeSearchText(str);
+      if (!norm) return { norm: '', allTokens: [], tokens: [] };
+      const allTokens = norm.split(' ').filter(Boolean);
+      const filtered = allTokens.filter((tok) => !SEARCH_STOP_WORDS.has(tok));
+      return { norm, allTokens, tokens: filtered.length ? filtered : allTokens };
+    }
+
     const curatedAiResponses = [
       {
+        id: "python-cbot",
         promptKey: "Create a cBot in Python",
-        match: ["python", "cbot", "bot", "algo"],
+        match: ["python", "cbot", "cbots", "bot", "algo", "install"],
+        phrases: ["python cbot", "cbot in python", "install a cbot", "start a cbot", "run a cbot"],
         title: "Building a Python cBot in cTrader Algo",
-        answer: "cTrader Algo natively supports Python alongside C#. You can create a new Python cBot in the Algo tab, define parameters, and execute orders against live or backtest feeds.",
-        code: `class SampleTrendBot:\n    def on_start(self):\n        print("Started on", self.symbol.name)\n\n    def on_bar(self):\n        if self.bars.close_prices[-1] > self.bars.open_prices[-1]:\n            self.execute_market_order(TradeType.BUY, self.symbol.name, 1000)`,
+        answer: "cTrader Algo natively supports Python alongside C#. Create a new Python cBot in the Algo tab, build it with Ctrl+B, and run it locally or 24/7 in cTrader Cloud.",
+        code: `import clr\nclr.AddReference("cAlgo.API")\nfrom cAlgo.API import *\nfrom robot_wrapper import *\n\nclass SampleTrendBot():\n    def on_start(self):\n        api.Print("cBot started")\n\n    def on_bar_closed(self):\n        api.ExecuteMarketOrder(TradeType.Buy, api.SymbolName, 1000)`,
         links: [
           { label: "Create a cBot in Python", url: "https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/" },
           { label: "Start a cBot", url: "https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/" },
           { label: "cTrader Algo Hub", url: "https://help.ctrader.com/ctrader-algo/" }
+        ],
+        followUps: [
+          "How do I connect Claude or Cursor to cTrader MCP servers?",
+          "How do I sell a product on cTrader Store?"
         ]
       },
       {
+        id: "mcp-servers",
         promptKey: "Connect AI Agent via MCP",
-        match: ["mcp", "claude", "cursor", "agent", "ai"],
+        match: ["mcp", "claude", "cursor", "agent", "llm", "copilot", "cli"],
+        phrases: ["mcp server", "mcp servers", "ai agent", "ctrader cli", "model context protocol"],
         title: "Connecting AI Agents via cTrader MCP Servers",
-        answer: "cTrader MCP Servers expose market data and platform state over the Model Context Protocol so assistants like Claude Desktop and Cursor can query symbols and assist with workflows.",
-        code: `{\n  "mcpServers": {\n    "ctrader": {\n      "command": "npx",\n      "args": ["-y", "@spotware/ctrader-mcp-server"]\n    }\n  }\n}`,
+        answer: "cTrader provides Local MCP (desktop cTrader) and Remote MCP servers to connect AI agents for natural-language trading, account management, and market analysis, alongside cTrader CLI for agent-assisted command-line workflows.",
+        code: null,
         links: [
           { label: "cTrader MCP Servers", url: "https://help.ctrader.com/ctrader-ai-agent-connect/" },
           { label: "cTrader CLI", url: "https://help.ctrader.com/ctrader-cli/" }
+        ],
+        followUps: [
+          "Open API vs FIX API: which should I choose?",
+          "How do I create a cBot in Python?"
         ]
       },
       {
+        id: "orders-risk",
         promptKey: "Orders & Stop Loss",
-        match: ["order", "stop", "limit", "margin", "trade"],
+        match: ["order", "orders", "pending", "limit", "stop", "loss", "profit", "trailing", "margin", "position"],
+        phrases: ["stop loss", "take profit", "trailing stop", "pending orders", "market order", "limit order"],
         title: "Orders & Risk Protection in cTrader",
-        answer: "cTrader supports Market, Limit, Stop, and Stop-Limit orders with pre-trade Stop Loss, Take Profit, and Trailing Stop configuration.",
+        answer: "cTrader supports Market, Limit, Stop, and Stop-Limit orders with pre-trade Stop Loss, Take Profit, and Trailing Stop protection.",
         code: null,
         links: [
           { label: "Orders Guide", url: "https://help.ctrader.com/trading-with-ctrader/orders/" },
           { label: "Trading with cTrader", url: "https://help.ctrader.com/trading-with-ctrader/" }
+        ],
+        followUps: [
+          "Where can I find my trading history?",
+          "How does risk management work when copying strategies in cTrader Copy?"
         ]
       },
       {
+        id: "partner-deeplinks",
         promptKey: "Partner Invite & Deeplinks",
-        match: ["invite", "partner", "deeplink", "ib", "referral"],
+        match: ["invite", "partner", "deeplink", "deeplinks", "ib", "referral", "attribution"],
+        phrases: ["partner invite", "ctrader invite", "partner deeplinks", "ctrader deeplinks", "partner tools"],
         title: "Partner Attribution with cTrader Invite & Deeplinks",
-        answer: "Use cTrader Invite to embed your Partner ID into shared links, strategies, and store products, and combine with Deeplinks to launch specific charts or apps.",
-        code: `https://app.ctrader.com/?symbol=EURUSD&invite=PARTNER_ID`,
+        answer: "Use cTrader Invite for partner referral attribution across shared links, strategies, and store products, and combine with cross-platform cTrader Deeplinks for cTrader Web and Mobile.",
+        code: `https://app.ctrader.com/symbols/EURUSD/chart\nhttps://app.ctrader.com/orders/create-market-order/EURUSD`,
         links: [
           { label: "cTrader Invite", url: "https://help.ctrader.com/ctrader-invite/" },
           { label: "cTrader Deeplinks", url: "https://help.ctrader.com/ctrader-deeplinks/" },
           { label: "List of Partner Tools", url: "https://help.ctrader.com/partner-tools/list-of-tools/" }
+        ],
+        followUps: [
+          "How do I sell a product on cTrader Store?",
+          "Can I use cTrader on Web, Windows, Mac, and Mobile?"
         ]
       },
       {
+        id: "apis",
         promptKey: "Open API vs FIX API",
-        match: ["open api", "fix", "api", "protocol"],
+        match: ["open", "fix", "api", "apis", "protocol", "protobuf", "websocket"],
+        phrases: ["open api", "fix api", "open api vs fix api"],
         title: "Open API vs. FIX API vs. cTrader Algo",
-        answer: "Use cTrader Algo for in-platform/Cloud cBots and indicators; Open API for external web/mobile apps and dashboards; FIX API for institutional low-latency order routing.",
+        answer: "Use cTrader Algo for in-platform and Cloud cBots and indicators; Open API for custom web/mobile apps and dashboards; FIX API for low-latency institutional order routing; and MCP Servers for connecting AI agents.",
         code: null,
         links: [
           { label: "Open API", url: "https://help.ctrader.com/open-api/" },
           { label: "FIX API", url: "https://help.ctrader.com/fix/" },
           { label: "cTrader Algo", url: "https://help.ctrader.com/ctrader-algo/" }
+        ],
+        followUps: [
+          "How do I connect Claude or Cursor to cTrader MCP servers?",
+          "How do I build or add a WebView plugin?"
+        ]
+      },
+      {
+        id: "ctid-password",
+        promptKey: "Reset password",
+        match: ["password", "reset", "forgot", "ctid", "login", "sign", "2fa", "account"],
+        phrases: ["reset password", "reset my password", "forgot password", "ctrader id", "sign in"],
+        title: "cTrader ID (cTID) & Password Reset",
+        answer: "Select Forgot password? on the cTrader login screen and enter your cTrader ID email to reset your password. Your cTID is your single sign-on across all linked broker demo and live accounts.",
+        code: null,
+        links: [
+          { label: "cTrader ID", url: "https://help.ctrader.com/ctrader-id/" },
+          { label: "Create a new cTID", url: "https://help.ctrader.com/ctrader-id/create-a-new-ctrader-id/" }
+        ],
+        followUps: [
+          "Can I use cTrader on Web, Windows, Mac, and Mobile?",
+          "How do pending orders and stop loss work in cTrader?"
+        ]
+      },
+      {
+        id: "copy-risk",
+        promptKey: "Copy trading fees",
+        match: ["copy", "copying", "strategy", "strategies", "investor", "provider", "equity", "fees", "risk"],
+        phrases: ["copy trading", "copying strategies", "ctrader copy", "equity stop loss", "copy trading fees", "risk management"],
+        title: "cTrader Copy & Risk Management",
+        answer: "cTrader Copy segregates allocated funds into dedicated copy sub-accounts using equity-to-equity copying, configurable Equity Stop Loss protection, and transparent strategy fee structures (performance, management, and volume fees).",
+        code: null,
+        links: [
+          { label: "cTrader Copy", url: "https://help.ctrader.com/ctrader-copy/" },
+          { label: "Invest in strategies", url: "https://help.ctrader.com/ctrader-copy/investing-in-strategies/" }
+        ],
+        followUps: [
+          "How do pending orders and stop loss work in cTrader?",
+          "How can I reset my password?"
+        ]
+      },
+      {
+        id: "store-buy-sell",
+        promptKey: "cTrader Store",
+        match: ["store", "marketplace", "sell", "seller", "buy", "publish", "monetise", "monetize", "product"],
+        phrases: ["ctrader store", "become a seller", "sell a product", "use a product", "store product"],
+        title: "cTrader Store (Buy & Sell)",
+        answer: "Products acquired in cTrader Store sync automatically via your cTID across cTrader apps. Complete seller onboarding to publish, license, and monetise your own cBots, indicators, or WebView plugins.",
+        code: null,
+        links: [
+          { label: "cTrader Store", url: "https://help.ctrader.com/ctrader-store/" },
+          { label: "Use a Store product", url: "https://help.ctrader.com/ctrader-store/how-tos/use-a-product/" },
+          { label: "Become a Store seller", url: "https://help.ctrader.com/ctrader-store/how-tos/become-a-seller/" }
+        ],
+        followUps: [
+          "How do I create a cBot in Python?",
+          "How do I build or add a WebView plugin?"
+        ]
+      },
+      {
+        id: "webview-plugins",
+        promptKey: "Add a WebView plugin",
+        match: ["plugin", "plugins", "webview", "extension", "ui", "sdk"],
+        phrases: ["webview plugin", "webview plugins", "add a plugin", "ui extension"],
+        title: "Extending cTrader with WebView Plugins",
+        answer: "Extend the cTrader interface with custom WebView plugins to embed web applications, research panels, and tailored trading workflows directly inside the platform.",
+        code: null,
+        links: [
+          { label: "Plugins", url: "https://help.ctrader.com/plugins/" },
+          { label: "Add a WebView plugin", url: "https://help.ctrader.com/webview-plugins/how-tos/add-wv-plugins/" }
+        ],
+        followUps: [
+          "How do I sell a product on cTrader Store?",
+          "Open API vs FIX API: which should I choose?"
+        ]
+      },
+      {
+        id: "apps-history",
+        promptKey: "cTrader Mobile",
+        match: ["mobile", "ios", "android", "web", "windows", "mac", "macos", "desktop", "app", "apps", "history", "statement"],
+        phrases: ["trading history", "mobile app", "ctrader mobile", "ctrader web", "ctrader mac", "ctrader windows", "trade watch"],
+        title: "cTrader Platform Apps & Trading History",
+        answer: "Your cTID cloud-syncs workspaces, watchlists, and accounts across cTrader Web, Windows, Mac, and iOS/Android Mobile. View closed positions and export account statements anytime in Trade Watch > History.",
+        code: null,
+        links: [
+          { label: "cTrader Mobile", url: "https://help.ctrader.com/ctrader-mobile/" },
+          { label: "cTrader Web", url: "https://help.ctrader.com/ctrader-web/" },
+          { label: "cTrader Windows", url: "https://help.ctrader.com/ctrader/" },
+          { label: "cTrader Mac", url: "https://help.ctrader.com/ctrader-mac/" },
+          { label: "cTrader Analyze", url: "https://help.ctrader.com/ctrader-analyze/" }
+        ],
+        followUps: [
+          "How can I reset my password?",
+          "How do pending orders and stop loss work in cTrader?"
         ]
       }
     ];
 
-    function buildSearchAndAiHTML(query) {
-      const q = query.trim().toLowerCase();
-      if (!q) return '';
+    const HIGH_SIGNAL_INTENT_TOKENS = new Set([
+      'python', 'cbot', 'cbots', 'mcp', 'claude', 'cursor', 'cli',
+      'orders', 'order', 'pending', 'stop', 'loss', 'trailing',
+      'invite', 'partner', 'deeplink', 'deeplinks', 'ib', 'referral',
+      'fix', 'protobuf', 'websocket',
+      'password', 'reset', 'forgot', 'ctid', '2fa',
+      'copy', 'copying', 'strategies', 'strategy', 'fees',
+      'store', 'seller', 'sell', 'marketplace', 'monetize', 'monetise',
+      'webview', 'plugin', 'plugins',
+      'mobile', 'ios', 'android', 'history', 'statement', 'macos'
+    ]);
 
-      const arrow = currentLang === 'ar' ? '←' : '→';
-      const curatedMatch = curatedAiResponses.find((item) =>
-        item.match.some((kw) => q.includes(kw)) ||
-        t(item.title).toLowerCase().includes(q) ||
-        (item.promptKey && t(item.promptKey).toLowerCase() === q)
-      );
-      const aiMatch = curatedMatch || {
-        title: t('Results for "{query}"').replace('{query}', escapeHtml(query.trim())),
-        answer: t('Relevant documentation hubs and guides matching your query:'),
-        code: null,
-        links: [
-          { label: "Trading with cTrader", url: "https://help.ctrader.com/trading-with-ctrader/" },
-          { label: "cTrader Algo", url: "https://help.ctrader.com/ctrader-algo/" },
-          { label: "Troubleshooting", url: "https://help.ctrader.com/troubleshooting/" }
-        ]
+    function escapeRegExpStr(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function hasWordBoundaryPhrase(normHay, phrase) {
+      if (!normHay || !phrase) return false;
+      return new RegExp(`(?:^|\\s)${escapeRegExpStr(phrase)}(?:$|\\s)`).test(normHay);
+    }
+
+    function matchCuratedAiIntent(query) {
+      const { norm, allTokens, tokens } = tokenizeSearchQuery(query);
+      if (!norm) return null;
+      const allTokenSet = new Set(allTokens);
+      const tokenSet = new Set(tokens);
+      const rawLower = query.trim().toLowerCase();
+
+      let bestItem = null;
+      let bestScore = 0;
+      let bestHits = 0;
+
+      for (const item of curatedAiResponses) {
+        let score = 0;
+        let hits = 0;
+
+        const promptNorm = item.promptKey ? normalizeSearchText(item.promptKey) : '';
+        const localPromptNorm = item.promptKey ? normalizeSearchText(t(item.promptKey)) : '';
+        const titleNorm = normalizeSearchText(item.title);
+        const localTitleNorm = normalizeSearchText(t(item.title));
+
+        if ((promptNorm && norm === promptNorm) || (localPromptNorm && (norm === localPromptNorm || rawLower === t(item.promptKey).toLowerCase()))) {
+          score += 220;
+          hits += 3;
+        }
+        if ((titleNorm && norm === titleNorm) || (localTitleNorm && norm === localTitleNorm)) {
+          score += 180;
+          hits += 3;
+        }
+
+        if (Array.isArray(item.phrases)) {
+          for (const phrase of item.phrases) {
+            const pNorm = normalizeSearchText(phrase);
+            if (pNorm && hasWordBoundaryPhrase(norm, pNorm)) {
+              score += 48;
+              hits += 2;
+            }
+          }
+        }
+
+        for (const kw of item.match) {
+          if (tokenSet.has(kw) || allTokenSet.has(kw)) {
+            score += HIGH_SIGNAL_INTENT_TOKENS.has(kw) ? 28 : 18;
+            hits += 1;
+          }
+        }
+
+        if (currentLang !== 'en' && localTitleNorm) {
+          const localTitleWords = new Set(localTitleNorm.split(' ').filter((w) => w.length >= 2));
+          let localHits = 0;
+          for (const tok of tokens) {
+            if (tok.length >= 2 && localTitleWords.has(tok)) localHits += 1;
+          }
+          if (localHits > 0) {
+            score += localHits * 20;
+            hits += localHits;
+          }
+        }
+
+        if (score >= 20 && (score > bestScore || (score === bestScore && hits > bestHits))) {
+          bestScore = score;
+          bestHits = hits;
+          bestItem = item;
+        }
+      }
+
+      return bestItem;
+    }
+
+    function scoreSearchDocs(query, curatedMatch) {
+      const { norm, tokens } = tokenizeSearchQuery(query);
+      if (!tokens.length) return [];
+
+      const scoreList = (toks, phraseNorm) => {
+        const scored = [];
+        for (const doc of searchIndex) {
+          const titleNorm = normalizeSearchText(`${doc.title} ${t(doc.title)}`);
+          const kwNorm = normalizeSearchText(doc.keywords);
+          const sumNorm = normalizeSearchText(`${doc.summary} ${t(doc.summary)}`);
+          const titleWords = new Set(titleNorm.split(' ').filter(Boolean));
+          const kwWords = new Set(kwNorm.split(' ').filter(Boolean));
+          const sumWords = new Set(sumNorm.split(' ').filter(Boolean));
+
+          let score = 0;
+          let matchedTokens = 0;
+
+          if (phraseNorm) {
+            if (titleNorm === phraseNorm) score += 120;
+            else if (phraseNorm.length >= 2 && hasWordBoundaryPhrase(titleNorm, phraseNorm)) score += 75;
+            else if (phraseNorm.length >= 3 && titleNorm.includes(phraseNorm)) score += 50;
+            if (phraseNorm.length >= 3 && (hasWordBoundaryPhrase(kwNorm, phraseNorm) || hasWordBoundaryPhrase(sumNorm, phraseNorm))) {
+              score += 32;
+            }
+          }
+
+          for (const tok of toks) {
+            let tokHit = false;
+            if (titleWords.has(tok)) {
+              score += 30;
+              tokHit = true;
+            } else if (tok.length >= 3 && titleNorm.includes(tok)) {
+              score += 15;
+              tokHit = true;
+            }
+            if (kwWords.has(tok)) {
+              score += 20;
+              tokHit = true;
+            } else if (tok.length >= 3 && [...kwWords].some((w) => w.startsWith(tok))) {
+              score += 10;
+              tokHit = true;
+            }
+            if (sumWords.has(tok)) {
+              score += 11;
+              tokHit = true;
+            } else if (tok.length >= 4 && sumNorm.includes(tok)) {
+              score += 5;
+              tokHit = true;
+            }
+            if (tokHit) matchedTokens += 1;
+          }
+
+          if (matchedTokens === toks.length && toks.length > 1) {
+            score += 24;
+          }
+          if (score > 0) {
+            scored.push({ doc, score, matchedTokens });
+          }
+        }
+        scored.sort((a, b) => b.score - a.score || b.matchedTokens - a.matchedTokens);
+        return scored.slice(0, 5).map((entry) => entry.doc);
       };
 
-      const matchedDocs = searchIndex.filter((doc) => {
-        const hay = `${doc.title} ${t(doc.title)} ${doc.keywords} ${doc.summary} ${t(doc.summary)}`.toLowerCase();
-        return hay.includes(q) || (curatedMatch && curatedMatch.match.some((kw) => hay.includes(kw)));
-      }).slice(0, 5);
+      const directHits = scoreList(tokens, norm);
+      if (directHits.length || !curatedMatch) return directHits;
+      return scoreList(curatedMatch.match, '');
+    }
 
-      const linksHtml = aiMatch.links.map((l) =>
-        `<a class="sublink-pill" href="${localizeDocUrl(l.url)}" target="_blank" rel="noopener" style="color:var(--accent);">${t(l.label)} ${arrow}</a>`
-      ).join('');
+    function buildSearchAndAiHTML(query) {
+      const trimmed = query.trim();
+      if (!trimmed) return '';
 
-      const docsHtml = matchedDocs.length
-        ? `<div style="margin-top:0.4rem;padding-top:0.55rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:0.25rem;">
-             ${matchedDocs.map((d) => `
-               <a href="${localizeDocUrl(d.url)}" target="_blank" rel="noopener" style="display:flex;justify-content:space-between;align-items:baseline;padding:0.3rem 0;font-size:0.8rem;">
-                 <span><strong>${t(d.title)}</strong> <span style="color:var(--text-muted);">— ${t(d.summary)}</span></span>
-                 <span style="font-size:0.7rem;color:var(--accent);margin-inline-start:0.5rem;white-space:nowrap;">${t(d.category)} ${arrow}</span>
-               </a>
-             `).join('')}
-           </div>`
-        : '';
+      const arrow = currentLang === 'ar' ? '←' : '→';
+      const curatedMatch = matchCuratedAiIntent(trimmed);
+      const matchedDocs = scoreSearchDocs(trimmed, curatedMatch);
+
+      let aiSectionHtml = '';
+      if (curatedMatch) {
+        const linksHtml = curatedMatch.links.map((l) =>
+          `<a class="sublink-pill" href="${localizeDocUrl(l.url)}" target="_blank" rel="noopener" style="color:var(--accent);">${t(l.label)} ${arrow}</a>`
+        ).join('');
+
+        const codeHtml = curatedMatch.code
+          ? `<div class="code-block-wrap">
+               <button type="button" class="code-copy-btn">${t('Copy')}</button>
+               <pre class="code-snippet-box" dir="ltr"><code>${escapeHtml(curatedMatch.code)}</code></pre>
+             </div>`
+          : '';
+
+        const followUpsHtml = Array.isArray(curatedMatch.followUps) && curatedMatch.followUps.length
+          ? `<div class="ai-followups-row">
+               <span class="ai-followups-label">${t('Follow up:')}</span>
+               ${curatedMatch.followUps.map((fq) => `<button type="button" class="ai-followup-chip" data-quick-query="${escapeHtml(fq)}">${escapeHtml(t(fq))}</button>`).join('')}
+             </div>`
+          : '';
+
+        aiSectionHtml = `
+          <div class="ai-summary-block">
+            <div class="ai-summary-header">
+              <div class="ai-summary-title-row">
+                <span class="ai-summary-badge"><span aria-hidden="true">✦</span> ${t('AI Summary')}</span>
+                <strong class="ai-summary-title">${t(curatedMatch.title)}</strong>
+              </div>
+              <span class="ai-grounding-note">${t('Grounded in cTrader docs — verify details in linked guides')}</span>
+            </div>
+            <p class="ai-summary-answer">${t(curatedMatch.answer)}</p>
+            ${codeHtml}
+            <div class="ai-sources-block">
+              <p class="ai-section-label">${t('Sources')}</p>
+              <div class="doc-sublinks">${linksHtml}</div>
+            </div>
+            ${followUpsHtml}
+          </div>
+        `;
+      }
+
+      let docsHtml = '';
+      if (matchedDocs.length) {
+        docsHtml = `
+          <div class="ai-docs-section${curatedMatch ? ' ai-docs-section--divider' : ''}">
+            <p class="ai-section-label">${t('Matching Documentation')}</p>
+            <div style="display:flex;flex-direction:column;gap:0.15rem;">
+              ${matchedDocs.map((d) => `
+                <a class="ai-doc-hit" href="${localizeDocUrl(d.url)}" target="_blank" rel="noopener">
+                  <span><strong>${t(d.title)}</strong> <span style="color:var(--text-muted);">— ${t(d.summary)}</span></span>
+                  <span class="ai-doc-hit-cat">${t(d.category)} ${arrow}</span>
+                </a>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (!curatedMatch) {
+        const emptyTopics = [
+          { label: 'Create a cBot in Python', query: 'How do I create a cBot in Python?' },
+          { label: 'Reset password', query: 'How can I reset my password?' },
+          { label: 'Orders & Stop Loss', query: 'How do pending orders and stop loss work in cTrader?' },
+          { label: 'cTrader Copy', query: 'How does risk management work when copying strategies in cTrader Copy?' },
+          { label: 'Open API vs FIX API', query: 'Open API vs FIX API: which should I choose?' }
+        ];
+        docsHtml = `
+          <div class="ai-empty-state">
+            <p class="ai-summary-answer">${t('No matching documentation found for "{query}".').replace('{query}', escapeHtml(trimmed))}</p>
+            <div class="ai-followups-row">
+              <span class="ai-followups-label">${t('Try one of these topics:')}</span>
+              ${emptyTopics.map((tp) => `<button type="button" class="ai-followup-chip" data-quick-query="${escapeHtml(tp.query)}">${escapeHtml(t(tp.label))}</button>`).join('')}
+            </div>
+          </div>
+        `;
+      }
 
       return `
         <div class="results-scroll-body">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;">
-            <strong style="font-size:0.84rem;">${aiMatch.code === undefined ? escapeHtml(aiMatch.title) : t(aiMatch.title)}</strong>
-          </div>
-          <p style="margin:0;font-size:0.81rem;color:var(--text-secondary);">${t(aiMatch.answer)}</p>
-          ${aiMatch.code ? `<pre class="code-snippet-box" dir="ltr"><code>${aiMatch.code}</code></pre>` : ''}
-          <div class="doc-sublinks">${linksHtml}</div>
+          ${aiSectionHtml}
           ${docsHtml}
         </div>
       `;
@@ -8410,6 +8967,63 @@
     const instantResultsBox = document.getElementById('instantResultsBox');
     const mobileSearchMq = window.matchMedia('(max-width: 560px)');
     const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        return navigator.clipboard.writeText(text).catch(() => copyTextViaTextarea(text));
+      }
+      return Promise.resolve(copyTextViaTextarea(text));
+    }
+
+    function copyTextViaTextarea(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-9999px';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+      } catch {}
+      document.body.removeChild(ta);
+    }
+
+    instantResultsBox?.addEventListener('click', (e) => {
+      const copyBtn = e.target.closest('.code-copy-btn');
+      if (copyBtn) {
+        e.stopPropagation();
+        const codeEl = copyBtn.closest('.code-block-wrap')?.querySelector('code');
+        const text = codeEl ? codeEl.textContent : '';
+        if (!text) return;
+        copyTextToClipboard(text).then(() => {
+          clearTimeout(Number(copyBtn.dataset.copyTimer || 0));
+          copyBtn.textContent = t('Copied');
+          copyBtn.classList.add('is-copied');
+          const tid = setTimeout(() => {
+            copyBtn.textContent = t('Copy');
+            copyBtn.classList.remove('is-copied');
+            delete copyBtn.dataset.copyTimer;
+          }, 1600);
+          copyBtn.dataset.copyTimer = String(tid);
+        });
+        return;
+      }
+
+      const followUpBtn = e.target.closest('.ai-followup-chip[data-quick-query]');
+      if (followUpBtn) {
+        e.stopPropagation();
+        const nextQuery = followUpBtn.dataset.quickQuery || followUpBtn.textContent.trim();
+        if (!nextQuery) return;
+        triggerHeroQuery(nextQuery);
+        const scrollBody = instantResultsBox.querySelector('.results-scroll-body');
+        if (scrollBody) {
+          scrollBody.scrollTop = 0;
+          requestAnimationFrame(() => updateResultsScrollFades(scrollBody));
+        }
+      }
+    });
 
     function syncHeroQueryState() {
       if (!heroSearchShell || !heroSearchInput) return;
@@ -10134,13 +10748,14 @@
         focusActiveSearchBar();
         return;
       }
-      const activeTag = document.activeElement?.tagName;
-      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+      const activeEl = document.activeElement;
+      const activeTag = activeEl?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT' || activeEl?.isContentEditable) return;
 
-      if (e.key === '/') {
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         focusActiveSearchBar();
-      } else if (e.key === '[') {
+      } else if (e.key === '[' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         if (document.body.dataset.heroSearch === 'open') return;
         e.preventDefault();
         sidebarCycleBtn.click();
@@ -10336,6 +10951,54 @@
       };
       GUIDES_REWORK_KEYS.forEach((k) => REDESIGN_KEYS.push(k));
       Object.entries(GUIDES_REWORK_PACKS).forEach(([lang, vals]) => {
+        if (REDESIGN_PACKS[lang]) REDESIGN_PACKS[lang].push(...vals);
+      });
+      const SEARCH_AI_KEYS = [
+        "AI Summary",
+        "Grounded in cTrader docs — verify details in linked guides",
+        "Sources",
+        "Matching Documentation",
+        "Follow up:",
+        "No matching documentation found for \"{query}\".",
+        "Try one of these topics:",
+        "Reset password",
+        "Copy trading fees",
+        "cTrader ID (cTID) & Password Reset",
+        "cTrader Copy & Risk Management",
+        "cTrader Store (Buy & Sell)",
+        "Extending cTrader with WebView Plugins",
+        "cTrader Platform Apps & Trading History",
+        "How do I create a cBot in Python?",
+        "How do I connect Claude or Cursor to cTrader MCP servers?",
+        "How do pending orders and stop loss work in cTrader?",
+        "Open API vs FIX API: which should I choose?",
+        "How can I reset my password?",
+        "How does risk management work when copying strategies in cTrader Copy?",
+        "How do I sell a product on cTrader Store?",
+        "How do I build or add a WebView plugin?",
+        "Where can I find my trading history?",
+        "Can I use cTrader on Web, Windows, Mac, and Mobile?"
+      ];
+      const SEARCH_AI_PACKS = {
+        es: ["Resumen de IA","Basado en la documentación de cTrader — verifica los detalles en las guías enlazadas","Fuentes","Documentación coincidente","Seguir preguntando:","No se encontró documentación coincidente para «{query}».","Prueba uno de estos temas:","Restablecer contraseña","Comisiones de copy trading","cTrader ID (cTID) y restablecimiento de contraseña","cTrader Copy y gestión de riesgos","cTrader Store (Comprar y vender)","Ampliar cTrader con plugins WebView","Aplicaciones de cTrader e historial de trading","¿Cómo creo un cBot en Python?","¿Cómo conecto Claude o Cursor a los servidores MCP de cTrader?","¿Cómo funcionan las órdenes pendientes y el stop loss en cTrader?","Open API vs FIX API: ¿cuál debo elegir?","¿Cómo puedo restablecer mi contraseña?","¿Cómo funciona la gestión de riesgos al copiar estrategias en cTrader Copy?","¿Cómo vendo un producto en cTrader Store?","¿Cómo creo o añado un plugin WebView?","¿Dónde encuentro mi historial de trading?","¿Puedo usar cTrader en Web, Windows, Mac y móvil?"],
+        pt: ["Resumo de IA","Baseado na documentação do cTrader — verifique os detalhes nos guias vinculados","Fontes","Documentação correspondente","Continuar perguntando:","Nenhuma documentação correspondente encontrada para \"{query}\".","Experimente um destes tópicos:","Redefinir senha","Taxas de copy trading","cTrader ID (cTID) e redefinição de senha","cTrader Copy e gestão de risco","cTrader Store (Comprar e vender)","Estendendo o cTrader com plugins WebView","Aplicativos cTrader e histórico de negociação","Como crio um cBot em Python?","Como conecto o Claude ou Cursor aos servidores MCP do cTrader?","Como funcionam as ordens pendentes e o stop loss no cTrader?","Open API vs FIX API: qual devo escolher?","Como posso redefinir minha senha?","Como funciona a gestão de risco ao copiar estratégias no cTrader Copy?","Como vendo um produto na cTrader Store?","Como crio ou adiciono um plugin WebView?","Onde encontro meu histórico de negociação?","Posso usar o cTrader na Web, Windows, Mac e Mobile?"],
+        de: ["KI-Zusammenfassung","Basiert auf cTrader-Dokumentation — Details in den verlinkten Leitfäden prüfen","Quellen","Passende Dokumentation","Weiterfragen:","Keine passende Dokumentation für „{query}“ gefunden.","Probiere eines dieser Themen:","Passwort zurücksetzen","Copy-Trading-Gebühren","cTrader ID (cTID) & Passwort zurücksetzen","cTrader Copy & Risikomanagement","cTrader Store (Kaufen & Verkaufen)","cTrader mit WebView-Plugins erweitern","cTrader-Plattform-Apps & Trading-Verlauf","Wie erstelle ich einen cBot in Python?","Wie verbinde ich Claude oder Cursor mit cTrader-MCP-Servern?","Wie funktionieren Pending Orders und Stop Loss in cTrader?","Open API vs. FIX API: Welche soll ich wählen?","Wie kann ich mein Passwort zurücksetzen?","Wie funktioniert Risikomanagement beim Kopieren von Strategien in cTrader Copy?","Wie verkaufe ich ein Produkt im cTrader Store?","Wie erstelle oder installiere ich ein WebView-Plugin?","Wo finde ich meinen Trading-Verlauf?","Kann ich cTrader auf Web, Windows, Mac und Mobilgeräten nutzen?"],
+        fr: ["Résumé IA","Basé sur la documentation cTrader — vérifiez les détails dans les guides liés","Sources","Documentation correspondante","Approfondir :","Aucune documentation correspondante trouvée pour « {query} ».","Essayez l'un de ces sujets :","Réinitialiser le mot de passe","Frais de copy trading","cTrader ID (cTID) et réinitialisation du mot de passe","cTrader Copy et gestion des risques","cTrader Store (Acheter et vendre)","Étendre cTrader avec des plugins WebView","Applications cTrader et historique de trading","Comment créer un cBot en Python ?","Comment connecter Claude ou Cursor aux serveurs MCP cTrader ?","Comment fonctionnent les ordres en attente et le stop loss dans cTrader ?","Open API vs FIX API : lequel choisir ?","Comment réinitialiser mon mot de passe ?","Comment fonctionne la gestion des risques dans cTrader Copy ?","Comment vendre un produit sur cTrader Store ?","Comment créer ou ajouter un plugin WebView ?","Où trouver mon historique de trading ?","Puis-je utiliser cTrader sur Web, Windows, Mac et Mobile ?"],
+        it: ["Riepilogo IA","Basato sulla documentazione cTrader — verifica i dettagli nelle guide collegate","Fonti","Documentazione corrispondente","Approfondisci:","Nessuna documentazione trovata per «{query}».","Prova uno di questi argomenti:","Reimposta password","Commissioni copy trading","cTrader ID (cTID) e reimpostazione password","cTrader Copy e gestione del rischio","cTrader Store (Acquista e vendi)","Estendere cTrader con plugin WebView","App cTrader e cronologia di trading","Come creo un cBot in Python?","Come collego Claude o Cursor ai server MCP di cTrader?","Come funzionano gli ordini pendenti e lo stop loss in cTrader?","Open API vs FIX API: quale scegliere?","Come posso reimpostare la mia password?","Come funziona la gestione del rischio nel copiare strategie in cTrader Copy?","Come vendo un prodotto su cTrader Store?","Come creo o aggiungo un plugin WebView?","Dove trovo la mia cronologia di trading?","Posso usare cTrader su Web, Windows, Mac e Mobile?"],
+        pl: ["Podsumowanie AI","Oparte na dokumentacji cTrader — zweryfikuj szczegóły w powiązanych poradnikach","Źródła","Pasująca dokumentacja","Kontynuuj:","Nie znaleziono dokumentacji pasującej do „{query}”.","Wypróbuj jeden z tych tematów:","Resetuj hasło","Opłaty copy tradingu","cTrader ID (cTID) i resetowanie hasła","cTrader Copy i zarządzanie ryzykiem","cTrader Store (Kupowanie i sprzedaż)","Rozszerzanie cTrader za pomocą wtyczek WebView","Aplikacje cTrader i historia handlu","Jak utworzyć cBota w Pythonie?","Jak połączyć Claude lub Cursor z serwerami MCP cTrader?","Jak działają zlecenia oczekujące i stop loss w cTrader?","Open API vs FIX API: które wybrać?","Jak mogę zresetować hasło?","Jak działa zarządzanie ryzykiem przy kopiowaniu strategii w cTrader Copy?","Jak sprzedać produkt w cTrader Store?","Jak zbudować lub dodać wtyczkę WebView?","Gdzie znajdę swoją historię handlu?","Czy mogę używać cTrader w przeglądarce, na Windows, Mac i urządzeniach mobilnych?"],
+        ru: ["ИИ-резюме","Основано на документации cTrader — проверьте детали в указанных руководствах","Источники","Подходящая документация","Уточнить:","Не найдено документации по запросу «{query}».","Попробуйте одну из этих тем:","Сбросить пароль","Комиссии копитрейдинга","cTrader ID (cTID) и сброс пароля","cTrader Copy и управление рисками","cTrader Store (Покупка и продажа)","Расширение cTrader с помощью WebView-плагинов","Приложения cTrader и история сделок","Как создать cBot на Python?","Как подключить Claude или Cursor к серверам cTrader MCP?","Как работают отложенные ордера и стоп-лосс в cTrader?","Open API и FIX API: что выбрать?","Как сбросить пароль?","Как работает управление рисками при копировании стратегий в cTrader Copy?","Как продавать продукты в cTrader Store?","Как создать или добавить WebView-плагин?","Где найти историю сделок?","Можно ли использовать cTrader в Web, Windows, Mac и на мобильных?"],
+        tr: ["Yapay Zeka Özeti","cTrader belgelerine dayanır — ayrıntıları bağlantılı kılavuzlarda doğrulayın","Kaynaklar","Eşleşen Belgeler","Devam sorusu:","\"{query}\" için eşleşen belge bulunamadı.","Şu konulardan birini deneyin:","Şifre sıfırla","Kopya işlem ücretleri","cTrader ID (cTID) ve Şifre Sıfırlama","cTrader Copy ve Risk Yönetimi","cTrader Store (Al ve Sat)","WebView Eklentileriyle cTrader'ı Genişletme","cTrader Platform Uygulamaları ve İşlem Geçmişi","Python ile nasıl cBot oluştururum?","Claude veya Cursor'ı cTrader MCP sunucularına nasıl bağlarım?","cTrader'da bekleyen emirler ve zarar durdur nasıl çalışır?","Open API ve FIX API: hangisini seçmeliyim?","Şifremi nasıl sıfırlayabilirim?","cTrader Copy'de strateji kopyalarken risk yönetimi nasıl çalışır?","cTrader Store'da nasıl ürün satarım?","WebView eklentisi nasıl geliştirilir veya eklenir?","İşlem geçmişimi nerede bulabilirim?","cTrader'ı Web, Windows, Mac ve Mobilde kullanabilir miyim?"],
+        ar: ["ملخص الذكاء الاصطناعي","مستند إلى وثائق cTrader — تحقّق من التفاصيل في الأدلة المرتبطة","المصادر","الوثائق المطابقة","متابعة:","لم يتم العثور على وثائق مطابقة لـ «{query}».","جرّب أحد هذه المواضيع:","إعادة تعيين كلمة المرور","رسوم نسخ التداول","معرّف cTrader ID (cTID) وإعادة تعيين كلمة المرور","cTrader Copy وإدارة المخاطر","متجر cTrader Store (الشراء والبيع)","توسيع cTrader باستخدام إضافات WebView","تطبيقات cTrader وسجل التداول","كيف أنشئ cBot بلغة Python؟","كيف أربط Claude أو Cursor بخوادم cTrader MCP؟","كيف تعمل الأوامر المعلقة وإيقاف الخسارة في cTrader؟","Open API مقابل FIX API: أيهما أختار؟","كيف يمكنني إعادة تعيين كلمة المرور؟","كيف تعمل إدارة المخاطر عند نسخ الاستراتيجيات في cTrader Copy؟","كيف أبيع منتجًا في cTrader Store؟","كيف أبني أو أضيف إضافة WebView؟","أين أجد سجل التداول الخاص بي؟","هل يمكنني استخدام cTrader على الويب وWindows وMac والجوال؟"],
+        zh: ["AI 摘要","基于 cTrader 文档生成 — 请在关联指南中核实详情","来源","匹配文档","继续提问：","未找到与“{query}”匹配的文档。","试试以下主题：","重置密码","跟单交易费用","cTrader ID (cTID) 与密码重置","cTrader Copy 与风险管理","cTrader Store（购买与销售）","使用 WebView 插件扩展 cTrader","cTrader 平台应用与交易历史","如何用 Python 创建 cBot？","如何将 Claude 或 Cursor 连接到 cTrader MCP 服务器？","cTrader 中的挂单和止损如何运作？","Open API 与 FIX API：我该如何选择？","如何重置我的密码？","在 cTrader Copy 跟单策略时风险管理如何运作？","如何在 cTrader Store 销售产品？","如何开发或添加 WebView 插件？","在哪里查看我的交易历史？","可以在 Web、Windows、Mac 和移动端使用 cTrader 吗？"],
+        ja: ["AI サマリー","cTrader ドキュメントに基づいています — 詳細はリンク先ガイドでご確認ください","ソース","一致するドキュメント","続けて質問：","「{query}」に一致するドキュメントが見つかりませんでした。","次のトピックをお試しください：","パスワード再設定","コピートレード手数料","cTrader ID (cTID) とパスワード再設定","cTrader Copy とリスク管理","cTrader Store（購入と販売）","WebView プラグインによる cTrader 拡張","cTrader プラットフォームアプリと取引履歴","Python で cBot を作成するには？","Claude や Cursor を cTrader MCP サーバーに接続するには？","cTrader の待機注文とストップロスはどう機能しますか？","Open API と FIX API のどちらを選ぶべきですか？","パスワードを再設定するにはどうすればよいですか？","cTrader Copy で戦略をコピーする際のリスク管理はどう機能しますか？","cTrader Store で製品を販売するには？","WebView プラグインを作成・追加するには？","取引履歴はどこで確認できますか？","Web・Windows・Mac・モバイルで cTrader を使えますか？"],
+        ko: ["AI 요약","cTrader 문서를 기반으로 작성됨 — 연결된 가이드에서 세부 정보를 확인하세요","출처","일치하는 문서","후속 질문:","\"{query}\"에 일치하는 문서를 찾을 수 없습니다.","다음 주제 중 하나를 시도해 보세요:","비밀번호 재설정","카피 트레이딩 수수료","cTrader ID (cTID) 및 비밀번호 재설정","cTrader Copy 및 리스크 관리","cTrader Store (구매 및 판매)","WebView 플러그인으로 cTrader 확장하기","cTrader 플랫폼 앱 및 거래 내역","Python으로 cBot을 만드는 방법은 무엇인가요?","Claude 또는 Cursor를 cTrader MCP 서버에 연결하는 방법은?","cTrader에서 대기 주문과 손절매는 어떻게 작동하나요?","Open API vs FIX API: 무엇을 선택해야 하나요?","비밀번호는 어떻게 재설정하나요?","cTrader Copy에서 전략 복사 시 리스크 관리는 어떻게 작동하나요?","cTrader Store에서 제품을 판매하려면 어떻게 해야 하나요?","WebView 플러그인을 만들거나 추가하려면 어떻게 하나요?","거래 내역은 어디에서 확인할 수 있나요?","Web, Windows, Mac, 모바일에서 cTrader를 사용할 수 있나요?"],
+        vi: ["Tóm tắt AI","Dựa trên tài liệu cTrader — xác minh chi tiết trong các hướng dẫn được liên kết","Nguồn","Tài liệu phù hợp","Hỏi tiếp:","Không tìm thấy tài liệu nào phù hợp cho \"{query}\".","Thử một trong các chủ đề sau:","Đặt lại mật khẩu","Phí sao chép giao dịch","cTrader ID (cTID) & Đặt lại mật khẩu","cTrader Copy & Quản lý rủi ro","cTrader Store (Mua & Bán)","Mở rộng cTrader với Plugin WebView","Ứng dụng cTrader & Lịch sử giao dịch","Làm thế nào để tạo cBot bằng Python?","Làm thế nào để kết nối Claude hoặc Cursor với máy chủ cTrader MCP?","Lệnh chờ và cắt lỗ hoạt động như thế nào trong cTrader?","Open API và FIX API: tôi nên chọn loại nào?","Làm cách nào để đặt lại mật khẩu của tôi?","Quản lý rủi ro hoạt động thế nào khi sao chép chiến lược trên cTrader Copy?","Làm thế nào để bán sản phẩm trên cTrader Store?","Làm thế nào để tạo hoặc thêm plugin WebView?","Tôi có thể xem lịch sử giao dịch ở đâu?","Tôi có thể dùng cTrader trên Web, Windows, Mac và Di động không?"],
+        th: ["สรุปโดย AI","อ้างอิงจากเอกสาร cTrader — ตรวจสอบรายละเอียดในคู่มือที่เชื่อมโยง","แหล่งที่มา","เอกสารที่ตรงกัน","ถามต่อ:","ไม่พบเอกสารที่ตรงกับ \"{query}\"","ลองเลือกหัวข้อต่อไปนี้:","รีเซ็ตรหัสผ่าน","ค่าธรรมเนียมคัดลอกการเทรด","cTrader ID (cTID) และการรีเซ็ตรหัสผ่าน","cTrader Copy และการบริหารความเสี่ยง","cTrader Store (ซื้อและขาย)","ขยายความสามารถ cTrader ด้วยปลั๊กอิน WebView","แอปแพลตฟอร์ม cTrader และประวัติการเทรด","จะสร้าง cBot ด้วย Python ได้อย่างไร?","จะเชื่อมต่อ Claude หรือ Cursor กับเซิร์ฟเวอร์ cTrader MCP ได้อย่างไร?","คำสั่งล่วงหน้าและ Stop Loss ทำงานอย่างไรใน cTrader?","Open API กับ FIX API: ควรเลือกใช้อะไร?","ฉันจะรีเซ็ตรหัสผ่านได้อย่างไร?","การบริหารความเสี่ยงในการคัดลอกกลยุทธ์บน cTrader Copy ทำงานอย่างไร?","จะขายผลิตภัณฑ์บน cTrader Store ได้อย่างไร?","จะสร้างหรือเพิ่มปลั๊กอิน WebView ได้อย่างไร?","ดูประวัติการเทรดได้ที่ไหน?","ใช้ cTrader บน Web, Windows, Mac และมือถือได้หรือไม่?"],
+        id: ["Ringkasan AI","Berdasarkan dokumentasi cTrader — verifikasi detail di panduan tertaut","Sumber","Dokumentasi yang Cocok","Tindak lanjut:","Tidak ada dokumentasi yang cocok untuk \"{query}\".","Coba salah satu topik ini:","Atur ulang kata sandi","Biaya copy trading","cTrader ID (cTID) & Pengaturan Ulang Kata Sandi","cTrader Copy & Manajemen Risiko","cTrader Store (Beli & Jual)","Memperluas cTrader dengan Plugin WebView","Aplikasi Platform cTrader & Riwayat Trading","Bagaimana cara membuat cBot dengan Python?","Bagaimana cara menghubungkan Claude atau Cursor ke server MCP cTrader?","Bagaimana cara kerja pending order dan stop loss di cTrader?","Open API vs FIX API: mana yang sebaiknya saya pilih?","Bagaimana cara mengatur ulang kata sandi saya?","Bagaimana manajemen risiko bekerja saat menyalin strategi di cTrader Copy?","Bagaimana cara menjual produk di cTrader Store?","Bagaimana cara membuat atau menambahkan plugin WebView?","Di mana saya bisa melihat riwayat trading saya?","Bisakah saya menggunakan cTrader di Web, Windows, Mac, dan Mobile?"],
+        ms: ["Ringkasan AI","Berdasarkan dokumentasi cTrader — sahkan butiran dalam panduan terpaut","Sumber","Dokumentasi Sepadan","Susulan:","Tiada dokumentasi sepadan ditemui untuk \"{query}\".","Cuba salah satu topik ini:","Tetapkan semula kata laluan","Yuran salin dagangan","cTrader ID (cTID) & Tetapan Semula Kata Laluan","cTrader Copy & Pengurusan Risiko","cTrader Store (Beli & Jual)","Melanjutkan cTrader dengan Pemalam WebView","Aplikasi Platform cTrader & Sejarah Dagangan","Bagaimanakah cara mencipta cBot dalam Python?","Bagaimanakah cara menyambungkan Claude atau Cursor ke pelayan MCP cTrader?","Bagaimanakah pesanan tertunda dan stop loss berfungsi dalam cTrader?","Open API lwn FIX API: manakah yang patut saya pilih?","Bagaimanakah saya boleh menetapkan semula kata laluan saya?","Bagaimanakah pengurusan risiko berfungsi apabila menyalin strategi dalam cTrader Copy?","Bagaimanakah cara menjual produk di cTrader Store?","Bagaimanakah cara membina atau menambah pemalam WebView?","Di manakah saya boleh mencari sejarah dagangan saya?","Bolehkah saya menggunakan cTrader di Web, Windows, Mac dan Mudah Alih?"]
+      };
+      SEARCH_AI_KEYS.forEach((k) => REDESIGN_KEYS.push(k));
+      Object.entries(SEARCH_AI_PACKS).forEach(([lang, vals]) => {
         if (REDESIGN_PACKS[lang]) REDESIGN_PACKS[lang].push(...vals);
       });
       REDESIGN_KEYS.forEach((k) => { strings.en[k] = k; });
