@@ -263,6 +263,7 @@
       justify-content: space-between;
       padding: 0 1.25rem;
       gap: 1rem;
+      transition: opacity 0.16s ease, filter 0.16s ease;
     }
 
     .brand-cluster {
@@ -309,14 +310,16 @@
     .hamburger-line--bot {
       transform-origin: 12px 17px;
     }
-    body[data-mobile-nav="open"] .hamburger-line--top {
-      transform: translateY(5px) rotate(45deg);
-    }
-    body[data-mobile-nav="open"] .hamburger-line--mid {
-      opacity: 0;
-    }
-    body[data-mobile-nav="open"] .hamburger-line--bot {
-      transform: translateY(-5px) rotate(-45deg);
+    @media (max-width: 560px) {
+      body[data-mobile-nav="open"] .hamburger-line--top {
+        transform: translateY(5px) rotate(45deg);
+      }
+      body[data-mobile-nav="open"] .hamburger-line--mid {
+        opacity: 0;
+      }
+      body[data-mobile-nav="open"] .hamburger-line--bot {
+        transform: translateY(-5px) rotate(-45deg);
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       .hamburger-line {
@@ -655,10 +658,6 @@
       --nav-fade-b: transparent;
     }
 
-    .sidebar-drawer-header {
-      display: none;
-    }
-
     .nav-all-btn {
       position: relative;
       width: 100%;
@@ -804,26 +803,30 @@
 
     .nav-group > summary::after {
       content: "";
-      inline-size: 0.82em;
-      block-size: 0.82em;
+      inline-size: 14px;
+      block-size: 14px;
       margin-inline-start: auto;
       flex-shrink: 0;
       background-color: var(--text-muted);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat center / contain;
-      rotate: -90deg;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
     }
     .nav-group[open]:not(.is-closing) > summary::after {
-      rotate: 0deg;
-      background-color: var(--text-primary);
+      background-color: var(--accent);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
     }
     @media (prefers-reduced-motion: no-preference) {
       .nav-group > summary::after {
-        transition: rotate 0.18s ease, background-color 0.15s ease;
+        transition: background-color 0.15s ease;
       }
     }
     @media (hover: hover) and (pointer: fine) {
       .nav-group > summary:hover::after {
         background-color: var(--text-primary);
+      }
+      .nav-group[open]:not(.is-closing) > summary:hover::after {
+        background-color: var(--accent);
       }
     }
 
@@ -1288,7 +1291,31 @@
       user-select: none;
       -webkit-user-select: none;
     }
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .top-bar,
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .top-bar {
+      filter: blur(3px);
+      opacity: 0.45;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .workspace-shell,
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .main-container,
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .workspace-shell,
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .main-container {
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .main-inner,
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .main-inner {
+      z-index: auto;
+    }
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .omni-search-shell,
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .omni-search-shell {
+      z-index: 55;
+    }
     @media (prefers-reduced-motion: reduce) {
+      .top-bar,
       .hero-bg-art,
       .main-inner,
       .omni-search-shell,
@@ -1603,16 +1630,10 @@
     }
     .home-faq-row-btn.is-active {
       z-index: 3;
-      background: var(--accent-soft);
-      border-color: color-mix(in srgb, var(--accent) 32%, var(--border));
-      color: var(--text-primary);
+      color: var(--accent);
       font-weight: 600;
       transform: translate3d(0, var(--faq-slide-y, 0px), 0);
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s, opacity 0.2s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
-    }
-    [data-theme="dark"] .home-faq-row-btn.is-active {
-      background: rgba(240, 62, 77, 0.14);
-      border-color: rgba(240, 62, 77, 0.38);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s, opacity 0.2s ease, color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     }
     .home-faq-row-btn.is-active svg {
       color: var(--accent);
@@ -2938,64 +2959,26 @@
         --header-height: 54px;
       }
       .workspace-shell {
-        --nav-drawer-width: min(292px, calc(100vw - 44px));
+        --nav-drawer-width: var(--sidebar-width);
       }
       .left-nav-panel {
         width: var(--nav-drawer-width);
-        border-right: none;
-        border-start-end-radius: 18px;
-        border-end-end-radius: 18px;
-        box-shadow: 16px 0 40px rgba(15, 23, 42, 0.16);
+        border-right: 1px solid var(--border);
+        border-radius: 0;
+        box-shadow: 10px 0 24px rgba(0, 0, 0, 0.14);
       }
       [data-theme="dark"] .left-nav-panel {
-        box-shadow: 16px 0 44px rgba(0, 0, 0, 0.48);
-      }
-      .mobile-nav-backdrop {
-        background: rgba(15, 23, 42, 0.22);
-      }
-      [data-theme="dark"] .mobile-nav-backdrop {
-        background: rgba(2, 6, 23, 0.48);
-      }
-      .sidebar-drawer-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 13px 14px 11px 16px;
-        border-bottom: 1px solid var(--border);
-        flex-shrink: 0;
-      }
-      .sidebar-drawer-title {
-        font-size: 0.92rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        letter-spacing: -0.015em;
-      }
-      .sidebar-drawer-close {
-        width: 32px;
-        height: 32px;
-        border: none;
-        border-radius: 9999px;
-        background: transparent;
-        color: var(--text-secondary);
-        flex-shrink: 0;
-      }
-      .sidebar-drawer-close:hover {
-        border: none;
-        background: var(--bg-subtle);
-        color: var(--text-primary);
+        box-shadow: 12px 0 32px rgba(0, 0, 0, 0.42);
       }
       #sidebarCycleBtn,
       body[data-mobile-nav="closed"] #sidebarCycleBtn {
         left: 0;
         transform: translate3d(0, -50%, 0);
-        opacity: 1;
-        transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease, color 0.15s;
+        transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), color 0.15s;
       }
       body[data-mobile-nav="open"] #sidebarCycleBtn {
         left: 0;
         transform: translate3d(calc(var(--nav-drawer-width) - 1px), -50%, 0);
-        opacity: 0;
-        pointer-events: none;
       }
       @media (prefers-reduced-motion: reduce) {
         #sidebarCycleBtn,
@@ -3077,11 +3060,21 @@
         position: absolute;
         inset: 0;
         background: transparent;
-        border-bottom: none;
+        border-bottom: 1px solid transparent;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
         z-index: 45;
         pointer-events: none;
+        transition: background-color 0.18s ease, border-color 0.18s ease;
+      }
+      body[data-mobile-scrolled="true"]:not([data-mobile-nav="open"]) .top-bar::before {
+        background: var(--bg-header);
+        border-bottom-color: var(--border);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .top-bar::before {
+          transition: none;
+        }
       }
       .brand-cluster {
         position: relative;
@@ -3757,8 +3750,8 @@
         margin: 0 auto;
         padding: 4px 0;
       }
-      body[data-active-audience="home"][data-home-scroll="true"][data-hero-search="open"] .main-container,
-      body[data-active-audience="home"][data-home-scroll="true"][data-hero-search-closing="sliding"] .main-container {
+      body[data-active-audience="home"][data-home-scroll="true"][data-hero-search="open"]:not([data-hero-search-over-header="true"]) .main-container,
+      body[data-active-audience="home"][data-home-scroll="true"][data-hero-search-closing="sliding"]:not([data-hero-search-over-header="true"]) .main-container {
         overflow-x: clip;
         overflow-y: hidden;
       }
@@ -4667,14 +4660,8 @@
       padding-bottom: 2px;
     }
     body:is([data-stage-width="narrow"], [data-stage-width="mobile"])[data-stage-height="tall"] .home-faq-row-btn.is-active {
-      padding: 7px 10px;
-      border-radius: 9px;
-      background: var(--accent-soft);
-      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
-    }
-    [data-theme="dark"] body:is([data-stage-width="narrow"], [data-stage-width="mobile"])[data-stage-height="tall"] .home-faq-row-btn.is-active {
-      background: rgba(240, 62, 77, 0.14);
-      border-color: rgba(240, 62, 77, 0.38);
+      color: var(--accent);
+      border-bottom-color: transparent;
     }
 
     /* Off-center desktop AI search bar widens smoothly while sliding diagonally to center, and narrows smoothly on close */
@@ -4760,11 +4747,9 @@
     [dir="rtl"] .nav-all-btn {
       text-align: right;
     }
-    [dir="rtl"] .nav-group > summary::after,
     [dir="rtl"] .faq-accordion-section summary::before {
       rotate: 90deg;
     }
-    [dir="rtl"] .nav-group[open]:not(.is-closing) > summary::after,
     [dir="rtl"] .faq-accordion-section details[open] > summary::before {
       rotate: 0deg;
     }
@@ -4937,12 +4922,6 @@
          ADAPTIVE LEFT NAVIGATION PANEL
          ====================================================================== -->
     <aside class="left-nav-panel" id="leftNavPanel" aria-label="Documentation Navigation">
-      <div class="sidebar-drawer-header">
-        <span class="sidebar-drawer-title">Menu</span>
-        <button type="button" class="icon-btn sidebar-drawer-close" id="tabletNavCloseBtn" aria-label="Close" title="Close">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
       <nav class="nav-tree-scroll" id="sidebarTreeContainer" aria-label="Section Tree">
         <button type="button" class="nav-all-btn nav-home-btn active" id="navAllAudiencesBtn" data-select-audience="home">
           <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 20V9.5z"/><polyline points="9 21.5 9 13 15 13 15 21.5"/></svg>
@@ -5866,10 +5845,6 @@
     // 6. Left Navigation Panel Controls
     const sidebarCycleBtn = document.getElementById('sidebarCycleBtn');
     const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
-    const tabletNavCloseBtn = document.getElementById('tabletNavCloseBtn');
-    tabletNavCloseBtn?.addEventListener('click', () => {
-      closeMobileNav();
-    });
     const overlayDrawerMq = window.matchMedia('(max-width: 960px)');
 
     let menuCollapseTimer = 0;
@@ -6733,6 +6708,7 @@
 
     function finishHeroCloseSlide() {
       cancelHeroClose();
+      delete document.body.dataset.heroSearchOverHeader;
       instantResultsBox.classList.remove('active');
       delete instantResultsBox.dataset.renderedHtml;
       lastHeroRestingTop = null;
@@ -6776,6 +6752,7 @@
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
         delete document.body.dataset.heroSearch;
+        delete document.body.dataset.heroSearchOverHeader;
         delete document.body.dataset.heroBarSettled;
         delete document.body.dataset.heroSuggFit;
         delete document.body.dataset.heroResFit;
@@ -6982,8 +6959,16 @@
       }
     }
 
+    function syncMobileScrolledHeader() {
+      const scrolled = Boolean(mobileSearchMq.matches && homeMainEl && homeMainEl.scrollTop > 4);
+      if (scrolled) document.body.dataset.mobileScrolled = 'true';
+      else delete document.body.dataset.mobileScrolled;
+    }
+    homeMainEl?.addEventListener('scroll', syncMobileScrolledHeader, { passive: true });
+
     function syncHomeScrollMode(opts) {
       syncHomeLayoutTier(opts);
+      syncMobileScrolledHeader();
     }
 
     if (document.fonts && document.fonts.ready) {
@@ -7158,9 +7143,13 @@
       let openWidth = null;
       let restingW = 0;
       const isHeroOpen = document.body.dataset.heroSearch === 'open';
+      const isOverHeader = isHeroOpen && (mobileSearchMq.matches ? (metrics.vvHeight <= 420) : (window.innerHeight <= 560));
+      if (isOverHeader) document.body.dataset.heroSearchOverHeader = 'true';
+      else delete document.body.dataset.heroSearchOverHeader;
+
       if (mobileSearchMq.matches) {
         const limitBottom = vvBottom - 10;
-        const minTop = visibleHeaderBottom + 8;
+        const minTop = isOverHeader ? (metrics.vvTop + 8) : (visibleHeaderBottom + 8);
         shift = Math.max(
           Math.round(minTop - restingTop),
           Math.round(limitBottom - restingBottom)
@@ -7168,7 +7157,7 @@
       } else {
         const mainEl = document.getElementById('mainContent');
         const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
-        const targetTop = mainTop + 14;
+        const targetTop = isOverHeader ? 10 : (mainTop + 14);
         shift = Math.round(targetTop - restingTop);
 
         // When off-center in the main content stage, slide diagonally to horizontal center and widen a bit
@@ -7316,7 +7305,8 @@
       let available = 0;
 
       if (mobileSearchMq.matches) {
-        const topBound = visibleHeaderBottom + 8;
+        const isOverHeader = document.body.dataset.heroSearchOverHeader === 'true';
+        const topBound = isOverHeader ? (metrics.vvTop + 8) : (visibleHeaderBottom + 8);
         suggFits = (finalBarTop - topBound) >= (suggH + 8);
         available = Math.floor((finalBarTop - suggOffset) - topBound);
         resFits = suggFits && available >= MIN_RESULTS_SPACE;
@@ -7591,13 +7581,14 @@
       if (blurTargets.faqDialog) blurTargets.faqDialog.inert = Boolean(faqDialog?.open && modalBlurred);
       if (blurTargets.headerActions) blurTargets.headerActions.inert = Boolean(mobileSearchMq.matches && heroOpen);
       if (blurTargets.sidebarCycleBtn) blurTargets.sidebarCycleBtn.inert = mobileBottomBlurred;
+      if (topBarEl) topBarEl.inert = Boolean(heroOpen && document.body.dataset.heroSearchOverHeader === 'true');
     }
 
     if ('MutationObserver' in window) {
       const blurObserver = new MutationObserver(() => syncBlurredInertState());
       blurObserver.observe(document.body, {
         attributes: true,
-        attributeFilter: ['data-hero-search', 'data-hero-search-closing', 'data-mobile-nav']
+        attributeFilter: ['data-hero-search', 'data-hero-search-closing', 'data-hero-search-over-header', 'data-mobile-nav']
       });
       if (popularGuidesDialog) blurObserver.observe(popularGuidesDialog, { attributes: true, attributeFilter: ['open'] });
       if (faqDialog) blurObserver.observe(faqDialog, { attributes: true, attributeFilter: ['open'] });
