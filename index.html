@@ -25,6 +25,8 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://help.ctrader.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <style>
@@ -135,7 +137,7 @@
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 
-      --sidebar-width: 256px;
+      --sidebar-width: 270px;
       --header-height: 52px;
       --radius-sm: 8px;
       --radius-md: 12px;
@@ -148,35 +150,14 @@
       box-sizing: border-box;
     }
 
-    .main-container,
-    .home-modal-body,
-    .results-scroll-body,
     .code-snippet-box {
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-
-    @supports not (scrollbar-color: auto) {
-      .main-container::-webkit-scrollbar,
-      .home-modal-body::-webkit-scrollbar,
-      .results-scroll-body::-webkit-scrollbar,
-      .code-snippet-box::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      .main-container::-webkit-scrollbar-thumb,
-      .home-modal-body::-webkit-scrollbar-thumb,
-      .results-scroll-body::-webkit-scrollbar-thumb,
-      .code-snippet-box::-webkit-scrollbar-thumb {
-        background: var(--scrollbar-thumb);
-        border-radius: 999px;
-      }
-      .main-container::-webkit-scrollbar-track,
-      .home-modal-body::-webkit-scrollbar-track,
-      .results-scroll-body::-webkit-scrollbar-track,
-      .code-snippet-box::-webkit-scrollbar-track {
-        background: var(--scrollbar-track);
-      }
+    .code-snippet-box::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
 
     html.i18n-pending body {
@@ -185,7 +166,10 @@
 
     html.theme-switching *,
     html.theme-switching *::before,
-    html.theme-switching *::after {
+    html.theme-switching *::after,
+    html.viewport-switching *,
+    html.viewport-switching *::before,
+    html.viewport-switching *::after {
       transition: none !important;
     }
 
@@ -643,8 +627,8 @@
       gap: 0.22rem;
       --nav-fade-t: #000;
       --nav-fade-b: #000;
-      mask-image: linear-gradient(to bottom, var(--nav-fade-t) 0, #000 22px, #000 calc(100% - 22px), var(--nav-fade-b) 100%);
-      -webkit-mask-image: linear-gradient(to bottom, var(--nav-fade-t) 0, #000 22px, #000 calc(100% - 22px), var(--nav-fade-b) 100%);
+      mask-image: linear-gradient(to bottom, var(--nav-fade-t) 0, #000 44px, #000 calc(100% - 44px), var(--nav-fade-b) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, var(--nav-fade-t) 0, #000 44px, #000 calc(100% - 44px), var(--nav-fade-b) 100%);
     }
     .nav-tree-scroll::-webkit-scrollbar {
       display: none;
@@ -718,19 +702,25 @@
     }
 
     /* Native <details> Accordion styling (per modern-web-guidance `accordion`) */
-    details::details-content {
-      interpolate-size: allow-keywords;
-      overflow: clip;
-      contain: layout;
-    }
-    details:not([open])::details-content {
-      block-size: 0;
-      min-block-size: 0;
-    }
-    @media (prefers-reduced-motion: no-preference) {
+    @supports (interpolate-size: allow-keywords) {
+      details {
+        interpolate-size: allow-keywords;
+      }
       details::details-content {
-        transition: block-size 0.2s ease, content-visibility 0.2s ease, display 0.2s ease;
-        transition-behavior: allow-discrete;
+        overflow: clip;
+      }
+      details:not([open])::details-content {
+        block-size: 0;
+        min-block-size: 0;
+      }
+      details[open]::details-content {
+        block-size: auto;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        details::details-content {
+          transition: block-size 0.2s ease, content-visibility 0.2s ease;
+          transition-behavior: allow-discrete;
+        }
       }
     }
 
@@ -752,8 +742,8 @@
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 0.65rem;
-      padding: 0.58rem 0.72rem;
+      gap: 0.56rem;
+      padding: 0.56rem 0.68rem;
       border-radius: 10px;
       font-size: 0.815rem;
       font-weight: 600;
@@ -984,18 +974,59 @@
       min-width: 0;
       min-height: 0;
       overflow-y: auto;
-      scrollbar-gutter: stable both-edges;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scrollbar-gutter: auto;
       width: 100%;
       padding: 0;
       display: flex;
       flex-direction: column;
+      --main-fade-t: #000;
+      --main-fade-b: #000;
+      --main-fade-l: #000;
+      --main-fade-r: #000;
+      --main-fade-top-offset: 0px;
+      --main-fade-left-offset: 0px;
+      mask-image:
+        linear-gradient(to bottom, var(--main-fade-t) 0, var(--main-fade-t) var(--main-fade-top-offset), #000 calc(var(--main-fade-top-offset) + 46px), #000 calc(100% - 46px), var(--main-fade-b) 100%),
+        linear-gradient(to right, var(--main-fade-l) 0, var(--main-fade-l) var(--main-fade-left-offset), #000 calc(var(--main-fade-left-offset) + 46px), #000 calc(100% - 46px), var(--main-fade-r) 100%);
+      mask-composite: intersect;
+      -webkit-mask-image:
+        linear-gradient(to bottom, var(--main-fade-t) 0, var(--main-fade-t) var(--main-fade-top-offset), #000 calc(var(--main-fade-top-offset) + 46px), #000 calc(100% - 46px), var(--main-fade-b) 100%),
+        linear-gradient(to right, var(--main-fade-l) 0, var(--main-fade-l) var(--main-fade-left-offset), #000 calc(var(--main-fade-left-offset) + 46px), #000 calc(100% - 46px), var(--main-fade-r) 100%);
+      -webkit-mask-composite: source-in;
+    }
+    .main-container::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    .main-container[data-fade-top="true"] {
+      --main-fade-t: transparent;
+    }
+    .main-container[data-fade-bottom="true"] {
+      --main-fade-b: transparent;
+    }
+    .main-container[data-fade-left="true"] {
+      --main-fade-l: transparent;
+    }
+    .main-container[data-fade-right="true"] {
+      --main-fade-r: transparent;
+    }
+    body[data-hero-search="open"] .main-container,
+    body[data-hero-search-closing="sliding"] .main-container,
+    body[data-modal-open="true"] .main-container {
+      mask-image: none;
+      -webkit-mask-image: none;
     }
     @media (min-width: 961px) {
       .main-container {
         padding-inline-start: var(--sidebar-width);
+        --main-fade-left-offset: var(--sidebar-width);
       }
       body[data-sidebar-mode="hidden"] .main-container {
         padding-inline-start: 0;
+        --main-fade-left-offset: 0px;
       }
     }
 
@@ -1086,7 +1117,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       overflow-x: clip;
-      scrollbar-gutter: stable both-edges;
+      scrollbar-gutter: auto;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
     }
@@ -1208,7 +1239,7 @@
     .ecosystem-banners-grid,
     .home-resources-grid,
     .site-footer {
-      transition: inset-inline-start 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+      transition: opacity 0.16s ease;
     }
     .hero-tall-prompts {
       display: none;
@@ -1216,6 +1247,35 @@
       align-items: center;
       gap: 8px;
       min-width: 0;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      --tall-fade-l: #000;
+      --tall-fade-r: #000;
+      mask-image: linear-gradient(to right, var(--tall-fade-l) 0, #000 38px, #000 calc(100% - 38px), var(--tall-fade-r) 100%);
+      -webkit-mask-image: linear-gradient(to right, var(--tall-fade-l) 0, #000 38px, #000 calc(100% - 38px), var(--tall-fade-r) 100%);
+    }
+    .hero-tall-prompts::-webkit-scrollbar {
+      display: none;
+      height: 0;
+    }
+    .hero-tall-prompts[data-fade-left="true"] {
+      --tall-fade-l: transparent;
+    }
+    .hero-tall-prompts[data-fade-right="true"] {
+      --tall-fade-r: transparent;
+    }
+    .hero-tall-prompts.is-scrollable {
+      cursor: grab;
+    }
+    .hero-tall-prompts.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .hero-tall-label {
       font-size: 12.5px;
@@ -1292,7 +1352,11 @@
       -webkit-user-select: none;
     }
     body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .top-bar,
-    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .top-bar {
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .top-bar,
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"] .left-nav-panel,
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-closing="sliding"] .left-nav-panel,
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"] #sidebarCycleBtn,
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-closing="sliding"] #sidebarCycleBtn {
       filter: blur(3px);
       opacity: 0.45;
       pointer-events: none;
@@ -1313,6 +1377,43 @@
     body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .omni-search-shell,
     body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .omni-search-shell {
       z-index: 55;
+    }
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"] .omni-search-shell .suggestions-bar {
+      top: auto;
+      bottom: calc(100% + 0.45rem);
+      padding: 0.36rem 0.6rem;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+    }
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
+    }
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"] .omni-search-shell .instant-results-box {
+      display: flex;
+      top: auto;
+      bottom: calc(100% + var(--hero-suggestions-offset, 52px));
+      padding: 0.85rem 0.95rem 0.55rem;
+      gap: 0.35rem;
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.22);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+    }
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
     }
     @media (prefers-reduced-motion: reduce) {
       .top-bar,
@@ -1650,9 +1751,8 @@
       z-index: 2;
       overflow-y: auto;
       overscroll-behavior: contain;
-      scrollbar-width: thin;
-      scrollbar-gutter: stable;
-      scrollbar-color: var(--scrollbar-thumb) transparent;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       padding: 6px 4px 2px;
       font-size: 12.5px;
       line-height: 1.5;
@@ -1777,7 +1877,7 @@
       border-radius: 0;
       box-shadow: none;
       padding: 0;
-      transition: inset-inline-start 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+      transition: opacity 0.16s ease;
     }
     [data-theme="dark"] body:is([data-stage-width="narrow"], [data-stage-width="mobile"]) .home-guides-panel,
     [data-theme="dark"] body:is([data-stage-width="narrow"], [data-stage-width="mobile"]) .home-faqs-panel {
@@ -2035,12 +2135,21 @@
       overflow-y: hidden;
       scroll-behavior: auto;
       overscroll-behavior-x: contain;
+      touch-action: pan-x;
       scrollbar-width: none;
       width: 100%;
       --chip-fade-l: #000;
       --chip-fade-r: #000;
-      mask-image: linear-gradient(to right, var(--chip-fade-l) 0, #000 18px, #000 calc(100% - 18px), var(--chip-fade-r) 100%);
-      -webkit-mask-image: linear-gradient(to right, var(--chip-fade-l) 0, #000 18px, #000 calc(100% - 18px), var(--chip-fade-r) 100%);
+      mask-image: linear-gradient(to right, var(--chip-fade-l) 0, #000 38px, #000 calc(100% - 38px), var(--chip-fade-r) 100%);
+      -webkit-mask-image: linear-gradient(to right, var(--chip-fade-l) 0, #000 38px, #000 calc(100% - 38px), var(--chip-fade-r) 100%);
+    }
+    .prompt-chips-row.is-scrollable {
+      cursor: grab;
+    }
+    .prompt-chips-row.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .prompt-chips-row[data-fade-left="true"] {
       --chip-fade-l: transparent;
@@ -2117,13 +2226,20 @@
       gap: 0.65rem;
       overflow-x: hidden;
       overflow-y: auto;
-      scrollbar-gutter: stable;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       scroll-behavior: smooth;
       overscroll-behavior: contain;
       --res-fade-t: #000;
       --res-fade-b: #000;
-      mask-image: linear-gradient(to bottom, var(--res-fade-t) 0, #000 20px, #000 calc(100% - 20px), var(--res-fade-b) 100%);
-      -webkit-mask-image: linear-gradient(to bottom, var(--res-fade-t) 0, #000 20px, #000 calc(100% - 20px), var(--res-fade-b) 100%);
+      mask-image: linear-gradient(to bottom, var(--res-fade-t) 0, #000 42px, #000 calc(100% - 42px), var(--res-fade-b) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, var(--res-fade-t) 0, #000 42px, #000 calc(100% - 42px), var(--res-fade-b) 100%);
+    }
+    .results-scroll-body::-webkit-scrollbar,
+    .home-faq-inline-answer::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
     .results-scroll-body[data-fade-top="true"] {
       --res-fade-t: transparent;
@@ -2194,14 +2310,33 @@
       width: 100%;
       max-width: 100%;
       height: auto;
-      max-height: 140px;
-      overflow: hidden;
+      max-height: 204px;
+      overflow-x: auto;
+      overflow-y: auto;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x pan-y;
       margin: 0;
+      --code-fade-l: #000;
+      --code-fade-r: #000;
+      mask-image: linear-gradient(to right, var(--code-fade-l) 0, #000 32px, #000 calc(100% - 32px), var(--code-fade-r) 100%);
+      -webkit-mask-image: linear-gradient(to right, var(--code-fade-l) 0, #000 32px, #000 calc(100% - 32px), var(--code-fade-r) 100%);
       transition: border-color 0.15s;
     }
+    .code-snippet-box[data-fade-left="true"] {
+      --code-fade-l: transparent;
+    }
+    .code-snippet-box[data-fade-right="true"] {
+      --code-fade-r: transparent;
+    }
+    .code-snippet-box.is-scrollable {
+      cursor: grab;
+    }
+    .code-snippet-box.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+      -webkit-user-select: none;
+    }
     .code-snippet-box.scroll-active {
-      overflow: auto;
-      scrollbar-gutter: stable;
       border-color: var(--border-strong);
     }
 
@@ -2210,59 +2345,120 @@
        ========================================================================== */
     .popular-guides-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 0.65rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.72rem;
+    }
+    @media (max-width: 640px) {
+      .popular-guides-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+      }
     }
 
     .guide-card {
-      background: var(--bg-surface);
+      background: var(--bg-canvas);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.9rem;
+      border-radius: 12px;
+      padding: 0.78rem 0.9rem;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 0.7rem;
+      align-items: center;
+      gap: 0.78rem;
       contain: layout style;
-      transition: border-color 0.15s;
+      transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s ease;
     }
     .guide-card:hover {
       border-color: var(--border-strong);
+      background: var(--bg-subtle);
     }
-    .guide-card-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
+    .guide-card-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fdecef;
+      color: #c8102e;
+    }
+    .guide-card-badge[data-tone="emerald"] {
+      background: #e8f8f0;
+      color: #059669;
+    }
+    .guide-card-badge[data-tone="blue"] {
+      background: #e8f1fe;
+      color: #2563eb;
+    }
+    .guide-card-badge[data-tone="violet"] {
+      background: #f1ebfe;
+      color: #7c3aed;
+    }
+    .guide-card-badge[data-tone="amber"] {
+      background: #fef3e2;
+      color: #d97706;
+    }
+    [data-theme="dark"] .guide-card-badge {
+      background: rgba(244, 63, 94, 0.16);
+      color: #fb7185;
+    }
+    [data-theme="dark"] .guide-card-badge[data-tone="emerald"] {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+    }
+    [data-theme="dark"] .guide-card-badge[data-tone="blue"] {
+      background: rgba(59, 130, 246, 0.18);
+      color: #60a5fa;
+    }
+    [data-theme="dark"] .guide-card-badge[data-tone="violet"] {
+      background: rgba(139, 92, 246, 0.18);
+      color: #a78bfa;
+    }
+    [data-theme="dark"] .guide-card-badge[data-tone="amber"] {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
     }
     .guide-card-icon {
-      width: 22px;
-      height: 22px;
+      width: 17px;
+      height: 17px;
       flex-shrink: 0;
-      color: var(--text-secondary);
-      margin-top: 0.05rem;
-      transition: color 0.15s;
     }
-    .guide-card:hover .guide-card-icon {
-      color: var(--accent);
+    .guide-card-copy {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.16rem;
     }
     .guide-card h4 {
       margin: 0;
-      font-size: 0.83rem;
+      font-size: 0.86rem;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.3;
+      color: var(--text-primary);
     }
-    .guide-read-link {
+    .guide-card-meta {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .guide-card-arrow {
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      font-size: 0.74rem;
-      font-weight: 500;
-      color: var(--accent);
+      justify-content: center;
+      color: var(--text-muted);
+      transition: transform 0.16s ease, color 0.16s ease;
     }
-    .guide-read-link svg {
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
+    .guide-card-arrow svg {
+      width: 15px;
+      height: 15px;
+    }
+    .guide-card:hover .guide-card-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
     }
 
     .ecosystem-banners-grid {
@@ -2418,46 +2614,58 @@
       opacity: 0.32;
     }
 
-    /* Minimal FAQ Accordion */
+    /* Minimal FAQ Accordion (Direction 1: hairline rows, + -> crimson -, red text only on active) */
     .faq-accordion-section {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0;
     }
     .faq-accordion-section details {
       border-bottom: 1px solid var(--border);
       border-radius: 0;
-      contain: layout style;
     }
     .faq-accordion-section summary {
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 0;
-      font-weight: 500;
-      font-size: 0.86rem;
+      justify-content: space-between;
+      gap: 0.9rem;
+      padding: 0.88rem 0;
+      font-weight: 600;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      color: var(--text-primary);
       cursor: pointer;
+      transition: color 0.16s ease;
+    }
+    .faq-accordion-section summary:hover {
+      color: var(--accent);
+    }
+    .faq-accordion-section details[open] > summary {
+      color: var(--accent);
     }
     .faq-accordion-section summary::-webkit-details-marker {
       display: none;
     }
-    .faq-accordion-section summary::before {
+    .faq-accordion-section summary::after {
       content: "";
-      inline-size: 0.85em;
-      block-size: 0.85em;
+      inline-size: 15px;
+      block-size: 15px;
       flex-shrink: 0;
       background-color: var(--text-muted);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat center / contain;
-      rotate: -90deg;
-      transition: rotate 0.18s;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      transition: background-color 0.16s ease;
     }
-    .faq-accordion-section details[open] > summary::before {
-      rotate: 0deg;
+    .faq-accordion-section details[open] > summary::after {
+      background-color: var(--accent);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
     }
     .faq-body {
-      padding: 0 0 0.85rem 1.35rem;
-      font-size: 0.82rem;
+      padding: 0 1.5rem 0.95rem 0;
+      font-size: 0.83rem;
+      line-height: 1.55;
       color: var(--text-secondary);
       max-width: 72ch;
     }
@@ -2529,22 +2737,32 @@
       opacity: 0.45;
     }
     .home-modal-surface {
-      width: min(860px, 100%);
+      width: min(820px, 100%);
       max-width: 100%;
       display: flex;
       flex-direction: column;
       min-height: 0;
-      max-height: min(100%, 720px);
+      max-height: min(100%, 700px);
       background: var(--bg-surface);
       border: 1px solid var(--border-strong);
-      border-radius: var(--radius-md);
-      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18);
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.16);
       contain: layout style paint;
-      will-change: transform, opacity;
       overflow: hidden;
       opacity: 1;
       transform: translate3d(0, 0, 0) scale(1);
       transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+    }
+    dialog.home-modal[open] .home-modal-surface {
+      will-change: transform, opacity;
+    }
+    [data-theme="dark"] .home-modal-surface {
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.52);
+    }
+    @media (min-width: 561px) and (max-width: 960px) {
+      .home-modal-surface {
+        width: min(680px, 100%);
+      }
     }
     @starting-style {
       dialog.home-modal[open] {
@@ -2564,112 +2782,165 @@
     .home-modal-header {
       flex-shrink: 0;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 0.9rem;
-      flex-wrap: wrap;
-      padding: 1rem 1.25rem;
+      padding: 1.05rem 1.3rem 0.88rem;
       border-bottom: 1px solid var(--border);
       background: var(--bg-surface);
       transition: opacity 0.18s ease;
     }
     .home-modal-title-wrap {
-      flex: 1 1 240px;
+      flex: 1 1 auto;
       min-width: 0;
-    }
-    .home-modal-title-row {
       display: flex;
       align-items: center;
-      gap: 0.48rem;
+      gap: 0.78rem;
+    }
+    .home-modal-icon-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fdecef;
+      color: var(--accent);
+    }
+    [data-theme="dark"] .home-modal-icon-badge {
+      background: rgba(244, 63, 94, 0.16);
+      color: #fb7185;
     }
     .home-modal-icon {
-      width: 18px;
-      height: 18px;
-      color: var(--accent);
+      width: 17px;
+      height: 17px;
+      color: currentColor;
       flex-shrink: 0;
     }
-    .home-modal-title-wrap h2 {
-      margin: 0;
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: -0.015em;
+    .home-modal-title-copy {
+      min-width: 0;
     }
-    .home-modal-title-wrap p {
-      margin: 0.24rem 0 0;
+    .home-modal-title-copy h2 {
+      margin: 0;
+      font-size: 1.06rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+    .home-modal-title-copy p {
+      margin: 0.16rem 0 0;
       font-size: 0.78rem;
       color: var(--text-secondary);
-      line-height: 1.45;
+      line-height: 1.4;
     }
-    .home-modal-controls {
+    .home-modal-filterbar {
+      flex-shrink: 0;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      flex-shrink: 0;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.72rem 1.3rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
+      transition: opacity 0.18s ease;
     }
-    .home-modal-select-wrap {
-      position: relative;
+    .modal-pill-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      --pill-fade-l: #000;
+      --pill-fade-r: #000;
+      mask-image: linear-gradient(to right, var(--pill-fade-l) 0, #000 38px, #000 calc(100% - 38px), var(--pill-fade-r) 100%);
+      -webkit-mask-image: linear-gradient(to right, var(--pill-fade-l) 0, #000 38px, #000 calc(100% - 38px), var(--pill-fade-r) 100%);
+    }
+    .modal-pill-strip[data-fade-left="true"] {
+      --pill-fade-l: transparent;
+    }
+    .modal-pill-strip[data-fade-right="true"] {
+      --pill-fade-r: transparent;
+    }
+    .modal-pill-strip.is-scrollable {
+      cursor: grab;
+    }
+    .modal-pill-strip.is-dragging {
+      cursor: grabbing;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .modal-pill-strip::-webkit-scrollbar {
+      display: none;
+      height: 0;
+    }
+    .modal-audience-pill {
+      flex-shrink: 0;
+      appearance: none;
+      border: 1px solid transparent;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.2;
+      padding: 0.38rem 0.78rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+    .modal-audience-pill:hover {
+      color: var(--text-primary);
+      background: color-mix(in srgb, var(--bg-subtle) 65%, var(--border-strong));
+    }
+    .modal-audience-pill.is-active {
+      background: #fdecef;
+      color: var(--accent);
+      border-color: transparent;
+    }
+    [data-theme="dark"] .modal-audience-pill.is-active {
+      background: rgba(244, 63, 94, 0.18);
+      color: #fb7185;
+    }
+    .modal-audience-pill:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .modal-filter-meta {
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
     }
-    .home-modal-select {
-      background: var(--bg-canvas);
-      border: 1px solid var(--border-strong);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
+    .modal-count-badge {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .home-modal-filterbar .modal-action-link {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--accent);
       font-family: inherit;
       font-size: 0.78rem;
-      font-weight: 500;
-      line-height: 1.3;
-      padding: 0.36rem 0.65rem;
+      font-weight: 600;
+      padding: 0.28rem 0.4rem;
+      border-radius: 6px;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
-    .home-modal-select:hover {
-      border-color: var(--text-muted);
-    }
-    .home-modal-select:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 1px;
-      border-color: var(--accent);
-    }
-    .home-modal-select option {
-      background: var(--bg-surface);
-      color: var(--text-primary);
-    }
-    @supports (appearance: base-select) {
-      .home-modal-select,
-      .home-modal-select::picker(select) {
-        appearance: base-select;
-      }
-      .home-modal-select {
-        align-items: center;
-        gap: 0.45rem;
-        padding-inline: 0.65rem;
-      }
-      .home-modal-select::picker(select) {
-        background: var(--bg-surface);
-        color: var(--text-primary);
-        border: 1px solid var(--border-strong);
-        border-radius: var(--radius-sm);
-        padding: 0.25rem;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-      }
-      .home-modal-select::picker-icon {
-        color: var(--text-muted);
-      }
-      .home-modal-select option {
-        padding: 0.36rem 0.55rem;
-        border-radius: 4px;
-        font-size: 0.78rem;
-        color: var(--text-primary);
-        cursor: pointer;
-      }
-      .home-modal-select option:hover {
-        background: var(--bg-subtle);
-      }
-      .home-modal-select option::checkmark {
-        color: var(--accent);
-      }
+    .home-modal-filterbar .modal-action-link:hover {
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
     }
     .home-modal-close {
       width: 34px;
@@ -2692,17 +2963,33 @@
       flex: 1 1 auto;
       min-height: 0;
       overflow-y: auto;
-      scrollbar-gutter: stable;
+      overflow-x: hidden;
       overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       contain: layout style paint;
       transform: translateZ(0);
-      will-change: scroll-position;
-      padding: 1.1rem 1.25rem 1.25rem;
-      transition: inset-inline-start 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+      padding: 1rem 1.3rem 1.25rem;
+      --modal-fade-t: #000;
+      --modal-fade-b: #000;
+      mask-image: linear-gradient(to bottom, var(--modal-fade-t) 0, #000 44px, #000 calc(100% - 44px), var(--modal-fade-b) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, var(--modal-fade-t) 0, #000 44px, #000 calc(100% - 44px), var(--modal-fade-b) 100%);
+      transition: opacity 0.16s ease;
+    }
+    .home-modal-body::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    .home-modal-body[data-fade-top="true"] {
+      --modal-fade-t: transparent;
+    }
+    .home-modal-body[data-fade-bottom="true"] {
+      --modal-fade-b: transparent;
     }
     .home-modal-body .faq-accordion-section {
-      gap: 0.25rem;
+      gap: 0;
     }
     .home-modal-body .faq-accordion-section details:last-child {
       border-bottom: none;
@@ -2722,10 +3009,18 @@
     }
 
     @media (min-width: 561px) {
+      body[data-lang-open="true"] #langTriggerBtn {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2.5px rgba(200, 16, 46, 0.12);
+      }
       @supports (position-area: block-end) {
+        #langTriggerBtn {
+          anchor-name: --lang-trigger;
+        }
         #langPopover {
+          position-anchor: --lang-trigger;
           inset: auto;
-          margin: 1.3125rem 0 0 0;
+          margin: 0.65rem 0 0 0;
           position-area: block-end span-inline-start;
           position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
         }
@@ -2734,9 +3029,75 @@
       @supports not (position-area: block-end) {
         #langPopover {
           position: fixed;
-          inset: calc(var(--header-height) + 12px) 1.25rem auto auto;
+          inset: calc(var(--header-height) + 10px) 1.25rem auto auto;
           margin: 0;
         }
+      }
+
+      #langPopover {
+        width: min(446px, calc(100vw - 2rem));
+        max-width: min(446px, calc(100vw - 2rem));
+        padding: 0.95rem 1.05rem 1.05rem;
+        border-radius: 16px;
+        border: 1px solid var(--border-strong);
+        background: var(--bg-surface);
+        box-shadow: 0 20px 44px rgba(15, 23, 42, 0.14);
+      }
+      [data-theme="dark"] #langPopover {
+        box-shadow: 0 24px 52px rgba(0, 0, 0, 0.48);
+      }
+      #langPopover > strong {
+        display: block !important;
+        padding: 0 0 0.65rem;
+        margin: 0 0 0.72rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.76rem !important;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: start !important;
+      }
+      #langPopover .lang-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.34rem 0.42rem;
+        margin-top: 0;
+      }
+      #langPopover .lang-item {
+        padding: 0.44rem 0.58rem;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      }
+      #langPopover .lang-item:hover {
+        background: var(--bg-subtle);
+        color: var(--text-primary);
+      }
+      #langPopover .lang-item.active {
+        background: #fdecef;
+        color: var(--accent);
+        font-weight: 700;
+        border-color: rgba(200, 16, 46, 0.22);
+      }
+      [data-theme="dark"] #langPopover .lang-item.active {
+        background: rgba(244, 63, 94, 0.16);
+        color: #fb7185;
+        border-color: rgba(244, 63, 94, 0.34);
+      }
+      #langPopover .lang-flag-icon {
+        width: 17px;
+        height: 17px;
+        border-radius: 0;
+      }
+    }
+    @media (min-width: 561px) and (max-width: 960px) {
+      #langPopover {
+        width: min(392px, calc(100vw - 2rem));
+        max-width: min(392px, calc(100vw - 2rem));
+        padding: 0.88rem 0.92rem 0.95rem;
       }
     }
 
@@ -3067,7 +3428,7 @@
         pointer-events: none;
         transition: background-color 0.18s ease, border-color 0.18s ease;
       }
-      body[data-mobile-scrolled="true"]:not([data-mobile-nav="open"]) .top-bar::before {
+      body[data-mobile-scrolled="true"]:not([data-mobile-nav="open"]):not([data-lang-open="true"]):not([data-modal-open="true"]) .top-bar::before {
         background: var(--bg-header);
         border-bottom-color: var(--border);
       }
@@ -3346,8 +3707,8 @@
         max-height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
         padding-top: var(--header-height);
         background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
-        backdrop-filter: blur(18px) saturate(1.18);
-        -webkit-backdrop-filter: blur(18px) saturate(1.18);
+        backdrop-filter: blur(14px) saturate(1.15);
+        -webkit-backdrop-filter: blur(14px) saturate(1.15);
         contain: layout style;
         border: none;
         border-radius: 0;
@@ -3586,65 +3947,92 @@
         }
       }
       dialog.home-modal {
-        padding: 0.55rem 0.5rem;
+        position: fixed;
+        top: var(--mobile-vv-top, 0px);
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
+        height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
+        max-height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
+        padding: 0;
+        z-index: 37;
+        contain: layout style;
+        transform: none;
       }
       .home-modal-surface {
+        position: relative;
+        width: 100%;
+        height: 100%;
         max-height: 100%;
+        padding-top: var(--header-height);
+        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+        backdrop-filter: blur(14px) saturate(1.15);
+        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        contain: layout style;
+      }
+      @starting-style {
+        dialog.home-modal[open] .home-modal-surface {
+          opacity: 0;
+          transform: translate3d(0, 14px, 0);
+        }
       }
       .home-modal-header {
         position: relative;
-        padding: 0.85rem 0.95rem;
-        gap: 0.65rem;
+        padding: 0.72rem 1.25rem 0.45rem;
+        padding-inline-end: 6.4rem;
+        gap: 0.5rem;
+        border-bottom: none;
+        background: transparent;
       }
-      .home-modal-title-wrap {
-        flex: 1 1 100%;
-        padding-inline-end: 0;
+      .home-modal-icon-badge {
+        display: none;
       }
-      .home-modal-title-wrap h2 {
-        font-size: 0.96rem;
+      .home-modal-title-copy h2 {
+        font-size: 1.04rem;
+        letter-spacing: -0.025em;
       }
-      .home-modal-title-wrap p {
-        font-size: 0.74rem;
+      .home-modal-title-copy p {
+        display: none;
       }
-      .home-modal-controls {
+      .home-modal-filterbar {
+        padding: 0.25rem 1.25rem 0.72rem;
+        gap: 0;
+        background: transparent;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-pill-strip {
         width: 100%;
-        flex-wrap: wrap;
-        gap: 0.45rem;
+        padding-inline-end: 0.4rem;
       }
-      .home-modal-select-wrap {
-        flex: 1 1 160px;
-        min-width: 0;
+      .modal-filter-meta {
+        position: absolute;
+        top: calc(var(--header-height) + 0.72rem);
+        inset-inline-end: 1.25rem;
       }
-      .home-modal-select {
-        width: 100%;
-        font-size: 0.84rem;
-        padding: 0.44rem 0.72rem;
-      }
-      .home-modal-controls .ghost-btn {
-        font-size: 0.84rem;
-        line-height: 1.3;
-        padding: 0.44rem 0.72rem;
-      }
-      .home-modal-select option {
-        font-size: 0.9rem;
-        padding: 0.52rem 0.72rem;
-        line-height: 1.35;
-      }
-      @supports (appearance: base-select) {
-        .home-modal-select::picker(select) {
-          padding: 0.35rem;
-        }
-        .home-modal-select option {
-          font-size: 0.9rem;
-          padding: 0.52rem 0.72rem;
-          line-height: 1.35;
-        }
+      .modal-audience-pill {
+        font-size: 0.78rem;
+        padding: 0.34rem 0.72rem;
       }
       .home-modal-close {
         display: none;
       }
       .home-modal-body {
-        padding: 0.9rem 0.95rem 1rem;
+        padding: 0.82rem 1.25rem 1rem;
+      }
+      .guide-card {
+        background: color-mix(in srgb, var(--bg-surface) 78%, var(--bg-canvas));
+      }
+      .faq-accordion-section summary {
+        font-size: 0.92rem;
+        padding: 0.92rem 0;
+      }
+      .faq-body {
+        font-size: 0.85rem;
+        padding: 0 0.75rem 0.95rem 0;
       }
       .site-footer {
         padding: 4px 14px 28px;
@@ -3696,32 +4084,117 @@
         height: 18px;
       }
       #langPopover {
+        display: flex;
+        flex-direction: column;
         position: fixed;
-        inset: auto 0.75rem 62px 0.75rem;
-        width: auto;
+        top: var(--mobile-vv-top, 0px);
+        left: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
         max-width: none;
-        max-height: calc(100dvh - var(--header-height) - 72px);
-        overflow-y: auto;
-        scrollbar-gutter: stable;
-        padding: 0.95rem;
+        height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
+        max-height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
         margin: 0;
+        padding: calc(var(--header-height) + 0.75rem) 1.35rem 0.95rem;
+        z-index: 38;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+        backdrop-filter: blur(14px) saturate(1.15);
+        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        contain: layout style;
+        overflow: hidden;
+        transform: translate3d(0, 14px, 0);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.22s;
+      }
+      body[data-mobile-lang="open"] #langPopover {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s;
       }
       #langPopover > strong {
-        font-size: 0.9rem !important;
+        flex-shrink: 0;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto !important;
+        padding: 0.2rem 0.35rem 0.65rem;
+        font-size: 0.76rem !important;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: start !important;
+        border-bottom: 1px solid var(--border);
       }
       .lang-grid {
-        grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-        gap: 0.35rem;
-        margin-top: 0.6rem;
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        gap: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        --lang-fade-t: #000;
+        --lang-fade-b: #000;
+        mask-image: linear-gradient(to bottom, var(--lang-fade-t) 0, #000 44px, #000 calc(100% - 44px), var(--lang-fade-b) 100%);
+        -webkit-mask-image: linear-gradient(to bottom, var(--lang-fade-t) 0, #000 44px, #000 calc(100% - 44px), var(--lang-fade-b) 100%);
+      }
+      .lang-grid::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+      .lang-grid[data-fade-top="true"] {
+        --lang-fade-t: transparent;
+      }
+      .lang-grid[data-fade-bottom="true"] {
+        --lang-fade-b: transparent;
       }
       .lang-item {
-        padding: 0.48rem 0.62rem;
-        font-size: 0.86rem;
-        gap: 0.55rem;
+        flex-shrink: 0;
+        padding: 0.88rem 0.35rem;
+        border-radius: 0;
+        border-bottom: 1px solid var(--border);
+        background: transparent;
+        font-size: 0.98rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        gap: 0.72rem;
+      }
+      .lang-item:last-child {
+        border-bottom: none;
+      }
+      .lang-item:hover {
+        background: transparent;
+        color: var(--accent);
+      }
+      .lang-item.active {
+        background: transparent;
+        color: var(--accent);
+        font-weight: 700;
       }
       #langPopover .lang-flag-icon {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
+        border-radius: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #langPopover {
+          transition: none;
+        }
       }
       @media (max-width: 350px) {
         .hero-resource-btn {
@@ -3733,10 +4206,24 @@
           font-size: 10.5px;
         }
       }
+      /* Avoid redundant double-blur GPU pass underneath full-screen frosted sheets on mobile */
+      body[data-modal-open="true"] .main-inner,
+      body[data-modal-open="true"] .site-footer,
+      body[data-lang-open="true"] .main-inner,
+      body[data-lang-open="true"] .site-footer,
+      body[data-mobile-nav="open"] .main-inner,
+      body[data-mobile-nav="open"] .site-footer {
+        filter: none;
+        opacity: 0.55;
+      }
+      .main-container {
+        --main-fade-top-offset: var(--header-height);
+        --main-fade-left-offset: 0px;
+      }
       body[data-active-audience="home"][data-home-scroll="true"] .main-container {
         overflow-y: auto;
         overflow-x: hidden;
-        scrollbar-gutter: stable both-edges;
+        scrollbar-gutter: auto;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
       }
@@ -4545,7 +5032,8 @@
     }
     body:is([data-stage-width="narrow"], [data-stage-width="mobile"])[data-stage-height="tall"] .hero-tall-prompts {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
+      justify-content: safe center;
       flex-wrap: nowrap;
       gap: 6px;
       width: 100%;
@@ -4747,14 +5235,9 @@
     [dir="rtl"] .nav-all-btn {
       text-align: right;
     }
-    [dir="rtl"] .faq-accordion-section summary::before {
-      rotate: 90deg;
-    }
-    [dir="rtl"] .faq-accordion-section details[open] > summary::before {
-      rotate: 0deg;
-    }
     [dir="rtl"] .support-card-arrow svg,
     [dir="rtl"] .eco-card-cta svg,
+    [dir="rtl"] .guide-card-arrow svg,
     [dir="rtl"] .home-panel-link svg,
     [dir="rtl"] .home-guide-chevron,
     [dir="rtl"] .home-faq-row-btn svg {
@@ -4857,6 +5340,388 @@
         transform: scaleX(-1);
       }
     }
+
+    /* ==========================================================================
+       VERY-SMALL-HEIGHT SCREENS (min-width: 561px & max-height: 460px)
+       Direction 1: Two-Column Frosted Command Sheet + Zero-Scroll 4-Col Language Matrix
+       ========================================================================== */
+    .short-sheet-close-btn,
+    .short-menu-pane {
+      display: none;
+    }
+
+    @media (min-width: 561px) and (max-height: 460px) {
+      .main-container {
+        padding-inline-start: 0 !important;
+        --main-fade-left-offset: 0px;
+      }
+      dialog.home-modal {
+        inset-inline-start: 0 !important;
+        width: 100% !important;
+      }
+      #sidebarCycleBtn,
+      body[data-sidebar-mode="hidden"] #sidebarCycleBtn,
+      body[data-mobile-nav="closed"] #sidebarCycleBtn {
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translate3d(0, -50%, 0);
+        z-index: 36;
+      }
+      [dir="rtl"] #sidebarCycleBtn,
+      [dir="rtl"] body[data-sidebar-mode="hidden"] #sidebarCycleBtn,
+      [dir="rtl"] body[data-mobile-nav="closed"] #sidebarCycleBtn {
+        left: auto;
+        right: 0;
+        transform: translate3d(0, -50%, 0);
+      }
+      body[data-mobile-nav="open"] #sidebarCycleBtn,
+      body[data-mobile-lang="open"] #sidebarCycleBtn {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .top-bar {
+        transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.16s ease, filter 0.16s ease;
+      }
+      body[data-mobile-nav="open"] .top-bar,
+      body[data-mobile-lang="open"] .top-bar {
+        background: transparent;
+        border-bottom-color: transparent;
+      }
+      body[data-mobile-nav="open"] .header-actions,
+      body[data-mobile-lang="open"] .header-actions {
+        display: none;
+      }
+      .short-sheet-close-btn {
+        display: none;
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 9999px;
+        background: transparent;
+        color: var(--text-secondary);
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.15s ease, color 0.15s ease;
+      }
+      .short-sheet-close-btn:hover {
+        background: var(--bg-subtle);
+        color: var(--text-primary);
+      }
+      body[data-mobile-nav="open"] .short-sheet-close-btn,
+      body[data-mobile-lang="open"] .short-sheet-close-btn {
+        display: inline-flex;
+      }
+      .mobile-nav-backdrop {
+        display: none !important;
+      }
+      /* Full-width Two-Column Frosted Command Sheet (Navigation Menu) */
+      .left-nav-panel {
+        position: fixed;
+        inset: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding-top: var(--header-height);
+        z-index: 38;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+        backdrop-filter: blur(14px) saturate(1.15);
+        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        contain: layout style;
+        transform: translate3d(0, 14px, 0);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.22s;
+      }
+      body[data-mobile-nav="open"] .left-nav-panel {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s;
+      }
+      .nav-tree-scroll {
+        flex: 0 0 auto;
+        width: clamp(204px, 26vw, 248px);
+        min-width: 204px;
+        padding: 0.65rem 0.7rem 0.75rem 1.05rem;
+        border-inline-end: 1px solid var(--border);
+        gap: 0.2rem;
+      }
+      .nav-all-btn,
+      .nav-group > summary {
+        font-size: 0.82rem;
+        padding: 0.5rem 0.68rem;
+        border-radius: 9px;
+      }
+      .nav-group > .nav-links-list,
+      .sidebar-support-wrap {
+        display: none !important;
+      }
+      .short-menu-pane {
+        display: flex;
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.7rem 1.35rem 0.8rem 1.25rem;
+        gap: 0.65rem;
+      }
+      .short-menu-pane-scroll {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        --short-fade-t: #000;
+        --short-fade-b: #000;
+        mask-image: linear-gradient(to bottom, var(--short-fade-t) 0, #000 40px, #000 calc(100% - 40px), var(--short-fade-b) 100%);
+        -webkit-mask-image: linear-gradient(to bottom, var(--short-fade-t) 0, #000 40px, #000 calc(100% - 40px), var(--short-fade-b) 100%);
+      }
+      .short-menu-pane-scroll[data-fade-top="true"] {
+        --short-fade-t: transparent;
+      }
+      .short-menu-pane-scroll[data-fade-bottom="true"] {
+        --short-fade-b: transparent;
+      }
+      .short-menu-pane-scroll::-webkit-scrollbar {
+        display: none;
+        width: 0;
+      }
+      .short-menu-pane-title {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 0.55rem;
+      }
+      .short-menu-cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+      .short-menu-card {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.56rem 0.78rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--bg-surface) 80%, var(--bg-canvas));
+        color: var(--text-primary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        min-width: 0;
+        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+      }
+      .short-menu-card:hover {
+        border-color: color-mix(in srgb, var(--accent) 42%, var(--border-strong));
+        background: var(--bg-surface);
+        color: var(--accent);
+      }
+      .short-menu-card .nav-item-icon {
+        width: 16px;
+        height: 16px;
+        color: var(--text-secondary);
+        flex-shrink: 0;
+      }
+      .short-menu-card:hover .nav-item-icon {
+        color: var(--accent);
+      }
+      .short-menu-card-label {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .short-menu-card-arrow {
+        flex-shrink: 0;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        transition: transform 0.15s ease, color 0.15s ease;
+      }
+      .short-menu-card:hover .short-menu-card-arrow {
+        color: var(--accent);
+        transform: translateX(2px);
+      }
+      [dir="rtl"] .short-menu-card:hover .short-menu-card-arrow {
+        transform: translateX(-2px);
+      }
+      .short-menu-support-bar {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.5rem 0.85rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--bg-surface) 78%, var(--bg-canvas));
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+      }
+      .short-menu-support-copy strong {
+        color: var(--text-primary);
+        font-weight: 700;
+      }
+      /* Avoid redundant double-blur GPU pass underneath full-screen frosted command sheets */
+      body[data-lang-open="true"] .main-inner,
+      body[data-lang-open="true"] .site-footer,
+      body[data-mobile-nav="open"] .main-inner,
+      body[data-mobile-nav="open"] .site-footer {
+        filter: none;
+        opacity: 0.55;
+      }
+      .short-menu-support-link {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        color: var(--accent);
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      [dir="rtl"] .short-menu-support-link svg {
+        transform: scaleX(-1);
+      }
+      .short-menu-support-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Zero-Scroll 4-Column Frosted Language Matrix */
+      #langPopover {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: none;
+        height: 100dvh;
+        max-height: 100dvh;
+        margin: 0;
+        padding: calc(var(--header-height) + 0.5rem) 1.5rem 0.85rem;
+        z-index: 38;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+        backdrop-filter: blur(14px) saturate(1.15);
+        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        contain: layout style;
+        overflow: hidden;
+        transform: translate3d(0, 14px, 0);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.22s;
+      }
+      body[data-mobile-lang="open"] #langPopover {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s;
+      }
+      #langPopover > strong {
+        flex-shrink: 0;
+        display: block !important;
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto !important;
+        padding: 0 0 0.55rem;
+        font-size: 0.76rem !important;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        text-align: start !important;
+        border-bottom: 1px solid var(--border);
+      }
+      #langPopover .lang-grid {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding-top: 0.65rem;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-content: start;
+        gap: 0.45rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      #langPopover .lang-grid::-webkit-scrollbar {
+        display: none;
+        width: 0;
+      }
+      @media (max-width: 720px) {
+        #langPopover .lang-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      #langPopover .lang-item {
+        padding: 0.46rem 0.72rem;
+        border-radius: 9px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--bg-surface) 84%, var(--bg-canvas));
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+      }
+      #langPopover .lang-item:hover {
+        border-color: var(--border-strong);
+        background: var(--bg-surface);
+        color: var(--accent);
+      }
+      #langPopover .lang-item.active {
+        border-color: var(--accent);
+        background: #fdecef;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      [data-theme="dark"] #langPopover .lang-item.active {
+        background: rgba(244, 63, 94, 0.16);
+        color: #fb7185;
+      }
+      #langPopover .lang-flag-icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .left-nav-panel,
+        #langPopover {
+          transition: none;
+        }
+      }
+    }
   </style>
 </head>
 <body data-sidebar-mode="full" data-active-audience="home" data-mobile-nav="closed" data-stage-width="wide" data-stage-height="standard">
@@ -4878,13 +5743,16 @@
       <button type="button" class="icon-btn" id="themeToggleBtn" title="Toggle theme" aria-label="Switch color scheme">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path class="theme-sun-half" d="M12 7a5 5 0 0 1 0 10Z" fill="currentColor" stroke="none"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       </button>
-      <button type="button" class="icon-btn" id="langTriggerBtn" popovertarget="langPopover" aria-label="Select Language">
+      <button type="button" class="icon-btn" id="langTriggerBtn" aria-label="Select Language" aria-haspopup="true" aria-expanded="false" aria-controls="langPopover">
         <svg class="lang-globe-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         <span class="lang-code">EN</span>
         <svg class="lang-chevron-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         <span class="lang-flag-circle" aria-hidden="true"><img class="lang-flag-icon" loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f1ec-1f1e7.svg" alt="EN" width="19" height="19"></span>
       </button>
     </div>
+    <button type="button" class="icon-btn short-sheet-close-btn" id="shortSheetCloseBtn" aria-label="Close overlay" title="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </header>
 
   <!-- ========================================================================
@@ -4996,6 +5864,17 @@
           </ul>
         </details>
       </nav>
+
+      <div class="short-menu-pane" id="shortMenuPane" aria-live="polite">
+        <div class="short-menu-pane-scroll" id="shortMenuPaneScroll">
+          <div class="short-menu-pane-title" id="shortMenuPaneTitle"></div>
+          <div class="short-menu-cards" id="shortMenuCards"></div>
+        </div>
+        <div class="short-menu-support-bar" id="shortMenuSupportBar">
+          <span class="short-menu-support-copy"><strong>Need more help?</strong> <span>Contact our support team</span></span>
+          <a class="short-menu-support-link" href="https://help.ctrader.com/troubleshooting/" target="_blank" rel="noopener"><span>Troubleshooting</span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        </div>
+      </div>
 
       <div class="sidebar-support-wrap">
         <a class="sidebar-support-card" href="https://help.ctrader.com/troubleshooting/" target="_blank" rel="noopener">
@@ -5361,98 +6240,131 @@
         <div class="home-modal-surface">
           <div class="home-modal-header">
             <div class="home-modal-title-wrap">
-              <div class="home-modal-title-row">
-                <svg class="home-modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span class="home-modal-icon-badge" aria-hidden="true">
+                <svg class="home-modal-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </span>
+              <div class="home-modal-title-copy">
                 <h2 id="popularGuidesHeading">Popular Guides</h2>
+                <p>Essential walkthroughs organized by cTrader audience.</p>
               </div>
-              <p>Essential walkthroughs separated by cTrader audience.</p>
             </div>
-            <div class="home-modal-controls">
-              <div class="home-modal-select-wrap">
-                <select id="guidesAudienceSelect" class="home-modal-select" aria-label="Filter by audience">
-                  <option value="all">All audiences</option>
-                  <option value="traders">Manual &amp; Copy Traders</option>
-                  <option value="algo">Algo Traders &amp; Quants</option>
-                  <option value="developers">Developers &amp; Store Sellers</option>
-                  <option value="partners">Partners &amp; IBs</option>
-                </select>
-              </div>
-              <button type="button" class="icon-btn home-modal-close" data-close-dialog="popularGuidesDialog" aria-label="Close" title="Close">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
+            <button type="button" class="icon-btn home-modal-close" data-close-dialog="popularGuidesDialog" aria-label="Close" title="Close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="home-modal-filterbar">
+            <div class="modal-pill-strip" id="guidesAudiencePills" role="group" aria-label="Filter guides by audience">
+              <button type="button" class="modal-audience-pill is-active" data-audience="all" aria-pressed="true">All</button>
+              <button type="button" class="modal-audience-pill" data-audience="traders" aria-pressed="false">Traders</button>
+              <button type="button" class="modal-audience-pill" data-audience="algo" aria-pressed="false">Algo &amp; Quants</button>
+              <button type="button" class="modal-audience-pill" data-audience="developers" aria-pressed="false">Developers</button>
+              <button type="button" class="modal-audience-pill" data-audience="partners" aria-pressed="false">Partners</button>
+            </div>
+            <div class="modal-filter-meta">
+              <span class="modal-count-badge" id="popularGuidesCount">10 guides</span>
             </div>
           </div>
           <div class="home-modal-body" id="popularGuidesSection">
             <div class="popular-guides-grid">
               <a class="guide-card" data-guide-audience="traders" href="https://help.ctrader.com/ctrader-id/create-a-new-ctrader-id/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 14c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4m-9-4V7H4v3H1v2h3v3h2v-3h3v-2m6 2a4 4 0 0 0 4-4 4 4 0 0 0-4-4 4 4 0 0 0-4 4 4 4 0 0 0 4 4"/></svg>
-                  <h4>Create a new cTID | cTrader ID</h4>
+                <span class="guide-card-badge" data-tone="crimson" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15 14c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4m-9-4V7H4v3H1v2h3v3h2v-3h3v-2m6 2a4 4 0 0 0 4-4 4 4 0 0 0-4-4 4 4 0 0 0-4 4 4 4 0 0 0 4 4"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Create a new cTID</h4>
+                  <span class="guide-card-meta">cTrader ID · Traders</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="traders" href="https://help.ctrader.com/trading-with-ctrader/orders/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2M6.5 9 10 5.5 13.5 9H11v4H9V9zm11 6L14 18.5 10.5 15H13v-4h2v4z"/></svg>
-                  <h4>Orders | Trading with cTrader</h4>
+                <span class="guide-card-badge" data-tone="emerald" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2M6.5 9 10 5.5 13.5 9H11v4H9V9zm11 6L14 18.5 10.5 15H13v-4h2v4z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Orders in cTrader</h4>
+                  <span class="guide-card-meta">Trading with cTrader · Traders</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="traders" href="https://help.ctrader.com/ctrader-copy/investing-in-strategies/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.45 15.18 22 7.31V21H2V3h2v12.54L9.5 6 16 9.78l4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L4.31 19h2.26l4.39-7.56z"/></svg>
-                  <h4>Invest in strategies | cTrader Copy</h4>
+                <span class="guide-card-badge" data-tone="blue" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.45 15.18 22 7.31V21H2V3h2v12.54L9.5 6 16 9.78l4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L4.31 19h2.26l4.39-7.56z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Invest in strategies</h4>
+                  <span class="guide-card-meta">cTrader Copy · Traders</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="traders developers" href="https://help.ctrader.com/ctrader-store/how-tos/use-a-product/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 18a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.11.89-2 2-2M1 2h3.27l.94 2H20a1 1 0 0 1 1 1c0 .17-.05.34-.12.5l-3.58 6.47c-.34.61-1 1.03-1.75 1.03H8.1l-.9 1.63-.03.12a.25.25 0 0 0 .25.25H19v2H7a2 2 0 0 1-2-2c0-.35.09-.68.24-.96l1.36-2.45L3 4H1zm6 16a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.11.89-2 2-2m9-7 2.78-5H6.14l2.36 5z"/></svg>
-                  <h4>Use a product | cTrader Store</h4>
+                <span class="guide-card-badge" data-tone="amber" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 18a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.11.89-2 2-2M1 2h3.27l.94 2H20a1 1 0 0 1 1 1c0 .17-.05.34-.12.5l-3.58 6.47c-.34.61-1 1.03-1.75 1.03H8.1l-.9 1.63-.03.12a.25.25 0 0 0 .25.25H19v2H7a2 2 0 0 1-2-2c0-.35.09-.68.24-.96l1.36-2.45L3 4H1zm6 16a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.11.89-2 2-2m9-7 2.78-5H6.14l2.36 5z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Use a Store product</h4>
+                  <span class="guide-card-meta">cTrader Store · Traders &amp; Devs</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="algo" href="https://help.ctrader.com/ctrader-algo/documentation/cbots/start-a-cbot/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 15.5c0 1.11-.89 2-2 2s-2-.89-2-2 .9-2 2-2 2 .9 2 2m-9-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.89 2-2-.89-2-2-2M23 15v3c0 .55-.45 1-1 1h-1v1c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2v-1H2c-.55 0-1-.45-1-1v-3c0-.55.45-1 1-1h1c0-3.87 3.13-7 7-7h1V5.73c-.6-.34-1-.99-1-1.73 0-1.1.9-2 2-2s2 .9 2 2c0 .74-.4 1.39-1 1.73V7h1c3.87 0 7 3.13 7 7h1c.55 0 1 .45 1 1m-2 1h-2v-2c0-2.76-2.24-5-5-5h-4c-2.76 0-5 2.24-5 5v2H3v1h2v3h14v-3h2z"/></svg>
-                  <h4>Start a cBot | cTrader Algo</h4>
+                <span class="guide-card-badge" data-tone="crimson" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 15.5c0 1.11-.89 2-2 2s-2-.89-2-2 .9-2 2-2 2 .9 2 2m-9-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.89 2-2-.89-2-2-2M23 15v3c0 .55-.45 1-1 1h-1v1c0 1.11-.89 2-2 2H5a2 2 0 0 1-2-2v-1H2c-.55 0-1-.45-1-1v-3c0-.55.45-1 1-1h1c0-3.87 3.13-7 7-7h1V5.73c-.6-.34-1-.99-1-1.73 0-1.1.9-2 2-2s2 .9 2 2c0 .74-.4 1.39-1 1.73V7h1c3.87 0 7 3.13 7 7h1c.55 0 1 .45 1 1m-2 1h-2v-2c0-2.76-2.24-5-5-5h-4c-2.76 0-5 2.24-5 5v2H3v1h2v3h14v-3h2z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Start a cBot</h4>
+                  <span class="guide-card-meta">cTrader Algo · Algo &amp; Quants</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="algo developers" href="https://help.ctrader.com/ctrader-algo/how-tos/cbots/create-a-trading-bot-in-python/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.14 7.5A2.86 2.86 0 0 1 22 10.36v3.78A2.86 2.86 0 0 1 19.14 17H12c0 .39.32.96.71.96H17v1.68a2.86 2.86 0 0 1-2.86 2.86H9.86A2.86 2.86 0 0 1 7 19.64v-3.75a2.85 2.85 0 0 1 2.86-2.85h5.25a2.85 2.85 0 0 0 2.85-2.86V7.5zm-4.28 11.79c-.4 0-.72.3-.72.89s.32.71.72.71a.71.71 0 0 0 .71-.71c0-.59-.32-.89-.71-.89m-10-1.79A2.86 2.86 0 0 1 2 14.64v-3.78A2.86 2.86 0 0 1 4.86 8H12c0-.39-.32-.96-.71-.96H7V5.36A2.86 2.86 0 0 1 9.86 2.5h4.28A2.86 2.86 0 0 1 17 5.36v3.75a2.85 2.85 0 0 1-2.86 2.85H8.89a2.85 2.85 0 0 0-2.85 2.86v2.68zM9.14 5.71c.4 0 .72-.3.72-.89s-.32-.71-.72-.71c-.39 0-.71.12-.71.71s.32.89.71.89"/></svg>
-                  <h4>Create a cBot in Python | cTrader Algo</h4>
+                <span class="guide-card-badge" data-tone="crimson" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 7.5A2.86 2.86 0 0 1 22 10.36v3.78A2.86 2.86 0 0 1 19.14 17H12c0 .39.32.96.71.96H17v1.68a2.86 2.86 0 0 1-2.86 2.86H9.86A2.86 2.86 0 0 1 7 19.64v-3.75a2.85 2.85 0 0 1 2.86-2.85h5.25a2.85 2.85 0 0 0 2.85-2.86V7.5zm-4.28 11.79c-.4 0-.72.3-.72.89s.32.71.72.71a.71.71 0 0 0 .71-.71c0-.59-.32-.89-.71-.89m-10-1.79A2.86 2.86 0 0 1 2 14.64v-3.78A2.86 2.86 0 0 1 4.86 8H12c0-.39-.32-.96-.71-.96H7V5.36A2.86 2.86 0 0 1 9.86 2.5h4.28A2.86 2.86 0 0 1 17 5.36v3.75a2.85 2.85 0 0 1-2.86 2.85H8.89a2.85 2.85 0 0 0-2.85 2.86v2.68zM9.14 5.71c.4 0 .72-.3.72-.89s-.32-.71-.72-.71c-.39 0-.71.12-.71.71s.32.89.71.89"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Create a Python cBot</h4>
+                  <span class="guide-card-meta">cTrader Algo · Algo &amp; Devs</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="traders algo" href="https://help.ctrader.com/knowledge-base/indicators/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 2h2v18h18v2H2zm7 8a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m4-8a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m5 10a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3"/></svg>
-                  <h4>Indicators | Knowledge base</h4>
+                <span class="guide-card-badge" data-tone="emerald" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2 2h2v18h18v2H2zm7 8a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m4-8a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m5 10a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Indicators overview</h4>
+                  <span class="guide-card-meta">Knowledge Base · Traders &amp; Algo</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="developers" href="https://help.ctrader.com/webview-plugins/how-tos/add-wv-plugins/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 13.5c0 1.76-1.3 3.22-3 3.46V20a2 2 0 0 1-2 2h-3.8v-.3a2.7 2.7 0 0 0-2.7-2.7c-1.5 0-2.7 1.21-2.7 2.7v.3H4a2 2 0 0 1-2-2v-3.8h.3C3.79 16.2 5 15 5 13.5s-1.21-2.7-2.7-2.7H2V7a2 2 0 0 1 2-2h3.04c.24-1.7 1.7-3 3.46-3s3.22 1.3 3.46 3H17a2 2 0 0 1 2 2v3.04c1.7.24 3 1.7 3 3.46M17 15h1.5a1.5 1.5 0 0 0 1.5-1.5 1.5 1.5 0 0 0-1.5-1.5H17V7h-5V5.5A1.5 1.5 0 0 0 10.5 4 1.5 1.5 0 0 0 9 5.5V7H4v2.12c1.76.68 3 2.38 3 4.38s-1.25 3.7-3 4.38V20h2.12a4.7 4.7 0 0 1 4.38-3c2 0 3.7 1.25 4.38 3H17z"/></svg>
-                  <h4>Add a plugin | Plugins</h4>
+                <span class="guide-card-badge" data-tone="violet" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22 13.5c0 1.76-1.3 3.22-3 3.46V20a2 2 0 0 1-2 2h-3.8v-.3a2.7 2.7 0 0 0-2.7-2.7c-1.5 0-2.7 1.21-2.7 2.7v.3H4a2 2 0 0 1-2-2v-3.8h.3C3.79 16.2 5 15 5 13.5s-1.21-2.7-2.7-2.7H2V7a2 2 0 0 1 2-2h3.04c.24-1.7 1.7-3 3.46-3s3.22 1.3 3.46 3H17a2 2 0 0 1 2 2v3.04c1.7.24 3 1.7 3 3.46M17 15h1.5a1.5 1.5 0 0 0 1.5-1.5 1.5 1.5 0 0 0-1.5-1.5H17V7h-5V5.5A1.5 1.5 0 0 0 10.5 4 1.5 1.5 0 0 0 9 5.5V7H4v2.12c1.76.68 3 2.38 3 4.38s-1.25 3.7-3 4.38V20h2.12a4.7 4.7 0 0 1 4.38-3c2 0 3.7 1.25 4.38 3H17z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Add a WebView plugin</h4>
+                  <span class="guide-card-meta">Plugins · Developers</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="developers partners" href="https://help.ctrader.com/ctrader-store/how-tos/become-a-seller/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 6c.58 0 1.05.2 1.42.59.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2zm-3.54 11.5 6.59-6.59-1.41-1.41-5.18 5.17-2.09-2.08L6.96 14z"/></svg>
-                  <h4>Become a seller | cTrader Store</h4>
+                <span class="guide-card-badge" data-tone="crimson" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6c.58 0 1.05.2 1.42.59.38.41.58.86.58 1.41v11c0 .55-.2 1-.58 1.41-.37.39-.84.59-1.42.59H4c-.58 0-1.05-.2-1.42-.59C2.2 20 2 19.55 2 19V8c0-.55.2-1 .58-1.41C2.95 6.2 3.42 6 4 6h4V4c0-.58.2-1.05.58-1.42C8.95 2.2 9.42 2 10 2h4c.58 0 1.05.2 1.42.58.38.37.58.84.58 1.42v2zM4 8v11h16V8zm10-2V4h-4v2zm-3.54 11.5 6.59-6.59-1.41-1.41-5.18 5.17-2.09-2.08L6.96 14z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>Become a Store seller</h4>
+                  <span class="guide-card-meta">cTrader Store · Devs &amp; Partners</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
               <a class="guide-card" data-guide-audience="partners" href="https://help.ctrader.com/partner-tools/list-of-tools/" target="_blank" rel="noopener">
-                <div class="guide-card-head">
-                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 8h-3V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v10h20V10c0-1.1-.9-2-2-2M9 6h6v2H9zm11 12H4v-3h2v1h2v-1h8v1h2v-1h2zm-2-5v-1h-2v1H8v-1H6v1H4v-3h16v3z"/></svg>
-                  <h4>List of partner tools | Partner tools</h4>
+                <span class="guide-card-badge" data-tone="blue" aria-hidden="true">
+                  <svg class="guide-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v10h20V10c0-1.1-.9-2-2-2M9 6h6v2H9zm11 12H4v-3h2v1h2v-1h8v1h2v-1h2zm-2-5v-1h-2v1H8v-1H6v1H4v-3h16v3z"/></svg>
+                </span>
+                <div class="guide-card-copy">
+                  <h4>List of partner tools</h4>
+                  <span class="guide-card-meta">Partner Tools · Partners &amp; IBs</span>
                 </div>
-                <span class="guide-read-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg>Read guide</span>
+                <span class="guide-card-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
               </a>
             </div>
           </div>
@@ -5463,28 +6375,30 @@
         <div class="home-modal-surface">
           <div class="home-modal-header">
             <div class="home-modal-title-wrap">
-              <div class="home-modal-title-row">
-                <svg class="home-modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span class="home-modal-icon-badge" aria-hidden="true">
+                <svg class="home-modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </span>
+              <div class="home-modal-title-copy">
                 <h2 id="faqHeading">Frequently Asked Questions</h2>
+                <p>Quick answers across accounts, trading, algorithmic execution, APIs, and the cTrader Store.</p>
               </div>
-              <p>Common questions across accounts, trading, algorithmic execution, APIs, and the cTrader Store.</p>
             </div>
-            <div class="home-modal-controls">
-              <div class="home-modal-select-wrap">
-                <select id="faqAudienceSelect" class="home-modal-select" aria-label="Filter by audience">
-                  <option value="all">All audiences</option>
-                  <option value="traders">Manual &amp; Copy Traders</option>
-                  <option value="algo">Algo Traders &amp; Quants</option>
-                  <option value="developers">Developers &amp; Store Sellers</option>
-                  <option value="partners">Partners &amp; IBs</option>
-                </select>
-              </div>
-              <button type="button" class="ghost-btn" commandfor="faqAccordionGroup" command="--toggle-all" aria-expanded="false" id="faqToggleAllBtn">
+            <button type="button" class="icon-btn home-modal-close" data-close-dialog="faqDialog" aria-label="Close" title="Close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="home-modal-filterbar">
+            <div class="modal-pill-strip" id="faqAudiencePills" role="group" aria-label="Filter FAQs by audience">
+              <button type="button" class="modal-audience-pill is-active" data-audience="all" aria-pressed="true">All</button>
+              <button type="button" class="modal-audience-pill" data-audience="traders" aria-pressed="false">Traders</button>
+              <button type="button" class="modal-audience-pill" data-audience="algo" aria-pressed="false">Algo &amp; Quants</button>
+              <button type="button" class="modal-audience-pill" data-audience="developers" aria-pressed="false">Developers</button>
+              <button type="button" class="modal-audience-pill" data-audience="partners" aria-pressed="false">Partners</button>
+            </div>
+            <div class="modal-filter-meta">
+              <button type="button" class="modal-action-link" commandfor="faqAccordionGroup" command="--toggle-all" aria-expanded="false" id="faqToggleAllBtn">
                 <span class="expand">Expand all</span>
                 <span class="collapse">Collapse all</span>
-              </button>
-              <button type="button" class="icon-btn home-modal-close" data-close-dialog="faqDialog" aria-label="Close" title="Close">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
           </div>
@@ -5556,7 +6470,7 @@
        POPOVER: 17 LIVE LOCALES
        ======================================================================== -->
   <div id="langPopover" popover aria-label="Choose a language">
-    <strong style="font-size:0.82rem;display:block;text-align:center;">Choose a language</strong>
+    <strong style="font-size:0.76rem;display:block;text-align:start;">Choose a language</strong>
     <div class="lang-grid">
       <a class="lang-item active" data-lang="en" href="https://help.ctrader.com/" aria-current="true"><span>English</span><img class="lang-flag-icon" loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f1ec-1f1e7.svg" alt="" width="17" height="17" aria-hidden="true"></a>
       <a class="lang-item" data-lang="es" href="https://help.ctrader.com/es/"><span>Español</span><img class="lang-flag-icon" loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f1ea-1f1f8.svg" alt="" width="17" height="17" aria-hidden="true"></a>
@@ -5821,19 +6735,64 @@
     // Clicking "Home" or logo resets home state
     navAllAudiencesBtn?.addEventListener('click', () => {
       resetToHome();
-      if (overlayDrawerMq.matches) closeMobileNav();
+      if (isOverlayNavMode()) closeMobileNav();
     });
     brandHomeLink?.addEventListener('click', (e) => {
       e.preventDefault();
       resetToHome();
-      syncSidebarToViewport(overlayDrawerMq.matches);
+      syncSidebarToViewport(isOverlayNavMode());
     });
+
+    const shortMenuPaneTitle = document.getElementById('shortMenuPaneTitle');
+    const shortMenuCards = document.getElementById('shortMenuCards');
+    const shortSheetCloseBtn = document.getElementById('shortSheetCloseBtn');
+
+    function renderShortMenuPane(group) {
+      if (!shortMenuCards || !shortMenuPaneTitle) return;
+      const targetGroup = group || sidebarGroups[0];
+      if (!targetGroup) return;
+      const titleSpan = targetGroup.querySelector(':scope > summary span');
+      shortMenuPaneTitle.textContent = (titleSpan?.textContent || '').trim();
+      shortMenuCards.innerHTML = '';
+      targetGroup.querySelectorAll('.nav-links-list .nav-link-item').forEach((origLink) => {
+        const card = document.createElement('a');
+        card.className = 'short-menu-card';
+        card.href = origLink.href;
+        card.target = origLink.target || '_blank';
+        card.rel = origLink.rel || 'noopener';
+        const origIcon = origLink.querySelector('svg');
+        if (origIcon) card.appendChild(origIcon.cloneNode(true));
+        const label = document.createElement('span');
+        label.className = 'short-menu-card-label';
+        label.textContent = (origLink.querySelector('span')?.textContent || origLink.textContent || '').trim();
+        card.appendChild(label);
+        const arrow = document.createElement('span');
+        arrow.className = 'short-menu-card-arrow';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = document.documentElement.dir === 'rtl' ? '←' : '→';
+        card.appendChild(arrow);
+        shortMenuCards.appendChild(card);
+      });
+      const shortScrollEl = document.getElementById('shortMenuPaneScroll');
+      if (shortScrollEl && typeof updateResultsScrollFades === 'function') {
+        shortScrollEl.scrollTop = 0;
+        requestAnimationFrame(() => updateResultsScrollFades(shortScrollEl));
+      }
+    }
 
     // Clicking any section summary in the left menu opens it exclusively (closing any previously open section)
     sidebarGroups.forEach((group) => {
       const summary = group.querySelector(':scope > summary');
       summary?.addEventListener('click', (e) => {
         e.preventDefault();
+        if (shortHeightSheetMq.matches) {
+          sidebarGroups.forEach((other) => {
+            cancelNavGroupAnimation(other);
+            other.open = other === group;
+          });
+          renderShortMenuPane(group);
+          return;
+        }
         const willOpen = !(group.open && !group.classList.contains('is-closing'));
         sidebarGroups.forEach((other) => {
           setNavGroupOpen(other, other === group ? willOpen : false);
@@ -5842,10 +6801,67 @@
       });
     });
 
+    // Shared ResizeObserver & rAF-coalesced resize dispatcher (replaces multiple observers/listeners)
+    const resizeCallbacks = new WeakMap();
+    const sharedResizeObserver = 'ResizeObserver' in window
+      ? new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            const cb = resizeCallbacks.get(entry.target);
+            if (cb) cb(entry);
+          }
+        })
+      : null;
+    function observeResize(el, cb) {
+      if (!sharedResizeObserver || !el || !cb) return;
+      resizeCallbacks.set(el, cb);
+      sharedResizeObserver.observe(el);
+    }
+    const pooledResizeListeners = [];
+    let pooledResizeRaf = 0;
+    function onCoalescedResize(cb) {
+      if (typeof cb === 'function') pooledResizeListeners.push(cb);
+    }
+    window.addEventListener('resize', () => {
+      if (pooledResizeRaf) return;
+      pooledResizeRaf = requestAnimationFrame(() => {
+        pooledResizeRaf = 0;
+        for (const fn of pooledResizeListeners) fn();
+      });
+    }, { passive: true });
+
+    let viewportSnapRaf1 = 0;
+    let viewportSnapRaf2 = 0;
+    function snapViewportTransitions() {
+      const root = document.documentElement;
+      if (viewportSnapRaf1) { cancelAnimationFrame(viewportSnapRaf1); viewportSnapRaf1 = 0; }
+      if (viewportSnapRaf2) { cancelAnimationFrame(viewportSnapRaf2); viewportSnapRaf2 = 0; }
+      root.classList.add('viewport-switching');
+      void root.offsetHeight;
+      viewportSnapRaf1 = requestAnimationFrame(() => {
+        viewportSnapRaf1 = 0;
+        viewportSnapRaf2 = requestAnimationFrame(() => {
+          viewportSnapRaf2 = 0;
+          root.classList.remove('viewport-switching');
+        });
+      });
+    }
+
     // 6. Left Navigation Panel Controls
     const sidebarCycleBtn = document.getElementById('sidebarCycleBtn');
     const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
     const overlayDrawerMq = window.matchMedia('(max-width: 960px)');
+    const shortHeightSheetMq = window.matchMedia('(min-width: 561px) and (max-height: 460px)');
+    function isOverlayNavMode() {
+      return overlayDrawerMq.matches || shortHeightSheetMq.matches;
+    }
+    function isSheetLangMode() {
+      return mobileSearchMq.matches || shortHeightSheetMq.matches;
+    }
+
+    shortSheetCloseBtn?.addEventListener('click', () => {
+      closeMobileNav();
+      closeLangPopover();
+    });
 
     let menuCollapseTimer = 0;
 
@@ -5886,9 +6902,29 @@
 
     function closeLangPopover() {
       const pop = document.getElementById('langPopover');
+      if (document.body.dataset.mobileLang === 'open') {
+        document.body.dataset.mobileLang = 'closed';
+      }
+      const trigger = document.getElementById('langTriggerBtn');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
       try {
         if (pop?.matches(':popover-open')) pop.hidePopover?.();
       } catch {}
+      if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
+    }
+
+    function openMobileLang() {
+      closeAllInlineResults();
+      closeMobileNav();
+      const grid = document.querySelector('#langPopover .lang-grid');
+      if (grid) grid.scrollTop = 0;
+      document.body.dataset.mobileLang = 'open';
+      const trigger = document.getElementById('langTriggerBtn');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
+      if (grid && typeof updateResultsScrollFades === 'function') {
+        requestAnimationFrame(() => updateResultsScrollFades(grid));
+      }
     }
 
     let mainSidebarFlipAnim = null;
@@ -5897,9 +6933,17 @@
 
     function openSidebarMenu() {
       cancelPendingMenuCollapse();
-      if (overlayDrawerMq.matches) {
+      if (isOverlayNavMode()) {
         closeLangPopover();
         closeAllInlineResults();
+        if (shortHeightSheetMq.matches) {
+          let activeGroup = Array.prototype.find.call(sidebarGroups, (g) => g.open) || sidebarGroups[0];
+          sidebarGroups.forEach((other) => {
+            cancelNavGroupAnimation(other);
+            other.open = other === activeGroup;
+          });
+          renderShortMenuPane(activeGroup);
+        }
         document.body.dataset.mobileNav = 'open';
         return;
       }
@@ -5907,7 +6951,7 @@
     }
 
     function setSidebarMode(mode) {
-      if (overlayDrawerMq.matches) {
+      if (isOverlayNavMode()) {
         if (document.body.dataset.mobileNav !== 'open') {
           openSidebarMenu();
         } else {
@@ -5993,20 +7037,47 @@
       }
       closeMobileNav();
     }
-    overlayDrawerMq.addEventListener('change', (e) => syncSidebarToViewport(e.matches));
-    syncSidebarToViewport(overlayDrawerMq.matches);
+    overlayDrawerMq.addEventListener('change', () => {
+      snapViewportTransitions();
+      syncSidebarToViewport(isOverlayNavMode());
+    });
+    shortHeightSheetMq.addEventListener('change', () => {
+      snapViewportTransitions();
+      closeLangPopover();
+      syncSidebarToViewport(isOverlayNavMode());
+      if (typeof syncHomeLayoutTier === 'function') syncHomeLayoutTier({ allowWhileSearchOpen: true, force: true });
+    });
+    syncSidebarToViewport(isOverlayNavMode());
 
     sidebarCycleBtn.addEventListener('click', () => {
       const current = document.body.dataset.sidebarMode;
       setSidebarMode(current === 'hidden' ? 'full' : 'hidden');
     });
 
-    // 7. Home Resource Modals (Popular Guides & FAQs + Audience Filter) & FAQ Expand/Collapse All
+    // 7. Home Resource Modals (Direction 1: Floating Sheet + One-Tap Audience Pills + Frosted Mobile Sheet)
     const popularGuidesDialog = document.getElementById('popularGuidesDialog');
     const faqDialog = document.getElementById('faqDialog');
-    const guidesAudienceSelect = document.getElementById('guidesAudienceSelect');
-    const faqAudienceSelect = document.getElementById('faqAudienceSelect');
+    const guidesAudiencePills = document.getElementById('guidesAudiencePills');
+    const faqAudiencePills = document.getElementById('faqAudiencePills');
+    const popularGuidesCountEl = document.getElementById('popularGuidesCount');
     const faqGroup = document.getElementById('faqAccordionGroup');
+
+    function syncModalBodyFades(dialog) {
+      const body = dialog?.querySelector('.home-modal-body');
+      if (body && typeof updateResultsScrollFades === 'function') {
+        updateResultsScrollFades(body);
+      }
+    }
+
+    function setActiveAudiencePill(strip, audience) {
+      if (!strip) return;
+      const target = audience || 'all';
+      strip.querySelectorAll('.modal-audience-pill').forEach((btn) => {
+        const active = btn.dataset.audience === target;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+    }
 
     function syncFaqToggleBtn(section) {
       const scope = section?.closest('.home-modal') || document;
@@ -6023,16 +7094,26 @@
         if (!details.hidden) details.open = expand;
       }
       syncFaqToggleBtn(section);
+      requestAnimationFrame(() => syncModalBodyFades(faqDialog));
     }
 
     function filterPopularGuides(audience) {
+      let visibleCount = 0;
       popularGuides.forEach((card) => {
         const audiences = (card.dataset.guideAudience || '').split(/\s+/).filter(Boolean);
         const match = !audience || audience === 'all' || audiences.includes(audience);
         card.hidden = !match;
+        if (match) visibleCount += 1;
       });
+      setActiveAudiencePill(guidesAudiencePills, audience || 'all');
+      if (popularGuidesCountEl) {
+        popularGuidesCountEl.textContent = visibleCount === 1 ? '1 guide' : `${visibleCount} guides`;
+      }
       const body = popularGuidesDialog?.querySelector('.home-modal-body');
-      if (body) body.scrollTop = 0;
+      if (body) {
+        body.scrollTop = 0;
+        requestAnimationFrame(() => syncModalBodyFades(popularGuidesDialog));
+      }
     }
 
     function filterFaqItems(audience) {
@@ -6042,9 +7123,13 @@
         const match = !audience || audience === 'all' || audiences.includes(audience);
         details.hidden = !match;
       });
+      setActiveAudiencePill(faqAudiencePills, audience || 'all');
       syncFaqToggleBtn(faqGroup);
       const body = faqDialog?.querySelector('.home-modal-body');
-      if (body) body.scrollTop = 0;
+      if (body) {
+        body.scrollTop = 0;
+        requestAnimationFrame(() => syncModalBodyFades(faqDialog));
+      }
     }
 
     const modalResizeCleanups = new WeakMap();
@@ -6060,7 +7145,7 @@
     function animateModalAudienceChange(dialog, applyFilterFn) {
       const surface = dialog?.querySelector('.home-modal-surface');
       const body = dialog?.querySelector('.home-modal-body');
-      if (!dialog?.open || !surface || reduceMotionNavMq.matches || typeof surface.animate !== 'function') {
+      if (!dialog?.open || !surface || mobileSearchMq.matches || reduceMotionNavMq.matches || typeof surface.animate !== 'function') {
         cancelModalResize(dialog);
         applyFilterFn();
         return;
@@ -6175,13 +7260,11 @@
       cancelModalResize(dialog);
       closeAllInlineResults();
       closeLangPopover();
-      if (overlayDrawerMq.matches) closeMobileNav();
-      if (dialog === popularGuidesDialog && guidesAudienceSelect) {
-        guidesAudienceSelect.value = 'all';
+      if (isOverlayNavMode()) closeMobileNav();
+      if (dialog === popularGuidesDialog) {
         filterPopularGuides('all');
-      } else if (dialog === faqDialog && faqAudienceSelect) {
+      } else if (dialog === faqDialog) {
         collapseAllFaqItems();
-        faqAudienceSelect.value = 'all';
         filterFaqItems('all');
         if (expandFaqId) {
           const targetFaq = document.getElementById(expandFaqId);
@@ -6193,7 +7276,7 @@
       }
       if (triggerEl) lastModalTrigger.set(dialog, triggerEl);
       const mainEl = document.getElementById('mainContent');
-      if (mainEl && document.body.dataset.homeScroll === 'true') {
+      if (!mobileSearchMq.matches && mainEl && document.body.dataset.homeScroll === 'true') {
         dialog.style.top = `${mainEl.scrollTop}px`;
         dialog.style.bottom = 'auto';
         dialog.style.height = `${mainEl.clientHeight}px`;
@@ -6206,13 +7289,21 @@
         dialog.show();
       }
       if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
+      requestAnimationFrame(() => {
+        syncModalBodyFades(dialog);
+        const pillStrip = dialog.querySelector('.modal-pill-strip');
+        if (pillStrip) {
+          pillStrip.scrollLeft = 0;
+          if (typeof updateChipRowFades === 'function') updateChipRowFades(pillStrip);
+        }
+      });
       if (expandFaqId && dialog === faqDialog) {
         const targetFaq = document.getElementById(expandFaqId);
         const focusTarget = targetFaq?.querySelector('summary') || dialog.querySelector('[data-close-dialog]');
         focusTarget?.focus({ preventScroll: true });
         targetFaq?.scrollIntoView({ block: 'nearest' });
       } else {
-        const focusTarget = dialog.querySelector('.home-modal-select') || dialog.querySelector('[data-close-dialog]');
+        const focusTarget = dialog.querySelector('.modal-audience-pill.is-active') || dialog.querySelector('[data-close-dialog]');
         focusTarget?.focus({ preventScroll: true });
       }
     }
@@ -6261,15 +7352,23 @@
       }
 
       const skipMotion = immediate || (typeof reducedMotionMq !== 'undefined' && reducedMotionMq.matches);
+      if (immediate) {
+        homeInlineFaqList.style.transition = 'none';
+        homeInlineFaqList.querySelectorAll('.home-faq-row-btn, .home-faq-row-btn svg').forEach((el) => {
+          el.style.transition = 'none';
+        });
+      }
       homeFaqInlineAnswer.classList.remove('is-visible');
       if (returningBtn) {
         returningBtn.setAttribute('aria-expanded', 'false');
         returningBtn.classList.remove('is-active');
-        returningBtn.classList.add('is-returning');
+        if (!skipMotion) returningBtn.classList.add('is-returning');
       }
-      homeInlineFaqList.classList.add('is-closing');
-      homeFaqsPanelRoot?.classList.add('is-closing');
-      homeResourcesGridRoot?.classList.add('is-closing');
+      if (!skipMotion) {
+        homeInlineFaqList.classList.add('is-closing');
+        homeFaqsPanelRoot?.classList.add('is-closing');
+        homeResourcesGridRoot?.classList.add('is-closing');
+      }
       delete homeInlineFaqList.dataset.faqFocused;
       delete homeFaqsPanelRoot?.dataset.faqFocused;
       delete homeResourcesGridRoot?.dataset.faqFocused;
@@ -6289,6 +7388,13 @@
           b.classList.remove('is-returning');
           b.style.removeProperty('--faq-slide-y');
         });
+        if (immediate) {
+          void homeInlineFaqList.offsetHeight;
+          homeInlineFaqList.style.transition = '';
+          homeInlineFaqList.querySelectorAll('.home-faq-row-btn, .home-faq-row-btn svg').forEach((el) => {
+            el.style.transition = '';
+          });
+        }
       };
 
       if (skipMotion) {
@@ -6411,11 +7517,29 @@
       openHomeModal(activeTab === 'faqs' ? faqDialog : popularGuidesDialog, mobileTabViewAllBtn);
     });
 
-    guidesAudienceSelect?.addEventListener('change', () => {
-      animateModalAudienceChange(popularGuidesDialog, () => filterPopularGuides(guidesAudienceSelect.value));
+    guidesAudiencePills?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.modal-audience-pill');
+      if (!btn || btn.classList.contains('is-active')) return;
+      animateModalAudienceChange(popularGuidesDialog, () => filterPopularGuides(btn.dataset.audience || 'all'));
     });
-    faqAudienceSelect?.addEventListener('change', () => {
-      animateModalAudienceChange(faqDialog, () => filterFaqItems(faqAudienceSelect.value));
+    faqAudiencePills?.addEventListener('click', (e) => {
+      const btn = e.target.closest('.modal-audience-pill');
+      if (!btn || btn.classList.contains('is-active')) return;
+      animateModalAudienceChange(faqDialog, () => filterFaqItems(btn.dataset.audience || 'all'));
+    });
+
+    [popularGuidesDialog, faqDialog].forEach((dialog) => {
+      const body = dialog?.querySelector('.home-modal-body');
+      body?.addEventListener('scroll', () => syncModalBodyFades(dialog), { passive: true });
+    });
+    faqGroup?.addEventListener('toggle', () => {
+      requestAnimationFrame(() => syncModalBodyFades(faqDialog));
+    }, true);
+    onCoalescedResize(() => {
+      cancelModalResize(popularGuidesDialog);
+      cancelModalResize(faqDialog);
+      if (popularGuidesDialog?.open) syncModalBodyFades(popularGuidesDialog);
+      if (faqDialog?.open) syncModalBodyFades(faqDialog);
     });
 
     [popularGuidesDialog, faqDialog].forEach((dialog) => {
@@ -6462,10 +7586,6 @@
           pressedOutside = false;
         });
       }
-    });
-    window.addEventListener('resize', () => {
-      cancelModalResize(popularGuidesDialog);
-      cancelModalResize(faqDialog);
     });
 
     document.querySelectorAll('[data-close-dialog]').forEach((btn) => {
@@ -6709,6 +7829,7 @@
     function finishHeroCloseSlide() {
       cancelHeroClose();
       delete document.body.dataset.heroSearchOverHeader;
+      delete document.body.dataset.heroSearchBottomDock;
       instantResultsBox.classList.remove('active');
       delete instantResultsBox.dataset.renderedHtml;
       lastHeroRestingTop = null;
@@ -6753,6 +7874,7 @@
         delete instantResultsBox.dataset.renderedHtml;
         delete document.body.dataset.heroSearch;
         delete document.body.dataset.heroSearchOverHeader;
+        delete document.body.dataset.heroSearchBottomDock;
         delete document.body.dataset.heroBarSettled;
         delete document.body.dataset.heroSuggFit;
         delete document.body.dataset.heroResFit;
@@ -6865,10 +7987,20 @@
     const homeHeroSectionEl = document.querySelector('.hero-section');
     const homeSiteFooterEl = document.querySelector('.site-footer');
 
-    function syncHomeLayoutTier({ allowWhileSearchOpen = false } = {}) {
+    let lastHomeLayoutKey = '';
+
+    function syncHomeLayoutTier({ allowWhileSearchOpen = false, force = false } = {}) {
       if (document.body.dataset.activeAudience !== 'home') return;
       if (!allowWhileSearchOpen && (document.body.dataset.heroSearch === 'open' || document.body.dataset.heroSearchClosing)) return;
       if (!homeMainEl || !homeMainInnerEl || !homeHeroSectionEl) return;
+
+      const sidebarReserve = (!isOverlayNavMode() && document.body.dataset.sidebarMode !== 'hidden') ? 270 : 0;
+      const layoutKey = `${window.innerWidth}x${window.innerHeight}|${homeMainEl.clientHeight}|${sidebarReserve}|${document.documentElement.lang}|${allowWhileSearchOpen ? 1 : 0}`;
+      if (!force && !allowWhileSearchOpen && layoutKey === lastHomeLayoutKey) {
+        return;
+      }
+      lastHomeLayoutKey = layoutKey;
+
       if (typeof collapseInlineFaq === 'function' && activeInlineFaqBtn) {
         collapseInlineFaq({ immediate: true });
       }
@@ -6888,7 +8020,6 @@
         heroSearchShell.style.transition = prevTr;
       }
 
-      const sidebarReserve = (!overlayDrawerMq.matches && document.body.dataset.sidebarMode !== 'hidden') ? 256 : 0;
       const availW = Math.max(0, window.innerWidth - sidebarReserve);
       const stagePadX = mobileSearchMq.matches ? 32 : 88; // 44px each side on non-mobile clears 32px menu toggle + 12px min gap
       const usableW = Math.max(0, availW - stagePadX);
@@ -6957,6 +8088,14 @@
           document.body.dataset.homeScrollX = 'true';
         }
       }
+      if (typeof syncMainScrollFades === 'function') {
+        requestAnimationFrame(syncMainScrollFades);
+      }
+      if (typeof updateChipRowFades === 'function') {
+        requestAnimationFrame(() => {
+          document.querySelectorAll('.prompt-chips-row, .modal-pill-strip, .hero-tall-prompts').forEach(updateChipRowFades);
+        });
+      }
     }
 
     function syncMobileScrolledHeader() {
@@ -6972,7 +8111,7 @@
     }
 
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => syncHomeLayoutTier());
+      document.fonts.ready.then(() => syncHomeLayoutTier({ force: true }));
     }
 
     function syncMobileViewportVars(metrics, { isScreenResize = false } = {}) {
@@ -7143,7 +8282,10 @@
       let openWidth = null;
       let restingW = 0;
       const isHeroOpen = document.body.dataset.heroSearch === 'open';
-      const isOverHeader = isHeroOpen && (mobileSearchMq.matches ? (metrics.vvHeight <= 420) : (window.innerHeight <= 560));
+      const isBottomDock = !mobileSearchMq.matches && isHeroOpen && (metrics.vvHeight <= 460 || window.innerHeight <= 460);
+      const isOverHeader = isHeroOpen && (isBottomDock || (mobileSearchMq.matches ? (metrics.vvHeight <= 420) : (window.innerHeight <= 560)));
+      if (isBottomDock) document.body.dataset.heroSearchBottomDock = 'true';
+      else delete document.body.dataset.heroSearchBottomDock;
       if (isOverHeader) document.body.dataset.heroSearchOverHeader = 'true';
       else delete document.body.dataset.heroSearchOverHeader;
 
@@ -7157,10 +8299,19 @@
       } else {
         const mainEl = document.getElementById('mainContent');
         const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
-        const targetTop = isOverHeader ? 10 : (mainTop + 14);
-        shift = Math.round(targetTop - restingTop);
+        if (isBottomDock) {
+          const limitBottom = vvBottom - 10;
+          const minTop = metrics.vvTop + 8;
+          shift = Math.max(
+            Math.round(minTop - restingTop),
+            Math.round(limitBottom - restingBottom)
+          );
+        } else {
+          const targetTop = isOverHeader ? 10 : (mainTop + 14);
+          shift = Math.round(targetTop - restingTop);
+        }
 
-        // When off-center in the main content stage, slide diagonally to horizontal center and widen a bit
+        // When off-center in the main content stage (or bottom-docked on very short heights), center horizontally and widen smoothly
         const shellRect = heroSearchShell.getBoundingClientRect();
         const currentX = getCurrentTranslateX(heroSearchShell);
         const isRtl = document.documentElement.dir === 'rtl';
@@ -7173,13 +8324,17 @@
         const restingRight = restingLeft + restingW;
         const stageEl = homeHeroSectionEl || homeMainInnerEl || mainEl;
         const stageRect = stageEl ? stageEl.getBoundingClientRect() : { left: 0, width: window.innerWidth };
-        const stageCenterX = stageRect.left + stageRect.width / 2;
+        const stageCenterX = isBottomDock ? (window.innerWidth / 2) : (stageRect.left + stageRect.width / 2);
         const restingCenterX = isRtl ? (restingRight - restingW / 2) : (restingLeft + restingW / 2);
 
-        if (isHeroOpen && Math.abs(restingCenterX - stageCenterX) > 4) {
-          const maxOpenW = Math.max(restingW, Math.round(stageRect.width - 48));
-          const extraW = restingW < 520 ? Math.min(210, Math.round(restingW * 0.45)) : 100;
-          openWidth = Math.min(maxOpenW, Math.round(restingW + extraW));
+        if (isHeroOpen && (isBottomDock || Math.abs(restingCenterX - stageCenterX) > 4)) {
+          if (isBottomDock) {
+            openWidth = Math.min(Math.max(restingW, 560), Math.min(720, Math.max(280, window.innerWidth - 32)));
+          } else {
+            const maxOpenW = Math.max(restingW, Math.round(stageRect.width - 48));
+            const extraW = restingW < 520 ? Math.min(210, Math.round(restingW * 0.45)) : 100;
+            openWidth = Math.min(maxOpenW, Math.round(restingW + extraW));
+          }
           const openUntranslatedCenterX = isRtl ? (restingRight - openWidth / 2) : (restingLeft + openWidth / 2);
           shiftX = Math.round(stageCenterX - openUntranslatedCenterX);
         }
@@ -7254,38 +8409,78 @@
       if (!scrollEl) return;
       const maxScroll = Math.max(0, scrollEl.scrollHeight - scrollEl.clientHeight);
       const hasOverflow = maxScroll > 2;
-      scrollEl.dataset.fadeTop = String(hasOverflow && scrollEl.scrollTop > 2);
-      scrollEl.dataset.fadeBottom = String(hasOverflow && scrollEl.scrollTop < maxScroll - 2);
+      const nextTop = String(hasOverflow && scrollEl.scrollTop > 2);
+      const nextBot = String(hasOverflow && scrollEl.scrollTop < maxScroll - 2);
+      if (scrollEl.dataset.fadeTop !== nextTop) scrollEl.dataset.fadeTop = nextTop;
+      if (scrollEl.dataset.fadeBottom !== nextBot) scrollEl.dataset.fadeBottom = nextBot;
     }
 
     function bindResultsScrollFades(boxEl) {
       const scrollEl = boxEl?.querySelector('.results-scroll-body');
       if (!scrollEl) return;
       scrollEl.addEventListener('scroll', () => updateResultsScrollFades(scrollEl), { passive: true });
-      if ('ResizeObserver' in window) {
-        new ResizeObserver(() => updateResultsScrollFades(scrollEl)).observe(scrollEl);
-      }
+      observeResize(scrollEl, () => updateResultsScrollFades(scrollEl));
+      boxEl.querySelectorAll('.code-snippet-box').forEach((codeBox) => {
+        if (typeof bindHorizontalScrollStrip === 'function') bindHorizontalScrollStrip(codeBox, codeBox);
+      });
       requestAnimationFrame(() => updateResultsScrollFades(scrollEl));
       updateResultsScrollFades(scrollEl);
     }
 
-    // Sidebar scroll fade indicators (Option 1: hidden native scrollbar + soft edge fades)
+    // Sidebar & short-menu scroll fade indicators (hidden native scrollbar + soft edge fades)
     const navTreeScrollEl = document.querySelector('.nav-tree-scroll');
     if (navTreeScrollEl) {
       const syncNavScrollFades = () => updateResultsScrollFades(navTreeScrollEl);
       navTreeScrollEl.addEventListener('scroll', syncNavScrollFades, { passive: true });
-      if ('ResizeObserver' in window) {
-        new ResizeObserver(syncNavScrollFades).observe(navTreeScrollEl);
-      }
+      observeResize(navTreeScrollEl, syncNavScrollFades);
       navTreeScrollEl.querySelectorAll('details.nav-group').forEach((det) => {
         det.addEventListener('toggle', () => {
           syncNavScrollFades();
           setTimeout(syncNavScrollFades, 230);
         });
       });
-      window.addEventListener('resize', syncNavScrollFades, { passive: true });
+      onCoalescedResize(syncNavScrollFades);
       requestAnimationFrame(syncNavScrollFades);
       syncNavScrollFades();
+    }
+
+    const shortMenuPaneScrollEl = document.getElementById('shortMenuPaneScroll');
+    if (shortMenuPaneScrollEl) {
+      const syncShortPaneFades = () => updateResultsScrollFades(shortMenuPaneScrollEl);
+      shortMenuPaneScrollEl.addEventListener('scroll', syncShortPaneFades, { passive: true });
+      observeResize(shortMenuPaneScrollEl, syncShortPaneFades);
+      onCoalescedResize(syncShortPaneFades);
+    }
+
+    // Main content scroll fade indicators (replaces native scrollbar with 4-edge long fade masks)
+    const mainContentScrollEl = document.getElementById('mainContent');
+    function syncMainScrollFades() {
+      if (!mainContentScrollEl) return;
+      updateResultsScrollFades(mainContentScrollEl);
+      if (typeof updateChipRowFades === 'function') {
+        updateChipRowFades(mainContentScrollEl);
+      }
+    }
+    if (mainContentScrollEl) {
+      mainContentScrollEl.addEventListener('scroll', syncMainScrollFades, { passive: true });
+      mainContentScrollEl.addEventListener('wheel', (e) => {
+        const hasVert = mainContentScrollEl.scrollHeight > mainContentScrollEl.clientHeight + 2;
+        const hasHoriz = mainContentScrollEl.scrollWidth > mainContentScrollEl.clientWidth + 2;
+        if (!hasVert && hasHoriz && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          const dy = typeof normalizeWheelDelta === 'function'
+            ? normalizeWheelDelta(e.deltaY, e.deltaMode, mainContentScrollEl.clientWidth)
+            : e.deltaY;
+          if (dy) {
+            e.preventDefault();
+            mainContentScrollEl.scrollLeft += dy;
+          }
+        }
+      }, { passive: false });
+      observeResize(mainContentScrollEl, syncMainScrollFades);
+      const mainInnerObs = mainContentScrollEl.querySelector('.main-inner');
+      if (mainInnerObs) observeResize(mainInnerObs, syncMainScrollFades);
+      onCoalescedResize(syncMainScrollFades);
+      requestAnimationFrame(syncMainScrollFades);
     }
 
     function fitHeroResultsHeight({ isScreenResize = false } = {}) {
@@ -7304,7 +8499,7 @@
       let resFits = false;
       let available = 0;
 
-      if (mobileSearchMq.matches) {
+      if (mobileSearchMq.matches || document.body.dataset.heroSearchBottomDock === 'true') {
         const isOverHeader = document.body.dataset.heroSearchOverHeader === 'true';
         const topBound = isOverHeader ? (metrics.vvTop + 8) : (visibleHeaderBottom + 8);
         suggFits = (finalBarTop - topBound) >= (suggH + 8);
@@ -7399,9 +8594,9 @@
         if (shellEl.scrollLeft !== 0) shellEl.scrollLeft = 0;
       }
       const mainEl = document.getElementById('mainContent');
-      if (mainEl && document.body.dataset.homeScroll !== 'true') {
-        if (mainEl.scrollTop !== 0) mainEl.scrollTop = 0;
-        if (mainEl.scrollLeft !== 0) mainEl.scrollLeft = 0;
+      if (mainEl) {
+        if (document.body.dataset.homeScroll !== 'true' && mainEl.scrollTop !== 0) mainEl.scrollTop = 0;
+        if (document.body.dataset.homeScrollX !== 'true' && mainEl.scrollLeft !== 0) mainEl.scrollLeft = 0;
       }
     }
 
@@ -7448,24 +8643,25 @@
       }, delay));
     }
 
-    mobileSearchMq.addEventListener('change', () => syncSearchUiToScreenSize({ isScreenResize: true }));
+    mobileSearchMq.addEventListener('change', () => {
+      snapViewportTransitions();
+      syncSearchUiToScreenSize({ isScreenResize: true });
+    });
     overlayDrawerMq.addEventListener('change', () => syncSearchUiToScreenSize({ isScreenResize: true }));
-    window.addEventListener('resize', scheduleMobileViewportSync);
+    window.addEventListener('resize', scheduleMobileViewportSync, { passive: true });
     window.addEventListener('scroll', scheduleMobileViewportSync, { passive: true });
     document.body.addEventListener('scroll', resetMobileWindowScroll, { passive: true });
     window.visualViewport?.addEventListener('resize', scheduleMobileViewportSync);
     window.visualViewport?.addEventListener('scroll', scheduleMobileViewportSync);
     heroSearchInput.addEventListener('focus', scheduleMobileViewportSync);
     heroSearchInput.addEventListener('blur', scheduleMobileViewportSync);
-    if ('ResizeObserver' in window) {
-      const heroSectionEl = document.querySelector('.hero-section');
-      if (heroSectionEl) {
-        new ResizeObserver(() => {
-          if (document.body.dataset.heroSearch === 'open' && !heroAwaitingKeyboard) {
-            fitHeroResultsHeight();
-          }
-        }).observe(heroSectionEl);
-      }
+    const heroSectionObsEl = document.querySelector('.hero-section');
+    if (heroSectionObsEl) {
+      observeResize(heroSectionObsEl, () => {
+        if (document.body.dataset.heroSearch === 'open' && !heroAwaitingKeyboard) {
+          fitHeroResultsHeight();
+        }
+      });
     }
     syncSearchUiToScreenSize();
 
@@ -7535,13 +8731,19 @@
       popularDialog: popularGuidesDialog,
       faqDialog: faqDialog,
       langPopover: document.getElementById('langPopover'),
-      mainContent: document.getElementById('mainContent')
+      mainContent: document.getElementById('mainContent'),
+      leftNavPanel: document.getElementById('leftNavPanel')
     };
+
+    function setInertIfChanged(el, val) {
+      if (el && el.inert !== val) el.inert = val;
+    }
 
     let suppressMainPointerUntil = 0;
     let deferredInertSyncTimer = 0;
 
     function isLangPopoverOpen() {
+      if (document.body.dataset.mobileLang === 'open') return true;
       const pop = blurTargets.langPopover;
       if (!pop) return false;
       try {
@@ -7566,40 +8768,57 @@
       const modalBlurred = langOpen || mobileNavOpen || keepMainSuppressed;
       const mobileBottomBlurred = mobileSearchMq.matches && (heroOpen || modalOpen);
 
-      if (modalOpen) document.body.dataset.modalOpen = 'true';
-      else delete document.body.dataset.modalOpen;
-      if (langOpen) document.body.dataset.langOpen = 'true';
-      else delete document.body.dataset.langOpen;
+      if (modalOpen) {
+        if (document.body.dataset.modalOpen !== 'true') document.body.dataset.modalOpen = 'true';
+      } else if ('modalOpen' in document.body.dataset) {
+        delete document.body.dataset.modalOpen;
+      }
+      if (langOpen) {
+        if (document.body.dataset.langOpen !== 'true') document.body.dataset.langOpen = 'true';
+      } else if ('langOpen' in document.body.dataset) {
+        delete document.body.dataset.langOpen;
+      }
 
-      if (blurTargets.heroCopy) blurTargets.heroCopy.inert = homeBlurred;
-      if (blurTargets.heroTallPrompts) blurTargets.heroTallPrompts.inert = homeBlurred;
-      if (blurTargets.ecoBanners) blurTargets.ecoBanners.inert = homeBlurred;
-      if (blurTargets.homeResources) blurTargets.homeResources.inert = homeBlurred;
-      if (blurTargets.siteFooter) blurTargets.siteFooter.inert = homeBlurred;
-      if (blurTargets.omniSearch) blurTargets.omniSearch.inert = searchBlurred;
-      if (blurTargets.popularDialog) blurTargets.popularDialog.inert = Boolean(popularGuidesDialog?.open && modalBlurred);
-      if (blurTargets.faqDialog) blurTargets.faqDialog.inert = Boolean(faqDialog?.open && modalBlurred);
-      if (blurTargets.headerActions) blurTargets.headerActions.inert = Boolean(mobileSearchMq.matches && heroOpen);
-      if (blurTargets.sidebarCycleBtn) blurTargets.sidebarCycleBtn.inert = mobileBottomBlurred;
-      if (topBarEl) topBarEl.inert = Boolean(heroOpen && document.body.dataset.heroSearchOverHeader === 'true');
+      setInertIfChanged(blurTargets.heroCopy, homeBlurred);
+      setInertIfChanged(blurTargets.heroTallPrompts, homeBlurred);
+      setInertIfChanged(blurTargets.ecoBanners, homeBlurred);
+      setInertIfChanged(blurTargets.homeResources, homeBlurred);
+      setInertIfChanged(blurTargets.siteFooter, homeBlurred);
+      setInertIfChanged(blurTargets.omniSearch, searchBlurred);
+      setInertIfChanged(blurTargets.popularDialog, Boolean(popularGuidesDialog?.open && modalBlurred));
+      setInertIfChanged(blurTargets.faqDialog, Boolean(faqDialog?.open && modalBlurred));
+      const bottomDockMenuBlurred = Boolean(heroOpen && document.body.dataset.heroSearchBottomDock === 'true');
+      setInertIfChanged(blurTargets.headerActions, Boolean(mobileSearchMq.matches && heroOpen));
+      setInertIfChanged(blurTargets.sidebarCycleBtn, mobileBottomBlurred || bottomDockMenuBlurred);
+      setInertIfChanged(blurTargets.leftNavPanel, bottomDockMenuBlurred);
+      setInertIfChanged(topBarEl, Boolean(heroOpen && document.body.dataset.heroSearchOverHeader === 'true'));
     }
 
     if ('MutationObserver' in window) {
       const blurObserver = new MutationObserver(() => syncBlurredInertState());
       blurObserver.observe(document.body, {
         attributes: true,
-        attributeFilter: ['data-hero-search', 'data-hero-search-closing', 'data-hero-search-over-header', 'data-mobile-nav']
+        attributeFilter: ['data-hero-search', 'data-hero-search-closing', 'data-hero-search-over-header', 'data-hero-search-bottom-dock', 'data-mobile-nav', 'data-mobile-lang']
       });
       if (popularGuidesDialog) blurObserver.observe(popularGuidesDialog, { attributes: true, attributeFilter: ['open'] });
       if (faqDialog) blurObserver.observe(faqDialog, { attributes: true, attributeFilter: ['open'] });
     }
-    mobileSearchMq.addEventListener('change', syncBlurredInertState);
+    mobileSearchMq.addEventListener('change', () => {
+      closeLangPopover();
+      syncBlurredInertState();
+    });
 
     window.addEventListener('pointerdown', (e) => {
       if (!isLangPopoverOpen()) return;
       const pop = blurTargets.langPopover;
       const trigger = document.getElementById('langTriggerBtn');
       if (pop?.contains(e.target) || trigger?.contains(e.target)) return;
+      if (document.body.dataset.mobileLang === 'open') {
+        const bottomBar = document.querySelector('.header-actions');
+        const cycleBtn = document.getElementById('sidebarCycleBtn');
+        if (bottomBar?.contains(e.target) || cycleBtn?.contains(e.target)) return;
+        closeLangPopover();
+      }
       const mainRect = blurTargets.mainContent?.getBoundingClientRect();
       if (isPointInsideRect(e.clientX, e.clientY, mainRect)) {
         suppressMainPointerUntil = Date.now() + 450;
@@ -7626,13 +8845,64 @@
       }
     }, true);
 
-    document.getElementById('langPopover')?.addEventListener('toggle', (e) => {
-      if (e.newState === 'open') {
-        closeAllInlineResults();
-        if (overlayDrawerMq.matches) closeMobileNav();
-      }
-      syncBlurredInertState();
-    });
+    const langPopoverEl = document.getElementById('langPopover');
+    const langGridEl = langPopoverEl?.querySelector('.lang-grid');
+    const langTriggerBtnEl = document.getElementById('langTriggerBtn');
+    if (langTriggerBtnEl && langPopoverEl) {
+      let desktopLangWasOpenOnPointerDown = false;
+      langTriggerBtnEl.addEventListener('pointerdown', () => {
+        if (!isSheetLangMode()) {
+          try {
+            desktopLangWasOpenOnPointerDown = langPopoverEl.matches(':popover-open');
+          } catch {
+            desktopLangWasOpenOnPointerDown = false;
+          }
+        }
+      });
+      langTriggerBtnEl.addEventListener('click', (e) => {
+        if (isSheetLangMode()) {
+          e.preventDefault();
+          if (document.body.dataset.mobileLang === 'open') {
+            closeLangPopover();
+          } else {
+            openMobileLang();
+          }
+        } else {
+          const wasOpen = desktopLangWasOpenOnPointerDown;
+          desktopLangWasOpenOnPointerDown = false;
+          try {
+            if (wasOpen) {
+              if (langPopoverEl.matches(':popover-open')) langPopoverEl.hidePopover?.();
+            } else {
+              try {
+                langPopoverEl.showPopover?.({ source: langTriggerBtnEl });
+              } catch {
+                langPopoverEl.showPopover?.();
+              }
+            }
+          } catch {}
+        }
+      });
+    }
+    if (langPopoverEl) {
+      const syncLangScrollFades = () => updateResultsScrollFades(langGridEl || langPopoverEl);
+      (langGridEl || langPopoverEl).addEventListener('scroll', syncLangScrollFades, { passive: true });
+      onCoalescedResize(() => {
+        if (isLangPopoverOpen()) syncLangScrollFades();
+      });
+      langPopoverEl.addEventListener('toggle', (e) => {
+        if (e.newState === 'open') {
+          closeAllInlineResults();
+          if (isOverlayNavMode()) closeMobileNav();
+          if (langGridEl) langGridEl.scrollTop = 0;
+          if (langTriggerBtnEl) langTriggerBtnEl.setAttribute('aria-expanded', 'true');
+          requestAnimationFrame(syncLangScrollFades);
+        } else if (langTriggerBtnEl && document.body.dataset.mobileLang !== 'open') {
+          langTriggerBtnEl.setAttribute('aria-expanded', 'false');
+        }
+        syncBlurredInertState();
+      });
+    }
     syncBlurredInertState();
 
     document.addEventListener('pointerdown', (e) => {
@@ -7766,25 +9036,47 @@
       return delta;
     }
 
+    function isDocRtl(el) {
+      if (el && el.classList && el.classList.contains('code-snippet-box')) return false;
+      return document.documentElement.dir === 'rtl';
+    }
+
     function updateChipRowFades(row) {
       if (!row) return;
       const maxScroll = Math.max(0, row.scrollWidth - row.clientWidth);
       const hasOverflow = maxScroll > 2;
-      row.dataset.fadeLeft = String(hasOverflow && row.scrollLeft > 2);
-      row.dataset.fadeRight = String(hasOverflow && row.scrollLeft < maxScroll - 2);
+      if (!hasOverflow) {
+        if (row.dataset.fadeLeft !== 'false') row.dataset.fadeLeft = 'false';
+        if (row.dataset.fadeRight !== 'false') row.dataset.fadeRight = 'false';
+        if (row.classList.contains('is-scrollable')) row.classList.remove('is-scrollable');
+        return;
+      }
+      if (!row.classList.contains('is-scrollable')) row.classList.add('is-scrollable');
+      let nextL, nextR;
+      if (isDocRtl(row)) {
+        const distFromRight = Math.abs(row.scrollLeft);
+        nextR = String(distFromRight > 2);
+        nextL = String(distFromRight < maxScroll - 2);
+      } else {
+        nextL = String(row.scrollLeft > 2);
+        nextR = String(row.scrollLeft < maxScroll - 2);
+      }
+      if (row.dataset.fadeLeft !== nextL) row.dataset.fadeLeft = nextL;
+      if (row.dataset.fadeRight !== nextR) row.dataset.fadeRight = nextR;
     }
 
-    document.querySelectorAll('.prompt-chips-row').forEach((row) => {
-      const wheelTarget = row.closest('.suggestions-bar') || row;
+    function bindHorizontalScrollStrip(row, wheelTarget) {
+      if (!row || row.dataset.hscrollBound === '1') return;
+      row.dataset.hscrollBound = '1';
+      const target = wheelTarget || row;
       let targetLeft = 0;
       let currentLeft = 0;
       let rafId = 0;
       let lastTime = 0;
 
       row.addEventListener('scroll', () => updateChipRowFades(row), { passive: true });
-      if ('ResizeObserver' in window) {
-        new ResizeObserver(() => updateChipRowFades(row)).observe(row);
-      }
+      observeResize(row, () => updateChipRowFades(row));
+      onCoalescedResize(() => updateChipRowFades(row));
       updateChipRowFades(row);
 
       function stopSmoothScroll() {
@@ -7795,11 +9087,15 @@
         lastTime = 0;
       }
 
+      function clampScrollTarget(val) {
+        const maxScroll = Math.max(0, row.scrollWidth - row.clientWidth);
+        return isDocRtl(row) ? Math.max(-maxScroll, Math.min(0, val)) : Math.max(0, Math.min(maxScroll, val));
+      }
+
       function stepScroll(now) {
         const dt = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 1 / 60;
         lastTime = now;
-        const maxScroll = Math.max(0, row.scrollWidth - row.clientWidth);
-        targetLeft = Math.max(0, Math.min(maxScroll, targetLeft));
+        targetLeft = clampScrollTarget(targetLeft);
         const diff = targetLeft - currentLeft;
         if (Math.abs(diff) <= 0.5) {
           row.scrollLeft = targetLeft;
@@ -7812,8 +9108,10 @@
         rafId = requestAnimationFrame(stepScroll);
       }
 
-      wheelTarget.addEventListener('wheel', (e) => {
-        if (row.scrollWidth <= row.clientWidth) return;
+      // Smooth mouse-wheel horizontal scrolling (vertical wheel -> horizontal scroll when overflowing)
+      target.addEventListener('wheel', (e) => {
+        if (row.scrollWidth <= row.clientWidth + 1) return;
+        if (row.scrollHeight > row.clientHeight + 2 && row.classList.contains('code-snippet-box')) return;
         if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) {
           stopSmoothScroll();
           return;
@@ -7821,22 +9119,83 @@
         const dy = normalizeWheelDelta(e.deltaY, e.deltaMode, row.clientWidth);
         if (!dy) return;
         e.preventDefault();
+        const delta = isDocRtl(row) ? -dy : dy;
         if (reducedMotionMq.matches) {
-          row.scrollLeft += dy;
+          row.scrollLeft = clampScrollTarget(row.scrollLeft + delta);
           return;
         }
         if (!rafId) {
           currentLeft = row.scrollLeft;
           targetLeft = row.scrollLeft;
         }
-        const maxScroll = Math.max(0, row.scrollWidth - row.clientWidth);
-        targetLeft = Math.max(0, Math.min(maxScroll, targetLeft + dy));
+        targetLeft = clampScrollTarget(targetLeft + delta);
         if (!rafId) {
           lastTime = 0;
           rafId = requestAnimationFrame(stepScroll);
         }
       }, { passive: false });
+
+      // On-demand mouse/pen drag-to-scroll (attaches window listeners ONLY during active drag -> 0 idle overhead)
+      let dragPointerId = -1;
+      let dragStartX = 0;
+      let dragStartScrollLeft = 0;
+      let dragMoved = false;
+      let suppressClickUntil = 0;
+
+      const onDragMove = (e) => {
+        if (e.pointerId !== dragPointerId) return;
+        const dx = e.clientX - dragStartX;
+        if (!dragMoved && Math.abs(dx) > 5) {
+          dragMoved = true;
+          row.classList.add('is-dragging');
+        }
+        if (dragMoved) {
+          row.scrollLeft = clampScrollTarget(dragStartScrollLeft - dx);
+        }
+      };
+
+      const onDragEnd = (e) => {
+        if (e && e.pointerId !== undefined && e.pointerId !== dragPointerId) return;
+        dragPointerId = -1;
+        row.classList.remove('is-dragging');
+        window.removeEventListener('pointermove', onDragMove);
+        window.removeEventListener('pointerup', onDragEnd);
+        window.removeEventListener('pointercancel', onDragEnd);
+        if (dragMoved) {
+          suppressClickUntil = Date.now() + 180;
+          dragMoved = false;
+        }
+      };
+
+      row.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'touch' || e.button !== 0) return;
+        if (row.scrollWidth <= row.clientWidth + 1) return;
+        stopSmoothScroll();
+        dragPointerId = e.pointerId;
+        dragStartX = e.clientX;
+        dragStartScrollLeft = row.scrollLeft;
+        dragMoved = false;
+        window.addEventListener('pointermove', onDragMove, { passive: true });
+        window.addEventListener('pointerup', onDragEnd, { passive: true });
+        window.addEventListener('pointercancel', onDragEnd, { passive: true });
+      });
+
+      row.addEventListener('click', (e) => {
+        if (suppressClickUntil > Date.now()) {
+          e.preventDefault();
+          e.stopPropagation();
+          suppressClickUntil = 0;
+        }
+      }, true);
+    }
+
+    document.querySelectorAll('.prompt-chips-row').forEach((row) => {
+      bindHorizontalScrollStrip(row, row.closest('.suggestions-bar') || row);
     });
+    document.querySelectorAll('.modal-pill-strip, .hero-tall-prompts').forEach((strip) => {
+      bindHorizontalScrollStrip(strip, strip.closest('.home-modal-filterbar') || strip);
+    });
+    if (typeof syncMainScrollFades === 'function') syncMainScrollFades();
 
     function focusActiveSearchBar() {
       heroSearchInput.focus({ preventScroll: true });
@@ -7868,6 +9227,10 @@
           closeMobileNav();
           return;
         }
+        if (document.body.dataset.mobileLang === 'open') {
+          closeLangPopover();
+          return;
+        }
         if (openModal) {
           e.preventDefault();
           openModal.close();
@@ -7875,6 +9238,7 @@
         }
         if (document.body.dataset.heroSearch === 'open') {
           e.preventDefault();
+          if (document.activeElement === heroSearchInput) heroSearchInput.blur();
           closeHeroResults();
           return;
         }
@@ -8085,7 +9449,7 @@
 
     function isI18nSkippedElement(el) {
       if (!el || el.nodeType !== 1) return true;
-      if (el.closest('script, style, pre, code, .step-num, .faq-body, .home-faq-answer, .site-footer, #langTriggerBtn, .lang-item, .search-kbd-badge, .code-copy-badge')) {
+      if (el.closest('script, style, pre, code, .step-num, .faq-body, .home-faq-answer, .site-footer, #langTriggerBtn, .lang-item, .lang-active-badge, .search-kbd-badge, .code-copy-badge')) {
         return true;
       }
       return false;
@@ -8259,7 +9623,8 @@
         triggerHeroQuery();
       }
 
-      document.querySelectorAll('.prompt-chips-row').forEach((row) => updateChipRowFades(row));
+      document.querySelectorAll('.prompt-chips-row, .modal-pill-strip, .hero-tall-prompts').forEach((row) => updateChipRowFades(row));
+      if (typeof syncMainScrollFades === 'function') syncMainScrollFades();
     }
 
     // Wire language popover switcher links in-page
