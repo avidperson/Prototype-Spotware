@@ -44,7 +44,7 @@
       --bg-subtle-dark: #1c202d;
 
       --bg-header-light: #ffffff;
-      --bg-header-dark: rgba(18, 21, 30, 0.94);
+      --bg-header-dark: #12151e;
 
       --text-primary-light: #0f172a;
       --text-primary-dark: #f1f5f9;
@@ -247,7 +247,7 @@
       justify-content: space-between;
       padding: 0 1.25rem;
       gap: 1rem;
-      transition: opacity 0.16s ease, filter 0.16s ease;
+      transition: opacity 0.18s ease;
     }
 
     .brand-cluster {
@@ -797,32 +797,40 @@
       block-size: 14px;
       margin-inline-start: auto;
       flex-shrink: 0;
-      background-color: var(--text-muted);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      background-image:
+        linear-gradient(var(--text-muted), var(--text-muted)),
+        linear-gradient(var(--text-muted), var(--text-muted));
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 11px 1.8px, 1.8px 11px;
     }
     .nav-group[open]:not(.is-closing) > summary::after {
-      background-color: var(--accent);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      background-image:
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent));
+      background-size: 11px 1.8px, 1.8px 0px;
     }
     @media (prefers-reduced-motion: no-preference) {
       .nav-group > summary::after {
-        transition: background-color 0.15s ease;
+        transition: background-size 0.18s cubic-bezier(0.22, 1, 0.36, 1);
       }
     }
     @media (hover: hover) and (pointer: fine) {
       .nav-group > summary:hover::after {
-        background-color: var(--text-primary);
+        background-image:
+          linear-gradient(var(--text-primary), var(--text-primary)),
+          linear-gradient(var(--text-primary), var(--text-primary));
       }
       .nav-group[open]:not(.is-closing) > summary:hover::after {
-        background-color: var(--accent);
+        background-image:
+          linear-gradient(var(--accent), var(--accent)),
+          linear-gradient(var(--accent), var(--accent));
       }
     }
 
     .nav-links-list {
       list-style: none;
-      margin: 0.14rem 0 0.2rem 1.25rem;
+      margin: 0 0 0 1.25rem;
       padding: 0 0 0 0.82rem;
       border-left: 1.5px solid var(--border);
       overflow: hidden;
@@ -831,10 +839,10 @@
       gap: 2px;
     }
     .nav-links-list > li:first-child {
-      padding-top: 0.1rem;
+      padding-top: 0.24rem;
     }
     .nav-links-list > li:last-child {
-      padding-bottom: 0.3rem;
+      padding-bottom: 0.45rem;
     }
 
     .nav-link-item {
@@ -1219,13 +1227,15 @@
       min-width: 0;
       margin: 0;
       transform: translate3d(0, 0, 0);
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), width 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+      transition: opacity 0.16s ease;
     }
     body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell {
       transform: translate3d(var(--hero-search-shift-x, 0px), var(--hero-search-shift, 0px), 0);
+      will-change: transform;
       z-index: 39;
     }
     body[data-active-audience="home"][data-hero-search-closing="sliding"] .omni-search-shell {
+      will-change: transform;
       z-index: 39;
     }
     body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-bar {
@@ -1239,7 +1249,7 @@
     .ecosystem-banners-grid,
     .home-resources-grid,
     .site-footer {
-      transition: opacity 0.16s ease;
+      transition: opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .hero-tall-prompts {
       display: none;
@@ -1285,7 +1295,7 @@
     }
     .hero-tall-chip {
       border: 1px solid rgba(15, 23, 42, 0.08);
-      background: rgba(255, 255, 255, 0.78);
+      background: var(--bg-surface);
       color: var(--text-primary);
       padding: 5px 12px;
       border-radius: 9999px;
@@ -1297,7 +1307,7 @@
       transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
     }
     [data-theme="dark"] .hero-tall-chip {
-      background: rgba(26, 34, 50, 0.86);
+      background: #1a2232;
       border-color: var(--border-strong);
       color: var(--text-primary);
     }
@@ -1320,7 +1330,6 @@
       display: none;
     }
     body[data-active-audience="home"][data-hero-search="open"] .hero-bg-art,
-    body[data-active-audience="home"][data-hero-search-closing="sliding"] .hero-bg-art,
     body[data-modal-open="true"] .hero-bg-art,
     body[data-lang-open="true"] .hero-bg-art,
     body[data-mobile-nav="open"] .hero-bg-art {
@@ -1332,11 +1341,6 @@
     body[data-active-audience="home"][data-hero-search="open"]:not([data-modal-open="true"]):not([data-lang-open="true"]):not([data-mobile-nav="open"]) .ecosystem-banners-grid,
     body[data-active-audience="home"][data-hero-search="open"]:not([data-modal-open="true"]):not([data-lang-open="true"]):not([data-mobile-nav="open"]) .home-resources-grid,
     body[data-active-audience="home"][data-hero-search="open"] .site-footer,
-    body[data-active-audience="home"][data-hero-search-closing="sliding"]:not([data-modal-open="true"]):not([data-lang-open="true"]):not([data-mobile-nav="open"]) .hero-copy,
-    body[data-active-audience="home"][data-hero-search-closing="sliding"]:not([data-modal-open="true"]):not([data-lang-open="true"]):not([data-mobile-nav="open"]) .hero-tall-prompts,
-    body[data-active-audience="home"][data-hero-search-closing="sliding"]:not([data-modal-open="true"]):not([data-lang-open="true"]):not([data-mobile-nav="open"]) .ecosystem-banners-grid,
-    body[data-active-audience="home"][data-hero-search-closing="sliding"]:not([data-modal-open="true"]):not([data-lang-open="true"]):not([data-mobile-nav="open"]) .home-resources-grid,
-    body[data-active-audience="home"][data-hero-search-closing="sliding"] .site-footer,
     body[data-modal-open="true"] .main-inner,
     body[data-modal-open="true"] .site-footer,
     body[data-lang-open="true"] .main-inner,
@@ -1345,18 +1349,22 @@
     body[data-mobile-nav="open"] .site-footer {
       filter: blur(3px);
       opacity: 0.45;
-      transform: translateZ(0);
-      contain: layout style paint;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .hero-copy,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .hero-tall-prompts,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .ecosystem-banners-grid,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .home-resources-grid,
+    body[data-active-audience="home"][data-hero-search-closing="sliding"] .site-footer {
       pointer-events: none;
       user-select: none;
       -webkit-user-select: none;
     }
     body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search="open"] .top-bar,
-    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-closing="sliding"] .top-bar,
     body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"] .left-nav-panel,
-    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-closing="sliding"] .left-nav-panel,
-    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"] #sidebarCycleBtn,
-    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-closing="sliding"] #sidebarCycleBtn {
+    body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search="open"] #sidebarCycleBtn {
       filter: blur(3px);
       opacity: 0.45;
       pointer-events: none;
@@ -2031,8 +2039,11 @@
       background: var(--bg-subtle);
       border-color: var(--border);
     }
-    body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .omni-clear-btn {
+    body[data-active-audience="home"] .omni-search-shell[data-has-query="true"] .omni-clear-btn {
       display: inline-flex;
+    }
+    .hero-search-close-btn {
+      display: none;
     }
 
     .btn-subtle-accent {
@@ -2100,7 +2111,7 @@
       visibility: hidden;
       pointer-events: none;
       transform: translateY(-6px);
-      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
       z-index: 31;
     }
     body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar {
@@ -2207,7 +2218,7 @@
       visibility: hidden;
       pointer-events: none;
       transform: translateY(-6px);
-      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
     }
     body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
       opacity: 1;
@@ -2638,8 +2649,13 @@
       cursor: pointer;
       transition: color 0.16s ease;
     }
-    .faq-accordion-section summary:hover {
-      color: var(--accent);
+    .faq-accordion-section details:not([open]) > summary {
+      color: var(--text-primary);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .faq-accordion-section summary:hover {
+        color: var(--accent);
+      }
     }
     .faq-accordion-section details[open] > summary {
       color: var(--accent);
@@ -2649,18 +2665,22 @@
     }
     .faq-accordion-section summary::after {
       content: "";
-      inline-size: 15px;
-      block-size: 15px;
+      inline-size: 14px;
+      block-size: 14px;
       flex-shrink: 0;
-      background-color: var(--text-muted);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-      transition: background-color 0.16s ease;
+      background-image:
+        linear-gradient(var(--text-muted), var(--text-muted)),
+        linear-gradient(var(--text-muted), var(--text-muted));
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 12px 1.8px, 1.8px 12px;
+      transition: background-size 0.16s ease;
     }
     .faq-accordion-section details[open] > summary::after {
-      background-color: var(--accent);
-      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
+      background-image:
+        linear-gradient(var(--accent), var(--accent)),
+        linear-gradient(var(--accent), var(--accent));
+      background-size: 12px 1.8px, 1.8px 0px;
     }
     .faq-body {
       padding: 0 1.5rem 0.95rem 0;
@@ -3008,7 +3028,7 @@
       display: block;
     }
 
-    @media (min-width: 561px) {
+    @media (min-width: 561px) and (min-height: 461px) {
       body[data-lang-open="true"] #langTriggerBtn {
         border-color: var(--accent);
         box-shadow: 0 0 0 2.5px rgba(200, 16, 46, 0.12);
@@ -3093,7 +3113,7 @@
         border-radius: 0;
       }
     }
-    @media (min-width: 561px) and (max-width: 960px) {
+    @media (min-width: 561px) and (max-width: 960px) and (min-height: 461px) {
       #langPopover {
         width: min(392px, calc(100vw - 2rem));
         max-width: min(392px, calc(100vw - 2rem));
@@ -3501,17 +3521,34 @@
       .hamburger-line--bot {
         transform-origin: 12px 17px;
       }
-      body[data-mobile-nav="open"] #sidebarCycleBtn {
+      body[data-mobile-nav="open"] #sidebarCycleBtn,
+      body[data-mobile-lang="open"] #sidebarCycleBtn {
         color: var(--text-primary);
       }
-      body[data-mobile-nav="open"] .hamburger-line--top {
+      body[data-mobile-nav="open"] .hamburger-line--top,
+      body[data-mobile-lang="open"] .hamburger-line--top {
         transform: translateY(5px) rotate(45deg);
       }
-      body[data-mobile-nav="open"] .hamburger-line--mid {
+      body[data-mobile-nav="open"] .hamburger-line--mid,
+      body[data-mobile-lang="open"] .hamburger-line--mid {
         opacity: 0;
       }
-      body[data-mobile-nav="open"] .hamburger-line--bot {
+      body[data-mobile-nav="open"] .hamburger-line--bot,
+      body[data-mobile-lang="open"] .hamburger-line--bot {
         transform: translateY(-5px) rotate(-45deg);
+      }
+      body[data-mobile-nav="open"] #themeToggleBtn,
+      body[data-mobile-nav="open"] #langTriggerBtn,
+      body[data-mobile-lang="open"] #themeToggleBtn,
+      body[data-mobile-lang="open"] #langTriggerBtn {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.16s ease, visibility 0s linear 0.16s;
+      }
+      body[data-mobile-nav="open"] #brandHomeLink,
+      body[data-mobile-lang="open"] #brandHomeLink {
+        pointer-events: none;
       }
       #themeToggleBtn {
         position: static;
@@ -3706,9 +3743,7 @@
         height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
         max-height: calc(var(--mobile-nav-max-height, calc(100dvh - var(--header-height) - 52px)) + var(--header-height));
         padding-top: var(--header-height);
-        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
-        backdrop-filter: blur(14px) saturate(1.15);
-        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        background: var(--bg-surface);
         contain: layout style;
         border: none;
         border-radius: 0;
@@ -3720,7 +3755,7 @@
         transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.22s;
       }
       [data-theme="dark"] .left-nav-panel {
-        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+        background: var(--bg-surface);
       }
       body[data-mobile-nav="open"] .left-nav-panel {
         transform: translate3d(0, 0, 0);
@@ -3794,14 +3829,16 @@
       .nav-group > summary::after {
         inline-size: 16px;
         block-size: 16px;
-        background-color: var(--text-muted);
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-        rotate: 0deg;
+        background-image:
+          linear-gradient(var(--text-muted), var(--text-muted)),
+          linear-gradient(var(--text-muted), var(--text-muted));
+        background-size: 13px 1.9px, 1.9px 13px;
       }
       .nav-group[open]:not(.is-closing) > summary::after {
-        background-color: var(--accent);
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E") no-repeat center / contain;
-        rotate: 0deg;
+        background-image:
+          linear-gradient(var(--accent), var(--accent)),
+          linear-gradient(var(--accent), var(--accent));
+        background-size: 13px 1.9px, 1.9px 0px;
       }
       .nav-item-icon {
         width: 19px;
@@ -3813,16 +3850,16 @@
       }
       .nav-links-list {
         width: auto;
-        margin: 0 0 0.65rem 0.65rem;
+        margin: 0 0 0 0.65rem;
         padding: 0 0 0 0.95rem;
         border-left: 1.5px solid var(--border);
         gap: 3px;
       }
       .nav-links-list > li:first-child {
-        padding-top: 0.05rem;
+        padding-top: 0.1rem;
       }
       .nav-links-list > li:last-child {
-        padding-bottom: 0.25rem;
+        padding-bottom: 0.85rem;
       }
       .nav-link-item {
         width: 100%;
@@ -3897,21 +3934,21 @@
         visibility: hidden;
         pointer-events: none;
         transform: translateY(6px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+        transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
       }
       body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
         transform: translateY(6px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+        transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
       }
       body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transform: translateY(0);
-        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
+        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
       }
       .omni-search-shell .instant-results-box {
         display: flex;
@@ -3924,7 +3961,7 @@
         visibility: hidden;
         pointer-events: none;
         transform: translateY(6px);
-        transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+        transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
       }
       body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
         opacity: 1;
@@ -3932,6 +3969,44 @@
         pointer-events: auto;
         transform: translateY(0);
         transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
+      }
+      .omni-search-shell .hero-search-close-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: calc(100% + 0.55rem);
+        left: 50%;
+        padding: 0.42rem 1.2rem;
+        border-radius: 9999px;
+        border: 1px solid var(--border-strong);
+        background: var(--bg-surface);
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        font-weight: 600;
+        line-height: 1.25;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+        cursor: pointer;
+        z-index: 31;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translate3d(-50%, -6px, 0);
+        transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s, color 0.15s ease, background-color 0.15s ease;
+      }
+      [data-theme="dark"] .omni-search-shell .hero-search-close-btn {
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+      }
+      .omni-search-shell .hero-search-close-btn:active {
+        background: var(--bg-subtle);
+        color: var(--text-primary);
+      }
+      body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"] .omni-search-shell .hero-search-close-btn {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate3d(-50%, 0, 0);
+        transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s, color 0.15s ease, background-color 0.15s ease;
       }
       @media (prefers-reduced-motion: reduce) {
         .hamburger-line,
@@ -3942,7 +4017,9 @@
         body[data-active-audience="home"][data-hero-search="open"] .omni-search-shell .suggestions-bar,
         body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-sugg-fit="true"] .omni-search-shell .suggestions-bar,
         .omni-search-shell .instant-results-box,
-        body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active {
+        body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"][data-hero-res-fit="true"] .omni-search-shell .instant-results-box.active,
+        .omni-search-shell .hero-search-close-btn,
+        body[data-active-audience="home"][data-hero-search="open"][data-hero-bar-settled="true"] .omni-search-shell .hero-search-close-btn {
           transition: none;
         }
       }
@@ -3966,9 +4043,7 @@
         height: 100%;
         max-height: 100%;
         padding-top: var(--header-height);
-        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
-        backdrop-filter: blur(14px) saturate(1.15);
-        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        background: var(--bg-surface);
         border: none;
         border-radius: 0;
         box-shadow: none;
@@ -4101,9 +4176,7 @@
         border: none;
         border-radius: 0;
         box-shadow: none;
-        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
-        backdrop-filter: blur(14px) saturate(1.15);
-        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        background: var(--bg-surface);
         contain: layout style;
         overflow: hidden;
         transform: translate3d(0, 14px, 0);
@@ -5229,7 +5302,7 @@
     [dir="rtl"] .nav-links-list {
       border-left: none;
       border-right: 1px solid var(--border);
-      margin: 0.1rem 1.25rem 0.15rem 0;
+      margin: 0 1.25rem 0 0;
       padding: 0 0.85rem 0 0;
     }
     [dir="rtl"] .nav-all-btn {
@@ -5417,13 +5490,28 @@
         display: none !important;
       }
       .top-bar {
+        position: relative;
         padding-inline: max(0.85rem, env(safe-area-inset-left)) max(0.85rem, env(safe-area-inset-right));
-        transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.16s ease, filter 0.16s ease;
+        transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.18s ease;
       }
       .brand-cluster {
         display: flex;
         align-items: center;
         gap: 0.45rem;
+      }
+      .brand-logo {
+        transform: translate3d(0, 0, 0);
+        transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
+      }
+      body[data-mobile-nav="open"] .brand-logo,
+      body[data-mobile-lang="open"] .brand-logo {
+        transform: translate3d(calc(-1 * (34px + 0.45rem)), 0, 0);
+        pointer-events: none;
+      }
+      [dir="rtl"] body[data-mobile-nav="open"] .brand-logo,
+      [dir="rtl"] body[data-mobile-lang="open"] .brand-logo {
+        transform: translate3d(calc(34px + 0.45rem), 0, 0);
       }
       .short-header-menu-btn {
         display: inline-flex;
@@ -5438,7 +5526,10 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: background-color 0.15s ease, color 0.15s ease;
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+        transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s, background-color 0.15s ease, color 0.15s ease;
       }
       .short-header-menu-btn:hover,
       .short-header-menu-btn:active {
@@ -5451,19 +5542,35 @@
       }
       body[data-mobile-nav="open"] .short-header-menu-btn,
       body[data-mobile-lang="open"] .short-header-menu-btn {
-        display: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: scale(0.84);
+        transition: opacity 0.16s ease, transform 0.2s ease, visibility 0s linear 0.2s;
       }
       body[data-mobile-nav="open"] .top-bar,
       body[data-mobile-lang="open"] .top-bar {
         background: transparent;
         border-bottom-color: transparent;
       }
+      .header-actions {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.18s ease, visibility 0s;
+      }
       body[data-mobile-nav="open"] .header-actions,
       body[data-mobile-lang="open"] .header-actions {
-        display: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.16s ease, visibility 0s linear 0.16s;
       }
       .short-sheet-close-btn {
-        display: none;
+        display: inline-flex;
+        position: absolute;
+        inset-inline-end: max(0.85rem, env(safe-area-inset-right));
+        top: 50%;
+        transform: translateY(-50%) scale(0.88);
         width: 34px;
         height: 34px;
         border: none;
@@ -5474,7 +5581,10 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: background-color 0.15s ease, color 0.15s ease;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.16s ease, transform 0.2s ease, visibility 0s linear 0.16s, background-color 0.15s ease, color 0.15s ease;
       }
       .short-sheet-close-btn:hover {
         background: var(--bg-subtle);
@@ -5482,7 +5592,11 @@
       }
       body[data-mobile-nav="open"] .short-sheet-close-btn,
       body[data-mobile-lang="open"] .short-sheet-close-btn {
-        display: inline-flex;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(-50%) scale(1);
+        transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s, background-color 0.15s ease, color 0.15s ease;
       }
       .mobile-nav-backdrop {
         display: none !important;
@@ -5586,9 +5700,7 @@
         border: none;
         border-radius: 0;
         box-shadow: none;
-        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
-        backdrop-filter: blur(14px) saturate(1.15);
-        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        background: var(--bg-surface);
         contain: layout style;
         transform: translate3d(0, 14px, 0);
         opacity: 0;
@@ -5773,6 +5885,9 @@
         display: flex;
         flex-direction: column;
         position: fixed;
+        position-anchor: auto;
+        position-area: none;
+        position-try-fallbacks: none;
         inset: 0;
         top: 0;
         left: 0;
@@ -5789,9 +5904,7 @@
         border: none;
         border-radius: 0;
         box-shadow: none;
-        background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
-        backdrop-filter: blur(14px) saturate(1.15);
-        -webkit-backdrop-filter: blur(14px) saturate(1.15);
+        background: var(--bg-surface);
         contain: layout style;
         overflow: hidden;
         transform: translate3d(0, 14px, 0);
@@ -5881,7 +5994,11 @@
       }
       @media (prefers-reduced-motion: reduce) {
         .left-nav-panel,
-        #langPopover {
+        #langPopover,
+        .brand-logo,
+        .short-header-menu-btn,
+        .header-actions,
+        .short-sheet-close-btn {
           transition: none;
         }
       }
@@ -6120,7 +6237,7 @@
           <div class="omni-bar">
             <svg class="omni-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="search" id="heroSearchInput" class="omni-input" placeholder="Search documentation or ask our AI assistant..." aria-label="Search cTrader Help Centre or ask AI">
-            <button type="button" class="icon-btn omni-clear-btn" id="heroClearSearchBtn" aria-label="Close" title="Close">
+            <button type="button" class="icon-btn omni-clear-btn" id="heroClearSearchBtn" aria-label="Clear search" title="Clear">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
             </button>
             <button type="button" class="btn-subtle-accent" id="heroAskAiBtn">
@@ -6141,6 +6258,7 @@
           </div>
 
           <div class="instant-results-box" id="instantResultsBox" aria-live="polite"></div>
+          <button type="button" class="hero-search-close-btn" id="heroSearchCloseBtn">Close</button>
         </div>
 
         <div class="hero-tall-prompts" aria-label="Quick prompts">
@@ -6743,6 +6861,8 @@
       const heroBox = document.getElementById('instantResultsBox');
 
       if (heroInput) heroInput.value = '';
+      const heroShell = document.querySelector('.omni-search-shell');
+      if (heroShell) heroShell.dataset.hasQuery = 'false';
       if (heroBox) {
         heroBox.classList.remove('active');
         heroBox.innerHTML = '';
@@ -6775,111 +6895,126 @@
         ul.style.transition = '';
         ul.style.height = '';
         ul.style.opacity = '';
+        ul.style.transform = '';
       }
     }
 
-    function setNavGroupOpen(group, expand, { animate = isNavPanelVisible() } = {}) {
-      if (!group) return;
-      const ul = group.querySelector('.nav-links-list');
-      if (reduceMotionNavMq.matches || !animate || !ul) {
-        cancelNavGroupAnimation(group);
-        group.open = Boolean(expand);
+    function applyNavGroupStates(changes, { animate = isNavPanelVisible() } = {}) {
+      const canAnimate = animate && !reduceMotionNavMq.matches && typeof Element.prototype.animate === 'function';
+      if (!canAnimate) {
+        changes.forEach(({ group, expand }) => {
+          if (!group) return;
+          cancelNavGroupAnimation(group);
+          group.open = Boolean(expand);
+        });
+        const navScroll = document.querySelector('.nav-tree-scroll');
+        if (navScroll && typeof updateResultsScrollFades === 'function') updateResultsScrollFades(navScroll);
         return;
       }
 
-      const isCurrentlyOpen = group.open && !group.classList.contains('is-closing');
-      if (Boolean(expand) === isCurrentlyOpen && !navGroupAnimCleanups.has(group)) {
-        return;
+      // Phase 1: Filter actionable items and capture live geometry before cancelling in-flight animations
+      const jobs = [];
+      for (const { group, expand } of changes) {
+        if (!group) continue;
+        const ul = group.querySelector('.nav-links-list');
+        if (!ul) {
+          cancelNavGroupAnimation(group);
+          group.open = Boolean(expand);
+          continue;
+        }
+        const isCurrentlyOpen = group.open && !group.classList.contains('is-closing');
+        if (Boolean(expand) === isCurrentlyOpen && !navGroupAnimCleanups.has(group)) {
+          continue;
+        }
+        if (!expand && !group.open) continue;
+
+        const startHeight = group.open ? ul.getBoundingClientRect().height : 0;
+        const startOpacity = group.open ? (parseFloat(getComputedStyle(ul).opacity) || 0) : 0;
+        jobs.push({ group, ul, expand: Boolean(expand), startHeight, startOpacity, targetHeight: 0 });
+      }
+      if (!jobs.length) return;
+
+      // Phase 2: Cancel prior animations and prepare opening groups for single batched measurement
+      for (const job of jobs) {
+        const prevCleanup = navGroupAnimCleanups.get(job.group);
+        if (prevCleanup) {
+          prevCleanup();
+          navGroupAnimCleanups.delete(job.group);
+        }
+        if (job.expand) {
+          job.group.classList.remove('is-closing');
+          job.group.open = true;
+          job.ul.style.height = 'auto';
+        } else {
+          job.group.classList.add('is-closing');
+        }
       }
 
-      const startHeight = group.open ? ul.getBoundingClientRect().height : 0;
-      const startOpacity = group.open ? (parseFloat(getComputedStyle(ul).opacity) || 1) : 0;
-
-      const prevCleanup = navGroupAnimCleanups.get(group);
-      if (prevCleanup) {
-        prevCleanup();
-        navGroupAnimCleanups.delete(group);
+      // Phase 3: Single batched read of target heights for opening groups
+      for (const job of jobs) {
+        if (job.expand) {
+          job.targetHeight = job.ul.scrollHeight;
+        }
       }
 
-      if (expand) {
-        group.classList.remove('is-closing');
-        group.open = true;
-        ul.style.transition = 'none';
-        ul.style.height = 'auto';
-        const targetHeight = ul.scrollHeight;
-        ul.style.height = `${startHeight}px`;
-        ul.style.opacity = `${startOpacity}`;
-        void getComputedStyle(ul).height;
+      // Phase 4: Start synchronized WAAPI animations on the exact same frame (zero margin snap, zero rAF lag)
+      const easing = 'cubic-bezier(0.22, 1, 0.36, 1)';
+      const duration = 240;
+      const syncNavFadesAfter = () => {
+        const navScroll = document.querySelector('.nav-tree-scroll');
+        if (navScroll && typeof updateResultsScrollFades === 'function') {
+          updateResultsScrollFades(navScroll);
+        }
+      };
 
-        let finished = false;
-        let timerId = 0;
-        const finish = () => {
-          if (finished) return;
-          finished = true;
-          clearTimeout(timerId);
-          ul.removeEventListener('transitionend', onEnd);
-          navGroupAnimCleanups.delete(group);
-          ul.style.transition = '';
-          ul.style.height = '';
-          ul.style.opacity = '';
+      for (const job of jobs) {
+        const { group, ul, expand, startHeight, startOpacity, targetHeight } = job;
+        ul.style.height = '';
+        const endHeight = expand ? targetHeight : 0;
+        const dist = Math.abs(endHeight - startHeight);
+        if (dist < 0.5) {
+          group.classList.remove('is-closing');
+          group.open = expand;
+          syncNavFadesAfter();
+          continue;
+        }
+
+        const keyframes = expand
+          ? [
+              { height: `${startHeight}px`, opacity: startOpacity, transform: 'translate3d(0, -4px, 0)' },
+              { height: `${targetHeight}px`, opacity: 1, transform: 'translate3d(0, 0, 0)' }
+            ]
+          : [
+              { height: `${startHeight}px`, opacity: startOpacity, transform: 'translate3d(0, 0, 0)' },
+              { height: '0px', opacity: 0, transform: 'translate3d(0, -4px, 0)' }
+            ];
+
+        const anim = ul.animate(keyframes, { duration, easing });
+        let settled = false;
+        const cleanupOnly = () => {
+          if (settled) return;
+          settled = true;
+          anim.onfinish = null;
+          anim.oncancel = null;
+          try { anim.cancel(); } catch {}
         };
-        const onEnd = (e) => {
-          if (e.target === ul && e.propertyName === 'height') finish();
-        };
-        navGroupAnimCleanups.set(group, () => {
-          finished = true;
-          clearTimeout(timerId);
-          ul.removeEventListener('transitionend', onEnd);
-        });
-        ul.addEventListener('transitionend', onEnd);
-        timerId = setTimeout(finish, 280);
-
-        requestAnimationFrame(() => {
-          if (finished) return;
-          ul.style.transition = 'height 0.22s ease, opacity 0.18s ease';
-          ul.style.height = `${targetHeight}px`;
-          ul.style.opacity = '1';
-        });
-      } else {
-        if (!group.open) return;
-        group.classList.add('is-closing');
-        ul.style.transition = 'none';
-        ul.style.height = `${startHeight}px`;
-        ul.style.opacity = `${startOpacity}`;
-        void getComputedStyle(ul).height;
-
-        let finished = false;
-        let timerId = 0;
-        const finish = () => {
-          if (finished) return;
-          finished = true;
-          clearTimeout(timerId);
-          ul.removeEventListener('transitionend', onEnd);
+        navGroupAnimCleanups.set(group, cleanupOnly);
+        anim.onfinish = () => {
+          if (settled) return;
+          settled = true;
           navGroupAnimCleanups.delete(group);
           group.classList.remove('is-closing');
-          group.open = false;
-          ul.style.transition = '';
-          ul.style.height = '';
-          ul.style.opacity = '';
+          if (!expand) group.open = false;
+          syncNavFadesAfter();
         };
-        const onEnd = (e) => {
-          if (e.target === ul && e.propertyName === 'height') finish();
+        anim.oncancel = () => {
+          settled = true;
         };
-        navGroupAnimCleanups.set(group, () => {
-          finished = true;
-          clearTimeout(timerId);
-          ul.removeEventListener('transitionend', onEnd);
-        });
-        ul.addEventListener('transitionend', onEnd);
-        timerId = setTimeout(finish, 280);
-
-        requestAnimationFrame(() => {
-          if (finished) return;
-          ul.style.transition = 'height 0.22s ease, opacity 0.16s ease';
-          ul.style.height = '0px';
-          ul.style.opacity = '0';
-        });
       }
+    }
+
+    function setNavGroupOpen(group, expand, opts) {
+      applyNavGroupStates([{ group, expand }], opts);
     }
 
     ['(max-width: 960px)', '(max-width: 560px)'].forEach((mqQuery) => {
@@ -6910,6 +7045,9 @@
     });
     brandHomeLink?.addEventListener('click', (e) => {
       e.preventDefault();
+      if ((mobileSearchMq.matches || shortHeightSheetMq.matches) && (document.body.dataset.mobileNav === 'open' || document.body.dataset.mobileLang === 'open')) {
+        return;
+      }
       resetToHome();
       syncSidebarToViewport(isOverlayNavMode());
     });
@@ -6965,9 +7103,12 @@
           return;
         }
         const willOpen = !(group.open && !group.classList.contains('is-closing'));
-        sidebarGroups.forEach((other) => {
-          setNavGroupOpen(other, other === group ? willOpen : false);
-        });
+        applyNavGroupStates(
+          Array.prototype.map.call(sidebarGroups, (other) => ({
+            group: other,
+            expand: other === group ? willOpen : false
+          }))
+        );
         if (!willOpen) summary.blur();
       });
     });
@@ -7206,6 +7347,7 @@
     mobileNavBackdrop?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+      if (mobileSearchMq.matches || shortHeightSheetMq.matches) return;
       closeMobileNav();
     });
 
@@ -7228,6 +7370,10 @@
     syncSidebarToViewport(isOverlayNavMode());
 
     sidebarCycleBtn.addEventListener('click', () => {
+      if (document.body.dataset.mobileLang === 'open') {
+        closeLangPopover();
+        return;
+      }
       const current = document.body.dataset.sidebarMode;
       setSidebarMode(current === 'hidden' ? 'full' : 'hidden');
     });
@@ -7794,6 +7940,10 @@
     document.addEventListener('toggle', (event) => {
       if (event.target.matches('#faqAccordionGroup > details')) {
         syncFaqToggleBtn(event.target.parentElement);
+        if (!event.target.open && (mobileSearchMq.matches || coarsePointerMq.matches)) {
+          const sum = event.target.querySelector('summary');
+          if (sum && document.activeElement === sum) sum.blur();
+        }
         return;
       }
       if (event.target.matches('#homeInlineFaqList > details') && event.target.open) {
@@ -7950,22 +8100,235 @@
 
     const heroSearchInput = document.getElementById('heroSearchInput');
     const heroSearchShell = document.querySelector('.omni-search-shell');
+    const heroSearchCloseBtn = document.getElementById('heroSearchCloseBtn');
     const instantResultsBox = document.getElementById('instantResultsBox');
     const mobileSearchMq = window.matchMedia('(max-width: 560px)');
     const reducedMotionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+    function syncHeroQueryState() {
+      if (!heroSearchShell || !heroSearchInput) return;
+      heroSearchShell.dataset.hasQuery = heroSearchInput.value.length > 0 ? 'true' : 'false';
+    }
+    syncHeroQueryState();
+
     let heroBarSettleTimer = 0;
+    let heroShellAnimCleanup = null;
+    let heroShellTarget = null;
+    let heroShellCurrent = { x: 0, y: 0, w: null };
+
+    // Exact cubic-bezier(0.22, 1, 0.36, 1) evaluator so locked width+transform rAF matches GPU WAAPI 1:1
+    function evalSmoothOutBezier(t) {
+      if (t <= 0) return 0;
+      if (t >= 1) return 1;
+      const cx1 = 0.22, cy1 = 1.0, cx2 = 0.36, cy2 = 1.0;
+      let u = t;
+      for (let i = 0; i < 6; i++) {
+        const inv = 1 - u;
+        const x = 3 * inv * inv * u * cx1 + 3 * inv * u * u * cx2 + u * u * u;
+        const dx = 3 * inv * inv * cx1 + 6 * inv * u * (cx2 - cx1) + 3 * u * u * (1 - cx2);
+        if (Math.abs(x - t) < 1e-5 || Math.abs(dx) < 1e-6) break;
+        u = Math.max(0, Math.min(1, u - (x - t) / dx));
+      }
+      const inv = 1 - u;
+      return 3 * inv * inv * u * cy1 + 3 * inv * u * u * cy2 + u * u * u;
+    }
 
     function cancelHeroBarSettle() {
       clearTimeout(heroBarSettleTimer);
       heroBarSettleTimer = 0;
     }
 
+    function cancelHeroShellAnim() {
+      heroShellTarget = null;
+      if (heroShellAnimCleanup) {
+        const fn = heroShellAnimCleanup;
+        heroShellAnimCleanup = null;
+        fn();
+      }
+    }
+
+    function applyHeroShellInstant(x, y, w, restingW) {
+      cancelHeroShellAnim();
+      if (!heroSearchShell) return;
+      heroSearchShell.style.transform = '';
+      heroSearchShell.style.width = '';
+      heroSearchShell.style.setProperty('--hero-search-shift-x', `${x}px`);
+      heroSearchShell.style.setProperty('--hero-search-shift', `${y}px`);
+      if (w !== null && w !== undefined) {
+        if (restingW) heroSearchShell.style.setProperty('--hero-search-resting-width', `${restingW}px`);
+        heroSearchShell.style.setProperty('--hero-search-open-width', `${w}px`);
+        heroSearchShell.dataset.searchWidened = 'true';
+      } else {
+        delete heroSearchShell.dataset.searchWidened;
+        heroSearchShell.style.removeProperty('--hero-search-open-width');
+        heroSearchShell.style.removeProperty('--hero-search-resting-width');
+      }
+      heroShellCurrent = { x, y, w: w !== null && w !== undefined ? w : null };
+    }
+
+    function animateHeroShell({ fromX, fromY, fromW = null, toX, toY, toW = null, restingW = 0, duration = 280, settleAt = 0, onSettle = null, onFinish = null }) {
+      if (heroShellAnimCleanup && heroShellTarget &&
+          Math.abs(heroShellTarget.x - toX) < 0.5 &&
+          Math.abs(heroShellTarget.y - toY) < 0.5 &&
+          heroShellTarget.w === toW) {
+        return;
+      }
+      cancelHeroShellAnim();
+      if (!heroSearchShell) {
+        onSettle?.();
+        onFinish?.();
+        return;
+      }
+      const widthAnimates = fromW !== null && toW !== null && Math.abs(toW - fromW) > 0.5;
+      const posAnimates = Math.abs(toX - fromX) > 0.5 || Math.abs(toY - fromY) > 0.5;
+
+      if (reducedMotionMq.matches || (!widthAnimates && !posAnimates)) {
+        applyHeroShellInstant(toX, toY, toW, restingW);
+        onSettle?.();
+        onFinish?.();
+        return;
+      }
+      heroShellTarget = { x: toX, y: toY, w: toW };
+
+      if (!widthAnimates && typeof heroSearchShell.animate === 'function') {
+        // Pure GPU-composited WAAPI transform animation (zero main-thread layout work)
+        heroSearchShell.style.transform = '';
+        heroSearchShell.style.width = '';
+        heroSearchShell.style.setProperty('--hero-search-shift-x', `${toX}px`);
+        heroSearchShell.style.setProperty('--hero-search-shift', `${toY}px`);
+        if (toW !== null) {
+          if (restingW) heroSearchShell.style.setProperty('--hero-search-resting-width', `${restingW}px`);
+          heroSearchShell.style.setProperty('--hero-search-open-width', `${toW}px`);
+          heroSearchShell.dataset.searchWidened = 'true';
+        }
+
+        const anim = heroSearchShell.animate(
+          [
+            { transform: `translate3d(${fromX}px, ${fromY}px, 0)` },
+            { transform: `translate3d(${toX}px, ${toY}px, 0)` }
+          ],
+          { duration, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+        );
+
+        let done = false;
+        let settled = false;
+        let settleTimer = 0;
+        const fireSettle = () => {
+          if (settled || done) return;
+          settled = true;
+          clearTimeout(settleTimer);
+          settleTimer = 0;
+          onSettle?.();
+        };
+        if (onSettle && settleAt > 0 && settleAt < duration) {
+          settleTimer = setTimeout(fireSettle, settleAt);
+        }
+
+        heroShellAnimCleanup = () => {
+          if (done) return;
+          done = true;
+          clearTimeout(settleTimer);
+          const liveX = getCurrentTranslateX(heroSearchShell);
+          const liveY = getCurrentTranslateY(heroSearchShell);
+          heroShellCurrent = { x: liveX, y: liveY, w: toW };
+          anim.onfinish = null;
+          anim.oncancel = null;
+          try { anim.cancel(); } catch {}
+        };
+
+        anim.onfinish = () => {
+          if (done) return;
+          done = true;
+          clearTimeout(settleTimer);
+          heroShellAnimCleanup = null;
+          heroShellTarget = null;
+          heroShellCurrent = { x: toX, y: toY, w: toW };
+          if (!settled) {
+            settled = true;
+            onSettle?.();
+          }
+          onFinish?.();
+        };
+        anim.oncancel = () => {
+          done = true;
+          clearTimeout(settleTimer);
+        };
+        return;
+      }
+
+      // Atomic single-frame rAF driver when widening/narrowing + sliding diagonally so width & transform stay in exact lockstep
+      if (restingW) heroSearchShell.style.setProperty('--hero-search-resting-width', `${restingW}px`);
+      if (toW !== null) {
+        heroSearchShell.style.setProperty('--hero-search-open-width', `${toW}px`);
+        heroSearchShell.dataset.searchWidened = 'true';
+      }
+      const startTime = performance.now();
+      let rafId = 0;
+      let done = false;
+      let settled = false;
+
+      heroShellAnimCleanup = () => {
+        done = true;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      };
+
+      const step = (now) => {
+        if (done) return;
+        const elapsed = now - startTime;
+        const rawT = Math.max(0, Math.min(1, elapsed / duration));
+        const p = evalSmoothOutBezier(rawT);
+        const curX = fromX + (toX - fromX) * p;
+        const curY = fromY + (toY - fromY) * p;
+        const curW = (fromW !== null && toW !== null) ? (fromW + (toW - fromW) * p) : toW;
+
+        heroShellCurrent = { x: curX, y: curY, w: curW };
+        heroSearchShell.style.transform = `translate3d(${curX.toFixed(2)}px, ${curY.toFixed(2)}px, 0)`;
+        if (curW !== null) {
+          heroSearchShell.style.width = `${curW.toFixed(2)}px`;
+        }
+
+        if (!settled && onSettle && settleAt > 0 && elapsed >= settleAt) {
+          settled = true;
+          onSettle();
+        }
+
+        if (rawT < 1) {
+          rafId = requestAnimationFrame(step);
+        } else {
+          done = true;
+          rafId = 0;
+          heroShellAnimCleanup = null;
+          heroShellTarget = null;
+          heroSearchShell.style.transform = '';
+          heroSearchShell.style.width = '';
+          heroSearchShell.style.setProperty('--hero-search-shift-x', `${toX}px`);
+          heroSearchShell.style.setProperty('--hero-search-shift', `${toY}px`);
+          if (toW !== null) {
+            heroSearchShell.style.setProperty('--hero-search-open-width', `${toW}px`);
+          }
+          heroShellCurrent = { x: toX, y: toY, w: toW };
+          if (!settled) {
+            settled = true;
+            onSettle?.();
+          }
+          onFinish?.();
+        }
+      };
+
+      // Paint frame 0 atomically before queuing next frame
+      heroSearchShell.style.transform = `translate3d(${fromX.toFixed(2)}px, ${fromY.toFixed(2)}px, 0)`;
+      if (fromW !== null) heroSearchShell.style.width = `${fromW.toFixed(2)}px`;
+      heroShellCurrent = { x: fromX, y: fromY, w: fromW };
+      rafId = requestAnimationFrame(step);
+    }
+
     function settleHeroBar() {
       cancelHeroBarSettle();
       if (document.body.dataset.heroSearch === 'open') {
         document.body.dataset.heroBarSettled = 'true';
-        fitHeroResultsHeight();
       }
     }
 
@@ -7975,19 +8338,8 @@
         settleHeroBar();
         return;
       }
-      heroBarSettleTimer = setTimeout(settleHeroBar, 310);
+      heroBarSettleTimer = setTimeout(settleHeroBar, 210);
     }
-
-    heroSearchShell?.addEventListener('transitionend', (e) => {
-      if (e.target !== heroSearchShell || e.propertyName !== 'transform') return;
-      if (document.body.dataset.heroSearch === 'open' &&
-          document.body.dataset.heroBarSettled !== 'true' &&
-          !document.body.dataset.heroSearchClosing) {
-        settleHeroBar();
-      } else if (document.body.dataset.heroSearchClosing === 'sliding') {
-        finishHeroCloseSlide();
-      }
-    });
 
     let heroCloseFadeTimer = 0;
     let heroCloseSlideTimer = 0;
@@ -8005,6 +8357,7 @@
     }
 
     function finishHeroCloseSlide() {
+      cancelHeroShellAnim();
       cancelHeroClose();
       delete document.body.dataset.heroSearchOverHeader;
       delete document.body.dataset.heroSearchBottomDock;
@@ -8013,28 +8366,49 @@
       lastHeroRestingTop = null;
       heroRestingWidth = null;
       heroRestingLeft = null;
+      heroShellCurrent = { x: 0, y: 0, w: null };
       if (heroSearchShell) {
+        heroSearchShell.style.transform = '';
+        heroSearchShell.style.width = '';
         delete heroSearchShell.dataset.searchWidened;
+        heroSearchShell.style.removeProperty('--hero-search-shift');
         heroSearchShell.style.removeProperty('--hero-search-shift-x');
         heroSearchShell.style.removeProperty('--hero-search-open-width');
         heroSearchShell.style.removeProperty('--hero-search-resting-width');
       }
-      syncSearchUiToScreenSize();
+      if (isTouchKeyboardViewport()) {
+        syncMobileViewportVars(getMobileViewportMetrics());
+      }
     }
 
     function startHeroCloseSlide() {
       heroCloseFadeTimer = 0;
       if (document.body.dataset.heroSearchClosing !== 'fading') return;
-      const currentY = getCurrentTranslateY(heroSearchShell);
-      const currentX = getCurrentTranslateX(heroSearchShell);
-      const needsSlide = Math.abs(currentY) > 1 || Math.abs(currentX) > 1 || Boolean(heroSearchShell?.dataset.searchWidened);
+      cancelHeroShellAnim();
+      const fromX = heroShellCurrent.x || getCurrentTranslateX(heroSearchShell);
+      const fromY = heroShellCurrent.y || getCurrentTranslateY(heroSearchShell);
+      const isWidened = Boolean(heroSearchShell?.dataset.searchWidened);
+      const fromW = isWidened ? (heroShellCurrent.w || Math.round(heroSearchShell.getBoundingClientRect().width)) : null;
+      const restingW = isWidened ? (heroRestingWidth || parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-resting-width')) || fromW) : null;
+      const needsSlide = Math.abs(fromY) > 0.5 || Math.abs(fromX) > 0.5 || (isWidened && Math.abs((fromW || 0) - (restingW || 0)) > 0.5);
+
       delete document.body.dataset.heroSearch;
       delete document.body.dataset.heroBarSettled;
       delete document.body.dataset.heroSuggFit;
       delete document.body.dataset.heroResFit;
       if (needsSlide) {
         document.body.dataset.heroSearchClosing = 'sliding';
-        heroCloseSlideTimer = setTimeout(finishHeroCloseSlide, 340);
+        animateHeroShell({
+          fromX,
+          fromY,
+          fromW,
+          toX: 0,
+          toY: 0,
+          toW: restingW,
+          restingW: restingW || 0,
+          duration: 260,
+          onFinish: finishHeroCloseSlide
+        });
       } else {
         finishHeroCloseSlide();
       }
@@ -8047,6 +8421,7 @@
       const isClosing = Boolean(document.body.dataset.heroSearchClosing);
 
       if (immediate || reducedMotionMq.matches || (!wasOpen && !isClosing)) {
+        cancelHeroShellAnim();
         cancelHeroClose();
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
@@ -8059,8 +8434,12 @@
         lastHeroRestingTop = null;
         heroRestingWidth = null;
         heroRestingLeft = null;
+        heroShellCurrent = { x: 0, y: 0, w: null };
         if (heroSearchShell) {
+          heroSearchShell.style.transform = '';
+          heroSearchShell.style.width = '';
           delete heroSearchShell.dataset.searchWidened;
+          heroSearchShell.style.removeProperty('--hero-search-shift');
           heroSearchShell.style.removeProperty('--hero-search-shift-x');
           heroSearchShell.style.removeProperty('--hero-search-open-width');
           heroSearchShell.style.removeProperty('--hero-search-resting-width');
@@ -8074,20 +8453,18 @@
       if (isClosing) return;
 
       const hadVisibleOverlays = document.body.dataset.heroBarSettled === 'true' && (
+        mobileSearchMq.matches ||
         document.body.dataset.heroSuggFit === 'true' ||
         (document.body.dataset.heroResFit === 'true' && instantResultsBox.classList.contains('active'))
       );
 
-      const frozenShift = Math.round(getCurrentTranslateY(heroSearchShell));
-      const frozenShiftX = Math.round(getCurrentTranslateX(heroSearchShell));
-      if (heroSearchShell) {
-        heroSearchShell.style.setProperty('--hero-search-shift', `${frozenShift}px`);
-        heroSearchShell.style.setProperty('--hero-search-shift-x', `${frozenShiftX}px`);
-        if (heroSearchShell.dataset.searchWidened === 'true') {
-          const frozenWidth = Math.round(heroSearchShell.getBoundingClientRect().width);
-          heroSearchShell.style.setProperty('--hero-search-open-width', `${frozenWidth}px`);
-        }
-      }
+      // Freeze at exact live visual coordinates without snapping
+      cancelHeroShellAnim();
+      const frozenX = heroShellCurrent.x || getCurrentTranslateX(heroSearchShell);
+      const frozenY = heroShellCurrent.y || getCurrentTranslateY(heroSearchShell);
+      const isWidened = heroSearchShell?.dataset.searchWidened === 'true';
+      const frozenW = isWidened ? (heroShellCurrent.w || Math.round(heroSearchShell.getBoundingClientRect().width)) : null;
+      applyHeroShellInstant(frozenX, frozenY, frozenW, heroRestingWidth || 0);
 
       document.body.dataset.heroSearchClosing = 'fading';
       instantResultsBox.classList.remove('active');
@@ -8100,7 +8477,7 @@
       }
 
       if (hadVisibleOverlays) {
-        heroCloseFadeTimer = setTimeout(startHeroCloseSlide, 210);
+        heroCloseFadeTimer = setTimeout(startHeroCloseSlide, 120);
       } else {
         startHeroCloseSlide();
       }
@@ -8199,8 +8576,10 @@
       }
 
       if (allowWhileSearchOpen && heroSearchShell) {
-        const prevTr = heroSearchShell.style.transition;
-        heroSearchShell.style.transition = 'none';
+        cancelHeroShellAnim();
+        heroShellCurrent = { x: 0, y: 0, w: null };
+        heroSearchShell.style.transform = '';
+        heroSearchShell.style.width = '';
         delete heroSearchShell.dataset.searchWidened;
         heroSearchShell.style.removeProperty('--hero-search-open-width');
         heroSearchShell.style.removeProperty('--hero-search-resting-width');
@@ -8209,8 +8588,6 @@
         lastHeroRestingTop = null;
         heroRestingWidth = null;
         heroRestingLeft = null;
-        void heroSearchShell.offsetWidth;
-        heroSearchShell.style.transition = prevTr;
       }
 
       const availW = Math.max(0, window.innerWidth - sidebarReserve);
@@ -8496,7 +8873,8 @@
       else delete document.body.dataset.heroSearchOverHeader;
 
       if (mobileSearchMq.matches) {
-        const limitBottom = vvBottom - 10;
+        const closeReserve = isHeroOpen ? ((heroSearchCloseBtn?.offsetHeight || 34) + 18) : 10;
+        const limitBottom = vvBottom - closeReserve;
         const minTop = isOverHeader ? (metrics.vvTop + 8) : (visibleHeaderBottom + 8);
         shift = Math.max(
           Math.round(minTop - restingTop),
@@ -8547,60 +8925,36 @@
         }
       }
 
-      const prevShift = parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || 0;
-      const prevShiftX = parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift-x')) || 0;
       const snapToViewport = (isTouchKeyboardViewport() && isHeroOpen && mobileSnapHeroOnViewport && document.body.dataset.heroBarSettled === 'true') || (isScreenResize && isHeroOpen);
-      if (snapToViewport) {
-        const prevTransition = heroSearchShell.style.transition;
-        heroSearchShell.style.transition = 'none';
-        heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
-        heroSearchShell.style.setProperty('--hero-search-shift-x', `${shiftX}px`);
-        if (openWidth) {
-          heroSearchShell.style.setProperty('--hero-search-resting-width', `${restingW}px`);
-          heroSearchShell.style.setProperty('--hero-search-open-width', `${openWidth}px`);
-          heroSearchShell.dataset.searchWidened = 'true';
-        } else {
-          delete heroSearchShell.dataset.searchWidened;
-          heroSearchShell.style.removeProperty('--hero-search-open-width');
-          heroSearchShell.style.removeProperty('--hero-search-resting-width');
-        }
-        heroSearchShell.getBoundingClientRect();
-        heroSearchShell.style.transition = prevTransition;
+      const targetW = openWidth || null;
+      const fromX = heroShellAnimCleanup ? heroShellCurrent.x : getCurrentTranslateX(heroSearchShell);
+      const fromY = heroShellAnimCleanup ? heroShellCurrent.y : currentY;
+      const fromW = (targetW !== null)
+        ? (heroShellAnimCleanup && heroShellCurrent.w !== null ? heroShellCurrent.w : (heroSearchShell.dataset.searchWidened === 'true' ? Math.round(heroSearchShell.getBoundingClientRect().width) : restingW))
+        : null;
+
+      if (snapToViewport || !isHeroOpen || reducedMotionMq.matches) {
+        applyHeroShellInstant(isHeroOpen ? shiftX : 0, isHeroOpen ? shift : 0, isHeroOpen ? targetW : null, restingW);
       } else {
-        if (mobileSearchMq.matches && !reducedMotionMq.matches && isHeroOpen && lastHeroRestingTop !== null && Math.abs(restingTop - lastHeroRestingTop) > 1) {
-          const visualTopBefore = barRect.top;
-          const compensatingShift = Math.round(visualTopBefore - restingTop);
-          const prevTransition = heroSearchShell.style.transition;
-          heroSearchShell.style.transition = 'none';
-          heroSearchShell.style.setProperty('--hero-search-shift', `${compensatingShift}px`);
-          heroSearchShell.getBoundingClientRect();
-          heroSearchShell.style.transition = prevTransition;
-        }
-        if (openWidth) {
-          if (heroSearchShell.dataset.searchWidened !== 'true') {
-            heroSearchShell.style.setProperty('--hero-search-resting-width', `${restingW}px`);
-            heroSearchShell.style.setProperty('--hero-search-open-width', `${restingW}px`);
-            heroSearchShell.dataset.searchWidened = 'true';
-            void heroSearchShell.offsetWidth;
-          } else {
-            heroSearchShell.style.setProperty('--hero-search-resting-width', `${restingW}px`);
-          }
-          heroSearchShell.style.setProperty('--hero-search-open-width', `${openWidth}px`);
-        } else {
-          delete heroSearchShell.dataset.searchWidened;
-          heroSearchShell.style.removeProperty('--hero-search-open-width');
-          heroSearchShell.style.removeProperty('--hero-search-resting-width');
-        }
-        heroSearchShell.style.setProperty('--hero-search-shift', `${shift}px`);
-        heroSearchShell.style.setProperty('--hero-search-shift-x', `${shiftX}px`);
+        const compFromY = (mobileSearchMq.matches && lastHeroRestingTop !== null && Math.abs(restingTop - lastHeroRestingTop) > 1)
+          ? Math.round(barRect.top - restingTop)
+          : fromY;
+        const alreadySettled = document.body.dataset.heroBarSettled === 'true';
+        animateHeroShell({
+          fromX,
+          fromY: compFromY,
+          fromW,
+          toX: shiftX,
+          toY: shift,
+          toW: targetW,
+          restingW,
+          duration: 280,
+          settleAt: alreadySettled ? 0 : 200,
+          onSettle: alreadySettled ? null : settleHeroBar
+        });
       }
       lastHeroRestingTop = isHeroOpen ? restingTop : null;
       heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
-
-      if (!reducedMotionMq.matches && isHeroOpen &&
-          document.body.dataset.heroBarSettled !== 'true' && (Math.abs(shift - prevShift) > 1 || Math.abs(shiftX - prevShiftX) > 1)) {
-        scheduleHeroBarSettle(true);
-      }
 
       return {
         shift,
@@ -8608,7 +8962,8 @@
         finalBarTop: restingTop + shift,
         finalBarBottom: restingBottom + shift,
         suggOffset,
-        visibleHeaderBottom
+        visibleHeaderBottom,
+        metrics
       };
     }
 
@@ -8690,16 +9045,16 @@
       requestAnimationFrame(syncMainScrollFades);
     }
 
-    function fitHeroResultsHeight({ isScreenResize = false } = {}) {
-      const metrics = getMobileViewportMetrics();
+    function fitHeroResultsHeight({ isScreenResize = false, positionData = null } = {}) {
+      const metrics = positionData?.metrics || getMobileViewportMetrics();
       const { visibleHeaderBottom } = metrics;
       if (document.body.dataset.heroSearchClosing) {
-        syncMobileViewportVars(metrics, { isScreenResize });
+        if (!positionData) syncMobileViewportVars(metrics, { isScreenResize });
         return;
       }
       const MIN_RESULTS_SPACE = document.body.dataset.heroSearchBottomDock === 'true' ? 56 : 76;
 
-      const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = updateHeroSearchPosition({ isScreenResize });
+      const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = positionData || updateHeroSearchPosition({ isScreenResize });
       const suggEl = heroSearchShell?.querySelector('.suggestions-bar');
       const suggH = suggEl ? suggEl.offsetHeight : 38;
       let suggFits = false;
@@ -8869,8 +9224,6 @@
     document.body.addEventListener('scroll', resetMobileWindowScroll, { passive: true });
     window.visualViewport?.addEventListener('resize', scheduleMobileViewportSync);
     window.visualViewport?.addEventListener('scroll', scheduleMobileViewportSync);
-    heroSearchInput.addEventListener('focus', scheduleMobileViewportSync);
-    heroSearchInput.addEventListener('blur', scheduleMobileViewportSync);
     const heroSectionObsEl = document.querySelector('.hero-section');
     if (heroSectionObsEl) {
       observeResize(heroSectionObsEl, () => {
@@ -8883,6 +9236,7 @@
 
     function runInlineBoxQuery({ inputEl, boxEl, bodyStateKey, queryText }) {
       if (queryText !== undefined) inputEl.value = queryText;
+      if (inputEl === heroSearchInput) syncHeroQueryState();
       const val = inputEl.value.trim();
       if (val) cancelHeroClose();
       if (val && heroAwaitingKeyboard) {
@@ -8929,6 +9283,14 @@
     }
 
     document.getElementById('heroClearSearchBtn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      heroSearchInput.value = '';
+      syncHeroQueryState();
+      triggerHeroQuery('');
+      heroSearchInput.focus({ preventScroll: true });
+    });
+
+    heroSearchCloseBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       heroPointerStartedInside = false;
       closeHeroResults();
@@ -9005,9 +9367,10 @@
       setInertIfChanged(blurTargets.popularDialog, Boolean(popularGuidesDialog?.open && modalBlurred));
       setInertIfChanged(blurTargets.faqDialog, Boolean(faqDialog?.open && modalBlurred));
       const bottomDockMenuBlurred = Boolean(heroOpen && document.body.dataset.heroSearchBottomDock === 'true');
-      setInertIfChanged(blurTargets.headerActions, Boolean(mobileSearchMq.matches && heroOpen));
+      const sheetOverlayActive = Boolean((mobileSearchMq.matches || shortHeightSheetMq.matches) && (mobileNavOpen || langOpen));
+      setInertIfChanged(blurTargets.headerActions, Boolean((mobileSearchMq.matches && heroOpen) || sheetOverlayActive));
       setInertIfChanged(blurTargets.sidebarCycleBtn, mobileBottomBlurred || bottomDockMenuBlurred);
-      setInertIfChanged(blurTargets.shortHeaderMenuBtn, bottomDockMenuBlurred);
+      setInertIfChanged(blurTargets.shortHeaderMenuBtn, bottomDockMenuBlurred || (shortHeightSheetMq.matches && (mobileNavOpen || langOpen)));
       setInertIfChanged(blurTargets.leftNavPanel, bottomDockMenuBlurred);
       setInertIfChanged(topBarEl, Boolean(heroOpen && document.body.dataset.heroSearchOverHeader === 'true'));
     }
@@ -9028,15 +9391,10 @@
 
     window.addEventListener('pointerdown', (e) => {
       if (!isLangPopoverOpen()) return;
+      if (document.body.dataset.mobileLang === 'open') return;
       const pop = blurTargets.langPopover;
       const trigger = document.getElementById('langTriggerBtn');
       if (pop?.contains(e.target) || trigger?.contains(e.target)) return;
-      if (document.body.dataset.mobileLang === 'open') {
-        const bottomBar = document.querySelector('.header-actions');
-        const cycleBtn = document.getElementById('sidebarCycleBtn');
-        if (bottomBar?.contains(e.target) || cycleBtn?.contains(e.target)) return;
-        closeLangPopover();
-      }
       const mainRect = blurTargets.mainContent?.getBoundingClientRect();
       if (isPointInsideRect(e.clientX, e.clientY, mainRect)) {
         suppressMainPointerUntil = Date.now() + 450;
@@ -9143,43 +9501,44 @@
       heroLastPointerType = e.pointerType || '';
     });
     heroSearchInput.addEventListener('input', () => {
+      syncHeroQueryState();
+      if (document.body.dataset.heroSearchClosing) return;
       triggerHeroQuery();
     });
     function commitHeroSearchOpen() {
-      const wasAwaiting = heroAwaitingKeyboard;
       cancelHeroPendingKeyboard();
       if (document.body.dataset.heroSearch !== 'open') return;
       const hasQuery = Boolean(heroSearchInput.value.trim());
-      const startY = getCurrentTranslateY(heroSearchShell);
-      const { shift } = updateHeroSearchPosition();
+      const pos = updateHeroSearchPosition();
       if (hasQuery) {
         triggerHeroQuery();
       } else {
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
-        fitHeroResultsHeight();
-      }
-      if (wasAwaiting || document.body.dataset.heroBarSettled !== 'true') {
-        scheduleHeroBarSettle(Math.abs(shift - startY) > 1);
+        fitHeroResultsHeight({ positionData: pos });
       }
     }
 
     function openHeroSearchOnInteract() {
-      cancelHeroClose();
+      const wasClosing = Boolean(document.body.dataset.heroSearchClosing);
+      if (wasClosing) {
+        cancelHeroShellAnim();
+        cancelHeroClose();
+      }
       if (heroAwaitingKeyboard) return;
       const hasQuery = Boolean(heroSearchInput.value.trim());
       const wasOpen = document.body.dataset.heroSearch === 'open';
       const metrics = getMobileViewportMetrics();
-      syncMobileViewportVars(metrics);
       const keyboardAlreadyOpen = mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50;
-      const isTouchInteraction = heroLastPointerType === 'touch' || (heroLastPointerType !== 'mouse' && window.matchMedia('(pointer: coarse)').matches);
+      const isTouchInteraction = heroLastPointerType === 'touch' || (heroLastPointerType !== 'mouse' && coarsePointerMq.matches);
 
       if (!wasOpen && isTouchKeyboardViewport() && !keyboardAlreadyOpen && isTouchInteraction) {
+        syncMobileViewportVars(metrics);
         cancelHeroBarSettle();
         delete document.body.dataset.heroBarSettled;
         delete document.body.dataset.heroSuggFit;
         delete document.body.dataset.heroResFit;
-        heroSearchShell?.style.setProperty('--hero-search-shift', '0px');
+        applyHeroShellInstant(0, 0, null, 0);
         document.body.dataset.heroSearch = 'open';
         heroAwaitingKeyboard = true;
         heroLastObservedVvHeight = metrics.vvHeight;
@@ -9190,19 +9549,15 @@
         return;
       }
 
-      const startY = getCurrentTranslateY(heroSearchShell);
       if (!wasOpen) delete document.body.dataset.heroBarSettled;
       document.body.dataset.heroSearch = 'open';
-      const { shift } = updateHeroSearchPosition();
+      const pos = updateHeroSearchPosition();
       if (hasQuery) {
         triggerHeroQuery();
       } else {
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
-        fitHeroResultsHeight();
-      }
-      if (!wasOpen) {
-        scheduleHeroBarSettle(Math.abs(shift - startY) > 1);
+        fitHeroResultsHeight({ positionData: pos });
       }
     }
 
@@ -9223,6 +9578,8 @@
       if (e.key === 'Enter') {
         e.preventDefault();
         triggerHeroQuery(heroSearchInput.value);
+      } else if (e.key === 'Escape' || e.code === 'Escape') {
+        e.preventDefault();
       }
     });
     document.getElementById('heroAskAiBtn').addEventListener('click', () => {
@@ -9442,11 +9799,10 @@
       const openModal = document.querySelector('dialog.home-modal[open]');
       if (e.key === 'Escape' || e.code === 'Escape') {
         if (document.body.dataset.mobileNav === 'open') {
-          closeMobileNav();
+          if (!mobileSearchMq.matches && !shortHeightSheetMq.matches) closeMobileNav();
           return;
         }
         if (document.body.dataset.mobileLang === 'open') {
-          closeLangPopover();
           return;
         }
         if (openModal) {
