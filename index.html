@@ -6868,8 +6868,8 @@
 
     function getMobileViewportMetrics() {
       const vv = window.visualViewport;
-      const vvTop = vv ? Math.max(0, Math.floor(vv.offsetTop)) : 0;
-      const vvBottom = vv ? Math.ceil(vv.offsetTop + vv.height) : window.innerHeight;
+      const vvTop = vv ? Math.max(0, Math.round(vv.offsetTop)) : 0;
+      const vvBottom = vv ? Math.round(vv.offsetTop + vv.height) : window.innerHeight;
       const vvHeight = Math.max(0, vvBottom - vvTop);
       const headerHeight = mobileSearchMq.matches
         ? (topBarEl ? Math.round(topBarEl.offsetHeight) : 48)
@@ -7159,8 +7159,7 @@
       let restingW = 0;
       const isHeroOpen = document.body.dataset.heroSearch === 'open';
       if (mobileSearchMq.matches) {
-        const keyboardOpen = mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50;
-        const limitBottom = keyboardOpen ? vvBottom : (vvBottom - 10);
+        const limitBottom = vvBottom - 10;
         const minTop = visibleHeaderBottom + 8;
         shift = Math.max(
           Math.round(minTop - restingTop),
