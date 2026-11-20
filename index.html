@@ -148,7 +148,6 @@
       box-sizing: border-box;
     }
 
-    .nav-tree-scroll,
     .main-container,
     .home-modal-body,
     .results-scroll-body,
@@ -158,7 +157,6 @@
     }
 
     @supports not (scrollbar-color: auto) {
-      .nav-tree-scroll::-webkit-scrollbar,
       .main-container::-webkit-scrollbar,
       .home-modal-body::-webkit-scrollbar,
       .results-scroll-body::-webkit-scrollbar,
@@ -166,7 +164,6 @@
         width: 6px;
         height: 6px;
       }
-      .nav-tree-scroll::-webkit-scrollbar-thumb,
       .main-container::-webkit-scrollbar-thumb,
       .home-modal-body::-webkit-scrollbar-thumb,
       .results-scroll-body::-webkit-scrollbar-thumb,
@@ -174,7 +171,6 @@
         background: var(--scrollbar-thumb);
         border-radius: 999px;
       }
-      .nav-tree-scroll::-webkit-scrollbar-track,
       .main-container::-webkit-scrollbar-track,
       .home-modal-body::-webkit-scrollbar-track,
       .results-scroll-body::-webkit-scrollbar-track,
@@ -185,6 +181,12 @@
 
     html.i18n-pending body {
       opacity: 0;
+    }
+
+    html.theme-switching *,
+    html.theme-switching *::before,
+    html.theme-switching *::after {
+      transition: none !important;
     }
 
     [hidden] {
@@ -629,12 +631,28 @@
       min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
-      scrollbar-width: thin;
-      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
       padding: 1rem 0.85rem 0.75rem;
       display: flex;
       flex-direction: column;
       gap: 0.22rem;
+      --nav-fade-t: #000;
+      --nav-fade-b: #000;
+      mask-image: linear-gradient(to bottom, var(--nav-fade-t) 0, #000 22px, #000 calc(100% - 22px), var(--nav-fade-b) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, var(--nav-fade-t) 0, #000 22px, #000 calc(100% - 22px), var(--nav-fade-b) 100%);
+    }
+    .nav-tree-scroll::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+    .nav-tree-scroll[data-fade-top="true"] {
+      --nav-fade-t: transparent;
+    }
+    .nav-tree-scroll[data-fade-bottom="true"] {
+      --nav-fade-b: transparent;
     }
 
     .nav-all-btn {
@@ -963,13 +981,13 @@
     /* Decorative Hero Background Art (Soft Atmospheric Wave + Delicate Candlesticks) */
     .hero-bg-art {
       position: absolute;
-      inset: 0 0 auto 0;
-      height: clamp(300px, 52vh, 450px);
+      inset: 0;
+      height: 100%;
       overflow: hidden;
       contain: strict;
       pointer-events: none;
       z-index: 0;
-      background: radial-gradient(circle at 88% 32%, rgba(225, 29, 72, 0.18) 0%, rgba(244, 63, 94, 0.08) 32%, transparent 62%);
+      background: radial-gradient(ellipse 68% 58% at 88% 22%, rgba(225, 29, 72, 0.17) 0%, rgba(244, 63, 94, 0.08) 36%, transparent 72%);
       user-select: none;
       -webkit-user-select: none;
       transition: inset-inline-start 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
@@ -983,12 +1001,14 @@
       }
     }
     [data-theme="dark"] .hero-bg-art {
-      background: radial-gradient(circle at 88% 32%, rgba(225, 29, 72, 0.2) 0%, rgba(244, 63, 94, 0.08) 32%, transparent 62%);
+      background: radial-gradient(ellipse 68% 58% at 88% 22%, rgba(225, 29, 72, 0.21) 0%, rgba(244, 63, 94, 0.08) 36%, transparent 72%);
     }
     .hero-bg-svg {
       width: 100%;
       height: 100%;
       display: block;
+      mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
     }
     .hero-bg-art .wave-soft {
       fill: rgba(255, 255, 255, 0.62);
@@ -1306,6 +1326,16 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 10px;
+      opacity: 1;
+      transition: opacity 0.15s ease;
+    }
+    .home-faqs-panel[data-faq-focused="true"] .home-panel-header {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.14s ease;
+    }
+    .home-faqs-panel.is-closing .home-panel-header {
+      transition: opacity 0.22s ease 0.16s;
     }
     .home-panel-title {
       margin: 0;
@@ -1544,14 +1574,14 @@
       color: var(--text-muted);
       transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), color 0.15s ease;
     }
-    /* Inline FAQ focus-expand choreography */
+    /* Inline FAQ focus-expand choreography (fade header & siblings -> slide clicked question to top -> reveal answer) */
     .home-faqs-list[data-faq-focused="true"] .home-faq-row-btn:not(.is-active) {
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.18s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: opacity 0.14s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .home-faqs-list.is-closing .home-faq-row-btn:not(.is-returning) {
-      transition: opacity 0.24s ease 0.08s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, background 0.16s ease;
+      transition: opacity 0.22s ease 0.16s, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, background 0.16s ease;
     }
     .home-faq-row-btn.is-active {
       z-index: 3;
@@ -1560,6 +1590,7 @@
       color: var(--text-primary);
       font-weight: 600;
       transform: translate3d(0, var(--faq-slide-y, 0px), 0);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s, opacity 0.2s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     }
     [data-theme="dark"] .home-faq-row-btn.is-active {
       background: rgba(240, 62, 77, 0.14);
@@ -1597,7 +1628,7 @@
       opacity: 1;
       transform: translate3d(0, 0, 0);
       pointer-events: auto;
-      transition: opacity 0.22s ease 0.12s, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+      transition: opacity 0.22s ease 0.24s, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1) 0.24s;
     }
     .home-faq-inline-answer strong {
       color: var(--text-primary);
@@ -1613,7 +1644,14 @@
       color: var(--accent-hover);
     }
     @media (prefers-reduced-motion: reduce) {
+      .home-panel-header,
+      .home-faqs-panel[data-faq-focused="true"] .home-panel-header,
+      .home-faqs-panel.is-closing .home-panel-header,
+      .home-resources-tabs,
+      .home-resources-grid[data-faq-focused="true"] .home-resources-tabs,
+      .home-resources-grid.is-closing .home-resources-tabs,
       .home-faq-row-btn,
+      .home-faq-row-btn.is-active,
       .home-faqs-list[data-faq-focused="true"] .home-faq-row-btn:not(.is-active),
       .home-faqs-list.is-closing .home-faq-row-btn:not(.is-returning),
       .home-faq-row-btn svg,
@@ -1649,6 +1687,16 @@
       justify-content: space-between;
       gap: 8px;
       margin-bottom: 10px;
+      opacity: 1;
+      transition: opacity 0.15s ease;
+    }
+    body:is([data-stage-width="narrow"], [data-stage-width="mobile"]) .home-resources-grid[data-faq-focused="true"] .home-resources-tabs {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.14s ease;
+    }
+    body:is([data-stage-width="narrow"], [data-stage-width="mobile"]) .home-resources-grid.is-closing .home-resources-tabs {
+      transition: opacity 0.22s ease 0.16s;
     }
     body:is([data-stage-width="narrow"], [data-stage-width="mobile"]) .home-tabs-group {
       display: inline-flex;
@@ -2732,6 +2780,9 @@
       color: var(--border-strong);
       user-select: none;
     }
+    .footer-mobile-dot {
+      display: none;
+    }
     .social-links {
       flex-shrink: 0;
       display: inline-flex;
@@ -2923,10 +2974,18 @@
         padding: calc(var(--header-height) + 14px) 16px 56px;
       }
       body[data-active-audience="home"] .main-inner {
-        padding: calc(var(--header-height) + 6px) 16px 10px;
+        padding: calc(var(--header-height) + 6px) 16px 4px;
       }
       .hero-bg-art {
-        height: 256px;
+        inset: 0;
+        height: 100%;
+      }
+      .hero-bg-svg {
+        position: absolute;
+        top: 0;
+        inset-inline-end: 0;
+        width: max(100%, 620px);
+        height: 100%;
       }
       .top-bar {
         position: fixed;
@@ -2941,6 +3000,7 @@
         background: transparent;
         border-bottom: none;
         backdrop-filter: none;
+        -webkit-backdrop-filter: none;
       }
       .top-bar::before {
         content: '';
@@ -2948,14 +3008,10 @@
         inset: 0;
         background: transparent;
         border-bottom: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
         z-index: 45;
         pointer-events: none;
-        transition: background 0.18s ease, backdrop-filter 0.18s ease;
-      }
-      body:is([data-hero-search="open"], [data-modal-open="true"], [data-lang-open="true"], [data-mobile-nav="open"], [data-home-scroll="true"]) .top-bar::before {
-        background: color-mix(in srgb, var(--bg-canvas) 84%, transparent);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
       }
       .brand-cluster {
         position: relative;
@@ -3443,36 +3499,49 @@
         padding: 0.9rem 0.95rem 1rem;
       }
       .site-footer {
-        padding: 8px 14px;
-        font-size: 10px;
-        line-height: 1.38;
+        padding: 4px 14px 32px;
+        font-size: 10.5px;
+        line-height: 1.35;
       }
       body[data-active-audience="home"] .site-footer {
-        padding: 7px 14px;
-        font-size: 10px;
+        padding: 4px 14px 32px;
+        font-size: 10.5px;
       }
       body[data-active-audience="home"] .footer-inner {
-        gap: 5px;
+        gap: 8px;
       }
       .footer-inner {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 0.55rem;
+        gap: 8px;
       }
       .footer-copyright {
         flex: none;
         width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
         align-items: center;
-        gap: 0.35rem;
+        gap: 3px 6px;
+      }
+      .footer-copy-word,
+      .footer-copy-trademarks,
+      .footer-link-long {
+        display: none;
+      }
+      .footer-mobile-dot {
+        display: inline;
+        color: var(--border-strong);
+        user-select: none;
       }
       .footer-links {
         justify-content: center;
-        gap: 0.3rem 0.45rem;
+        gap: 2px 5px;
       }
       .social-links {
         justify-content: center;
-        gap: 0.95rem;
+        gap: 1.05rem;
       }
       .social-links svg {
         width: 16px;
@@ -3512,8 +3581,8 @@
           font-size: 0.8rem;
         }
         body[data-active-audience="home"] .site-footer {
-          padding: 0.42rem 0.7rem;
-          font-size: 0.62rem;
+          padding: 4px 10px 26px;
+          font-size: 10px;
         }
       }
       body[data-active-audience="home"][data-home-scroll="true"] .main-container {
@@ -3536,7 +3605,7 @@
       body[data-active-audience="home"][data-home-scroll="true"][data-hero-search="open"] .main-container,
       body[data-active-audience="home"][data-home-scroll="true"][data-hero-search-closing="sliding"] .main-container {
         overflow-x: clip;
-        overflow-y: visible;
+        overflow-y: hidden;
       }
       body[data-active-audience="home"][data-home-scroll="true"][data-modal-open="true"] .main-container,
       body[data-active-audience="home"][data-home-scroll="true"][data-lang-open="true"] .main-container,
@@ -4785,18 +4854,18 @@
          ====================================================================== -->
     <main class="main-container" id="mainContent">
       <div class="hero-bg-art" aria-hidden="true">
-        <svg class="hero-bg-svg" viewBox="0 0 1120 440" preserveAspectRatio="xMaxYMin slice" fill="none">
+        <svg class="hero-bg-svg" viewBox="0 0 1120 620" preserveAspectRatio="xMaxYMin meet" fill="none">
           <defs>
-            <linearGradient id="heroCrimsonWave" x1="700" y1="340" x2="1120" y2="120" gradientUnits="userSpaceOnUse">
+            <linearGradient id="heroCrimsonWave" x1="620" y1="470" x2="1120" y2="120" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#e11d48" stop-opacity="0"/>
               <stop offset="55%" stop-color="#e11d48" stop-opacity="0.14"/>
               <stop offset="100%" stop-color="#c8102e" stop-opacity="0.26"/>
             </linearGradient>
           </defs>
           <!-- Soft ethereal white/lavender sweeping curves -->
-          <path class="wave-soft" d="M 320 0 C 520 110, 740 165, 1120 25 L 1120 0 Z"/>
-          <path class="wave-mid" d="M 480 440 C 690 265, 860 195, 1120 105 L 1120 310 C 930 350, 780 395, 650 440 Z"/>
-          <path fill="url(#heroCrimsonWave)" d="M 730 375 C 885 275, 990 195, 1120 120 L 1120 255 C 1010 295, 900 340, 810 395 Z"/>
+          <path class="wave-soft" d="M 180 0 C 440 120, 720 175, 1120 25 L 1120 0 Z"/>
+          <path class="wave-mid" d="M 260 620 C 560 365, 810 230, 1120 105 L 1120 345 C 890 405, 700 495, 510 620 Z"/>
+          <path fill="url(#heroCrimsonWave)" d="M 610 470 C 815 320, 960 215, 1120 120 L 1120 275 C 985 330, 855 405, 720 495 Z"/>
           <!-- Delicate ascending candlestick chart bars & wicks (direct per-bar opacity, zero SVG mask cost) -->
           <g>
             <g opacity="0.18"><line class="candle-wick" x1="655" y1="168" x2="655" y2="262"/><rect class="candle-up" x="650.5" y="190" width="9" height="46" rx="1.5"/></g>
@@ -5086,13 +5155,14 @@
       <footer class="site-footer" dir="ltr">
         <div class="footer-inner">
           <div class="footer-copyright">
-            <span>Copyright © 2026 <a href="https://www.spotware.com/" target="_blank" rel="noopener">Spotware Systems Ltd</a>. cTrader®, Traders First®, Open Trading Platform®. All rights reserved.</span>
+            <span class="footer-copy-line"><span class="footer-copy-word">Copyright </span>© 2026 <a href="https://www.spotware.com/" target="_blank" rel="noopener">Spotware Systems Ltd</a>.<span class="footer-copy-trademarks"> cTrader®, Traders First®, Open Trading Platform®. All rights reserved.</span></span>
+            <span class="footer-mobile-dot" aria-hidden="true">·</span>
             <span class="footer-links">
-              <a href="https://ctrader.com/legal-notices/" target="_blank" rel="noopener">Legal notices</a>
+              <a href="https://ctrader.com/legal-notices/" target="_blank" rel="noopener">Legal<span class="footer-link-long"> notices</span></a>
               <span class="footer-sep" aria-hidden="true">|</span>
               <a href="https://ctrader.com/eula/" target="_blank" rel="noopener">EULA</a>
               <span class="footer-sep" aria-hidden="true">|</span>
-              <a href="https://ctrader.com/copyright-infringement/" target="_blank" rel="noopener">Copyright infringement notification</a>
+              <a href="https://ctrader.com/copyright-infringement/" target="_blank" rel="noopener">Copyright<span class="footer-link-long"> infringement notification</span></a>
             </span>
           </div>
           <div class="social-links" aria-label="cTrader Social Channels">
@@ -5359,11 +5429,27 @@
       return (document.documentElement.dataset.theme === 'dark' || metaScheme.content === 'dark') ? 'dark' : 'light';
     }
 
+    let themeSwitchRaf1 = 0;
+    let themeSwitchRaf2 = 0;
+
     themeToggleBtn.addEventListener('click', () => {
       const current = getCurrentRenderedScheme();
       const target = current === 'dark' ? 'light' : 'dark';
+      const root = document.documentElement;
+      if (themeSwitchRaf1) { cancelAnimationFrame(themeSwitchRaf1); themeSwitchRaf1 = 0; }
+      if (themeSwitchRaf2) { cancelAnimationFrame(themeSwitchRaf2); themeSwitchRaf2 = 0; }
+      root.classList.add('theme-switching');
       metaScheme.content = target;
-      document.documentElement.dataset.theme = target;
+      root.dataset.theme = target;
+      // Flush styles synchronously while transitions are disabled so every element flips on the exact same frame
+      void root.offsetHeight;
+      themeSwitchRaf1 = requestAnimationFrame(() => {
+        themeSwitchRaf1 = 0;
+        themeSwitchRaf2 = requestAnimationFrame(() => {
+          themeSwitchRaf2 = 0;
+          root.classList.remove('theme-switching');
+        });
+      });
       try {
         sessionStorage.setItem('ctrader_help_theme', target);
       } catch (e) {}
@@ -5973,6 +6059,10 @@
     // Homepage inline FAQ focus-expand choreography (others fade out, clicked slides up, answer appears below)
     const homeInlineFaqList = document.getElementById('homeInlineFaqList');
     const homeFaqInlineAnswer = document.getElementById('homeFaqInlineAnswer');
+    const homeFaqsPanelRoot = homeInlineFaqList?.closest('.home-faqs-panel') || null;
+    const homeFaqsHeaderEl = homeFaqsPanelRoot?.querySelector('.home-panel-header') || null;
+    const homeResourcesGridRoot = homeInlineFaqList?.closest('.home-resources-grid') || null;
+    const homeResourcesTabsEl = homeResourcesGridRoot?.querySelector('.home-resources-tabs') || null;
     let activeInlineFaqBtn = null;
     let inlineFaqCloseTimer = 0;
     let inlineFaqRaf = 0;
@@ -5994,6 +6084,12 @@
         homeFaqInlineAnswer.classList.remove('is-visible');
         homeFaqInlineAnswer.hidden = true;
         homeInlineFaqList.classList.remove('is-closing');
+        homeFaqsPanelRoot?.classList.remove('is-closing');
+        homeResourcesGridRoot?.classList.remove('is-closing');
+        delete homeFaqsPanelRoot?.dataset.faqFocused;
+        delete homeResourcesGridRoot?.dataset.faqFocused;
+        if (homeFaqsHeaderEl) homeFaqsHeaderEl.inert = false;
+        if (homeResourcesTabsEl) homeResourcesTabsEl.inert = false;
         homeInlineFaqList.style.height = '';
         return;
       }
@@ -6006,7 +6102,13 @@
         returningBtn.classList.add('is-returning');
       }
       homeInlineFaqList.classList.add('is-closing');
+      homeFaqsPanelRoot?.classList.add('is-closing');
+      homeResourcesGridRoot?.classList.add('is-closing');
       delete homeInlineFaqList.dataset.faqFocused;
+      delete homeFaqsPanelRoot?.dataset.faqFocused;
+      delete homeResourcesGridRoot?.dataset.faqFocused;
+      if (homeFaqsHeaderEl) homeFaqsHeaderEl.inert = false;
+      if (homeResourcesTabsEl) homeResourcesTabsEl.inert = false;
 
       const finishReset = () => {
         inlineFaqCloseTimer = 0;
@@ -6014,6 +6116,8 @@
         homeFaqInlineAnswer.hidden = true;
         homeFaqInlineAnswer.innerHTML = '';
         homeInlineFaqList.classList.remove('is-closing');
+        homeFaqsPanelRoot?.classList.remove('is-closing');
+        homeResourcesGridRoot?.classList.remove('is-closing');
         homeInlineFaqList.style.height = '';
         homeInlineFaqList.querySelectorAll('.home-faq-row-btn').forEach((b) => {
           b.classList.remove('is-returning');
@@ -6024,7 +6128,7 @@
       if (skipMotion) {
         finishReset();
       } else {
-        inlineFaqCloseTimer = setTimeout(finishReset, 330);
+        inlineFaqCloseTimer = setTimeout(finishReset, 400);
       }
     }
 
@@ -6045,14 +6149,27 @@
       if (!sourceBody) return;
 
       const listRect = homeInlineFaqList.getBoundingClientRect();
-      const btnRect = btn.getBoundingClientRect();
-      if (listRect.height <= 0 || btnRect.height <= 0) return;
+      if (listRect.height <= 0 || btn.offsetHeight <= 0) return;
 
-      const slideY = Math.round(btnRect.top - listRect.top);
-      const answerTop = Math.round(btnRect.height + 8);
-      const answerMaxH = Math.max(44, Math.floor(listRect.height - answerTop));
+      const getElTranslateY = (el) => {
+        const tf = window.getComputedStyle(el).transform;
+        if (!tf || tf === 'none') return 0;
+        try { return new DOMMatrixReadOnly(tf).m42 || 0; } catch (e) { return 0; }
+      };
 
-      homeInlineFaqList.style.height = `${Math.round(listRect.height)}px`;
+      // Fade out "FAQs" / "View all FAQs ->" header (or mobile tabbed header) and slide ALL questions to the top of the FAQ section
+      const headerRect = homeFaqsHeaderEl ? homeFaqsHeaderEl.getBoundingClientRect() : null;
+      const tabsRect = homeResourcesTabsEl ? homeResourcesTabsEl.getBoundingClientRect() : null;
+      const usePanelHeader = Boolean(headerRect && headerRect.height > 0);
+      const useTabsHeader = Boolean(!usePanelHeader && tabsRect && tabsRect.height > 0);
+      const targetTop = usePanelHeader ? headerRect.top : (useTabsHeader ? tabsRect.top : listRect.top);
+
+      const btnRestingTop = btn.getBoundingClientRect().top - getElTranslateY(btn);
+      const slideY = btnRestingTop - targetTop;
+      const answerTop = Math.round((targetTop - listRect.top) + btn.offsetHeight + 8);
+      const answerMaxH = Math.max(44, Math.floor((listRect.bottom - targetTop) - btn.offsetHeight - 8));
+
+      homeInlineFaqList.style.height = `${listRect.height}px`;
       btn.style.setProperty('--faq-slide-y', `${-slideY}px`);
       homeFaqInlineAnswer.style.setProperty('--faq-answer-top', `${answerTop}px`);
       homeFaqInlineAnswer.style.setProperty('--faq-answer-max-h', `${answerMaxH}px`);
@@ -6064,6 +6181,13 @@
       btn.setAttribute('aria-expanded', 'true');
       btn.classList.add('is-active');
       homeInlineFaqList.dataset.faqFocused = 'true';
+      if (usePanelHeader && homeFaqsPanelRoot) {
+        homeFaqsPanelRoot.dataset.faqFocused = 'true';
+        if (homeFaqsHeaderEl) homeFaqsHeaderEl.inert = true;
+      } else if (useTabsHeader && homeResourcesGridRoot) {
+        homeResourcesGridRoot.dataset.faqFocused = 'true';
+        if (homeResourcesTabsEl) homeResourcesTabsEl.inert = true;
+      }
 
       inlineFaqRaf = requestAnimationFrame(() => {
         inlineFaqRaf = 0;
@@ -6747,7 +6871,7 @@
         const mainEl = document.getElementById('mainContent');
         const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
         const targetTop = mainTop + 14;
-        shift = Math.min(0, Math.round(targetTop - restingTop));
+        shift = Math.round(targetTop - restingTop);
       }
 
       const prevShift = parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || 0;
@@ -6806,6 +6930,25 @@
       }
       requestAnimationFrame(() => updateResultsScrollFades(scrollEl));
       updateResultsScrollFades(scrollEl);
+    }
+
+    // Sidebar scroll fade indicators (Option 1: hidden native scrollbar + soft edge fades)
+    const navTreeScrollEl = document.querySelector('.nav-tree-scroll');
+    if (navTreeScrollEl) {
+      const syncNavScrollFades = () => updateResultsScrollFades(navTreeScrollEl);
+      navTreeScrollEl.addEventListener('scroll', syncNavScrollFades, { passive: true });
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(syncNavScrollFades).observe(navTreeScrollEl);
+      }
+      navTreeScrollEl.querySelectorAll('details.nav-group').forEach((det) => {
+        det.addEventListener('toggle', () => {
+          syncNavScrollFades();
+          setTimeout(syncNavScrollFades, 230);
+        });
+      });
+      window.addEventListener('resize', syncNavScrollFades, { passive: true });
+      requestAnimationFrame(syncNavScrollFades);
+      syncNavScrollFades();
     }
 
     function fitHeroResultsHeight() {
