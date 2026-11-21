@@ -5382,12 +5382,14 @@
         will-change: transform;
       }
       body[data-mobile-nav="open"] .brand-logo,
-      body[data-mobile-lang="open"] .brand-logo {
+      body[data-mobile-lang="open"] .brand-logo,
+      body[data-modal-open="true"] .brand-logo {
         transform: translate3d(calc(-1 * (34px + 0.45rem)), 0, 0);
         pointer-events: none;
       }
       [dir="rtl"] body[data-mobile-nav="open"] .brand-logo,
-      [dir="rtl"] body[data-mobile-lang="open"] .brand-logo {
+      [dir="rtl"] body[data-mobile-lang="open"] .brand-logo,
+      [dir="rtl"] body[data-modal-open="true"] .brand-logo {
         transform: translate3d(calc(34px + 0.45rem), 0, 0);
       }
       .short-header-menu-btn {
@@ -5418,7 +5420,8 @@
         outline-offset: 2px;
       }
       body[data-mobile-nav="open"] .short-header-menu-btn,
-      body[data-mobile-lang="open"] .short-header-menu-btn {
+      body[data-mobile-lang="open"] .short-header-menu-btn,
+      body[data-modal-open="true"] .short-header-menu-btn {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -5426,7 +5429,8 @@
         transition: opacity 0.16s ease, transform 0.2s ease, visibility 0s linear 0.2s;
       }
       body[data-mobile-nav="open"] .top-bar,
-      body[data-mobile-lang="open"] .top-bar {
+      body[data-mobile-lang="open"] .top-bar,
+      body[data-modal-open="true"] .top-bar {
         background: transparent;
         border-bottom-color: transparent;
       }
@@ -5436,7 +5440,8 @@
         transition: opacity 0.18s ease, visibility 0s;
       }
       body[data-mobile-nav="open"] .header-actions,
-      body[data-mobile-lang="open"] .header-actions {
+      body[data-mobile-lang="open"] .header-actions,
+      body[data-modal-open="true"] .header-actions {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -5468,7 +5473,8 @@
         color: var(--text-primary);
       }
       body[data-mobile-nav="open"] .short-sheet-close-btn,
-      body[data-mobile-lang="open"] .short-sheet-close-btn {
+      body[data-mobile-lang="open"] .short-sheet-close-btn,
+      body[data-modal-open="true"] .short-sheet-close-btn {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
@@ -5478,55 +5484,83 @@
       .mobile-nav-backdrop {
         display: none !important;
       }
-      /* Compact Short-Height Modals (All Sections & Popular Guides) */
+      /* Full-Screen Edge-to-Edge Short-Height Modals (All Sections & Popular Guides) */
+      body[data-modal-open="true"] .main-inner,
+      body[data-modal-open="true"] .site-footer {
+        filter: none;
+        opacity: 0.55;
+      }
       dialog.home-modal {
         position: fixed;
-        inset: var(--header-height) 0 0 0 !important;
+        inset: 0 !important;
         width: 100% !important;
-        height: calc(100dvh - var(--header-height)) !important;
-        max-height: calc(100dvh - var(--header-height)) !important;
-        padding: 0.45rem max(0.85rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.85rem, env(safe-area-inset-left));
-        z-index: 37;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        padding: 0;
+        z-index: 38;
       }
       .home-modal-surface {
-        width: min(820px, 100%);
+        position: relative;
+        width: 100%;
         height: 100%;
         max-height: 100%;
-        border-radius: 14px;
+        padding-top: var(--header-height);
+        background: var(--bg-surface);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      [data-theme="dark"] .home-modal-surface {
+        box-shadow: none;
+      }
+      @starting-style {
+        dialog.home-modal[open] .home-modal-surface {
+          opacity: 0;
+          transform: translate3d(0, 14px, 0);
+        }
       }
       .home-modal-header {
-        padding: 0.52rem 1rem 0.45rem;
-        gap: 0.6rem;
+        position: relative;
+        padding: 0.52rem max(1.25rem, env(safe-area-inset-right)) 0.35rem max(1.25rem, env(safe-area-inset-left));
+        padding-inline-end: calc(max(1.25rem, env(safe-area-inset-right)) + 5.8rem);
+        gap: 0.5rem;
+        border-bottom: none;
+        background: transparent;
       }
       .home-modal-icon-badge {
-        width: 26px;
-        height: 26px;
-        border-radius: 7px;
-      }
-      .home-modal-icon {
-        width: 14px;
-        height: 14px;
+        display: none;
       }
       .home-modal-title-copy h2 {
-        font-size: 0.96rem;
+        font-size: 1rem;
+        letter-spacing: -0.025em;
       }
       .home-modal-title-copy p {
         display: none;
       }
       .home-modal-close {
-        width: 30px;
-        height: 30px;
+        display: none;
       }
       .home-modal-filterbar {
-        padding: 0.42rem 1rem;
-        gap: 0.5rem;
+        padding: 0.2rem max(1.25rem, env(safe-area-inset-right)) 0.58rem max(1.25rem, env(safe-area-inset-left));
+        gap: 0;
+        background: transparent;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-pill-strip {
+        width: 100%;
+        padding-inline-end: 0.4rem;
+      }
+      .modal-filter-meta {
+        position: absolute;
+        top: calc(var(--header-height) + 0.54rem);
+        inset-inline-end: max(1.25rem, env(safe-area-inset-right));
       }
       .modal-audience-pill {
-        padding: 0.28rem 0.68rem;
-        font-size: 0.74rem;
+        padding: 0.3rem 0.7rem;
+        font-size: 0.75rem;
       }
       .home-modal-body {
-        padding: 0.65rem 1rem 0.85rem;
+        padding: 0.68rem max(1.25rem, env(safe-area-inset-right)) max(0.85rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
         -webkit-overflow-scrolling: touch;
       }
       #allSectionsBody,
@@ -5534,12 +5568,14 @@
         gap: 0.85rem;
       }
       .popular-guides-grid {
-        gap: 0.5rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
       }
       .guide-card {
-        padding: 0.56rem 0.75rem;
+        padding: 0.56rem 0.78rem;
         border-radius: 10px;
         gap: 0.62rem;
+        background: color-mix(in srgb, var(--bg-surface) 78%, var(--bg-canvas));
       }
       .guide-card-badge {
         width: 30px;
@@ -7284,6 +7320,7 @@
     shortSheetCloseBtn?.addEventListener('click', () => {
       closeMobileNav();
       closeLangPopover();
+      closeAllHomeModals();
     });
 
     let menuCollapseTimer = 0;
@@ -7472,6 +7509,7 @@
       closeLangPopover();
       syncSidebarToViewport(isOverlayNavMode());
       if (typeof syncHomeLayoutTier === 'function') syncHomeLayoutTier({ allowWhileSearchOpen: true, force: true });
+      if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
     });
     syncSidebarToViewport(isOverlayNavMode());
 
@@ -9779,10 +9817,13 @@
       setInertIfChanged(blurTargets.allSectionsDialog, Boolean(allSectionsDialog?.open && modalBlurred));
       setInertIfChanged(blurTargets.popularDialog, Boolean(popularGuidesDialog?.open && modalBlurred));
       const bottomDockMenuBlurred = Boolean(heroOpen && document.body.dataset.heroSearchBottomDock === 'true');
-      const sheetOverlayActive = Boolean((mobileSearchMq.matches || shortHeightSheetMq.matches) && (mobileNavOpen || langOpen));
+      const sheetOverlayActive = Boolean(
+        (mobileSearchMq.matches && (mobileNavOpen || langOpen)) ||
+        (shortHeightSheetMq.matches && (mobileNavOpen || langOpen || modalOpen))
+      );
       setInertIfChanged(blurTargets.headerActions, Boolean((mobileSearchMq.matches && heroOpen) || sheetOverlayActive));
       setInertIfChanged(blurTargets.sidebarCycleBtn, mobileBottomBlurred || bottomDockMenuBlurred);
-      setInertIfChanged(blurTargets.shortHeaderMenuBtn, bottomDockMenuBlurred || (shortHeightSheetMq.matches && (mobileNavOpen || langOpen)));
+      setInertIfChanged(blurTargets.shortHeaderMenuBtn, bottomDockMenuBlurred || (shortHeightSheetMq.matches && (mobileNavOpen || langOpen || modalOpen)));
       setInertIfChanged(blurTargets.leftNavPanel, bottomDockMenuBlurred);
       setInertIfChanged(topBarEl, Boolean(heroOpen && document.body.dataset.heroSearchOverHeader === 'true'));
     }
