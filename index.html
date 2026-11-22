@@ -3856,7 +3856,8 @@
         bottom: auto;
         width: 100%;
         height: 52px;
-        padding: 0 14px;
+        padding-block: 0;
+        padding-inline: clamp(28px, 14vw, 68px);
         background: var(--bg-header);
         border-top: 1px solid var(--border);
         justify-content: space-between;
@@ -6303,39 +6304,78 @@
       pointer-events: none !important;
     }
 
-    /* Slightly compact AI search bar & close control when vertical space above the mobile keyboard is very tight */
-    body[data-hero-search-compact="true"] .omni-search-shell .omni-bar {
-      padding-block: 0.18rem;
-      padding-inline: 0.7rem 0.28rem;
-      gap: 0.38rem;
+    /* Dynamically compact AI search bar, Ask AI button & close control when vertical space above the mobile keyboard is tight */
+    body[data-hero-search-compact] .omni-search-shell .omni-bar {
+      padding-block: 0.16rem;
+      padding-inline: 0.68rem 0.24rem;
+      gap: 0.35rem;
     }
-    body[data-hero-search-compact="true"] .omni-search-shell .omni-input {
+    body[data-hero-search-compact] .omni-search-shell .omni-input {
       font-size: 16px !important;
       line-height: 1.2;
-      padding: 0.1rem 0;
+      padding: 0.08rem 0;
     }
-    body[data-hero-search-compact="true"] .omni-search-shell .omni-search-icon {
+    body[data-hero-search-compact] .omni-search-shell .omni-search-icon {
       width: 15px;
       height: 15px;
     }
-    body[data-hero-search-compact="true"] .omni-search-shell .omni-clear-btn {
+    body[data-hero-search-compact] .omni-search-shell .omni-clear-btn {
       width: 26px;
       height: 26px;
     }
-    body[data-hero-search-compact="true"] .omni-search-shell .btn-subtle-accent,
-    body[data-hero-search-compact="true"] #heroAskAiBtn {
-      padding: 0.34rem 0.65rem;
-      font-size: 0.74rem;
-      gap: 0.26rem;
+    body[data-hero-search-compact] .omni-search-shell .btn-subtle-accent,
+    body[data-hero-search-compact] #heroAskAiBtn {
+      padding: 0.28rem 0.56rem;
+      font-size: 0.72rem;
+      gap: 0.22rem;
     }
-    body[data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+    body[data-hero-search-compact] .omni-search-shell .ask-ai-sparkle {
+      width: 13px;
+      height: 13px;
+    }
+    body[data-hero-search-compact] .omni-search-shell .hero-search-close-btn {
       top: calc(100% + 0.32rem);
       padding: 0.28rem 0.92rem;
       font-size: 0.76rem;
     }
+    body[data-hero-search-compact="tight"] .omni-search-shell .omni-bar {
+      padding-block: 0.12rem;
+      padding-inline: 0.58rem 0.18rem;
+      gap: 0.28rem;
+    }
+    body[data-hero-search-compact="tight"] .omni-search-shell .omni-search-icon {
+      width: 14px;
+      height: 14px;
+    }
+    body[data-hero-search-compact="tight"] .omni-search-shell .omni-clear-btn {
+      width: 24px;
+      height: 24px;
+    }
+    body[data-hero-search-compact="tight"] .omni-search-shell .btn-subtle-accent,
+    body[data-hero-search-compact="tight"] #heroAskAiBtn {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      padding: 0;
+      gap: 0;
+      border-radius: 50%;
+    }
+    body[data-hero-search-compact="tight"] #heroAskAiBtn > span {
+      display: none;
+    }
+    body[data-hero-search-compact="tight"] .omni-search-shell .ask-ai-sparkle {
+      width: 14px;
+      height: 14px;
+    }
+    body[data-hero-search-compact="tight"] .omni-search-shell .hero-search-close-btn {
+      top: calc(100% + 0.24rem);
+      padding: 0.22rem 0.8rem;
+      font-size: 0.72rem;
+    }
     @media (min-width: 561px) and (max-height: 460px) {
-      body[data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn,
-      body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+      body[data-hero-search-compact] .omni-search-shell .hero-search-close-btn,
+      body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-compact] .omni-search-shell .hero-search-close-btn {
         top: 50%;
         left: calc(100% + 8px);
         right: auto;
@@ -6343,13 +6383,13 @@
         height: 32px;
         padding: 0;
       }
-      [dir="rtl"] body[data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn,
-      [dir="rtl"] body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+      [dir="rtl"] body[data-hero-search-compact] .omni-search-shell .hero-search-close-btn,
+      [dir="rtl"] body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-compact] .omni-search-shell .hero-search-close-btn {
         left: auto;
         right: calc(100% + 8px);
       }
     }
-    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-compact] .omni-search-shell .hero-search-close-btn {
       top: 50%;
       left: calc(100% + 8px);
       right: auto;
@@ -6357,13 +6397,13 @@
       height: 32px;
       padding: 0;
     }
-    [dir="rtl"] body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+    [dir="rtl"] body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-compact] .omni-search-shell .hero-search-close-btn {
       left: auto;
       right: calc(100% + 8px);
     }
 
     /* ==========================================================================
-       BACK TO TOP ROUNDED PILL BUTTON
+       BACK TO TOP CIRCULAR ARROW-ONLY BUTTON
        ========================================================================== */
     .back-to-top-btn {
       appearance: none;
@@ -6373,14 +6413,15 @@
       bottom: var(--back-to-top-bottom, 20px);
       z-index: 25;
       margin: 0;
-      border-radius: 9999px;
-      padding: 0.45rem 0.85rem;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
       font-family: inherit;
-      font-size: 0.78rem;
+      font-size: 0.96rem;
       font-weight: 600;
       line-height: 1;
       white-space: nowrap;
@@ -6410,26 +6451,16 @@
     [data-theme="dark"] .back-to-top-btn {
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.44);
     }
-    .back-to-top-btn .back-to-top-arrow,
-    .back-to-top-btn .back-to-top-label {
+    .back-to-top-btn .back-to-top-arrow {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       line-height: 1;
     }
     .back-to-top-btn[data-compact="tight"] {
-      padding: 0.4rem 0.65rem;
-      gap: 0.25rem;
-      font-size: 0.74rem;
-    }
-    .back-to-top-btn[data-compact="icon"] {
       width: 34px;
       height: 34px;
-      padding: 0;
-      gap: 0;
-    }
-    .back-to-top-btn[data-compact="icon"] .back-to-top-label {
-      display: none;
+      font-size: 0.88rem;
     }
     .back-to-top-btn[data-visible="true"] {
       opacity: 1;
@@ -6720,7 +6751,7 @@
             <button type="button" class="icon-btn omni-clear-btn" id="heroClearSearchBtn" aria-label="Clear search" title="Clear">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
             </button>
-            <button type="button" class="btn-subtle-accent" id="heroAskAiBtn">
+            <button type="button" class="btn-subtle-accent" id="heroAskAiBtn" aria-label="Ask AI" title="Ask AI">
               <svg class="ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10.5 2.5 12.6 8.4 18.5 10.5 12.6 12.6 10.5 18.5 8.4 12.6 2.5 10.5 8.4 8.4 10.5 2.5Z"/><path d="M18.5 14.5 19.55 17.45 22.5 18.5 19.55 19.55 18.5 22.5 17.45 19.55 14.5 18.5 17.45 17.45 18.5 14.5Z"/></svg>
               <span>Ask AI</span>
             </button>
@@ -6972,9 +7003,9 @@
     </main>
 
     <!-- ========================================================================
-         FLOATING BACK TO TOP PILL BUTTON
+         FLOATING BACK TO TOP CIRCULAR BUTTON
          ======================================================================== -->
-    <button type="button" class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top" title="Back to top"><span class="back-to-top-arrow" aria-hidden="true">↑</span><span class="back-to-top-label">Top</span></button>
+    <button type="button" class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top" title="Back to top"><span class="back-to-top-arrow" aria-hidden="true">↑</span></button>
 
     <!-- ========================================================================
          MODALS: ALL SECTIONS & POPULAR GUIDES OVERLAY WINDOWS
@@ -9300,7 +9331,7 @@
       heroShellCurrent = { x, y, w: hasDistinctWidth ? w : null };
     }
 
-    function animateHeroShell({ fromX, fromY, fromW = null, toX, toY, toW = null, restingW = 0, duration = 260, settleAt = 0, onSettle = null, onFinish = null }) {
+    function animateHeroShell({ fromX, fromY, fromW = null, toX, toY, toW = null, restingW = 0, duration = 260, easing = 'cubic-bezier(0.22, 1, 0.36, 1)', settleAt = 0, onSettle = null, onFinish = null }) {
       if (heroShellAnimCleanup && heroShellTarget &&
           Math.abs(heroShellTarget.x - toX) < 0.5 &&
           Math.abs(heroShellTarget.y - toY) < 0.5 &&
@@ -9346,7 +9377,7 @@
             { transform: `translate3d(${fromX}px, ${fromY}px, 0)` },
             { transform: `translate3d(${toX}px, ${toY}px, 0)` }
           ],
-          { duration, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+          { duration, easing }
         );
 
         let done = false;
@@ -9789,7 +9820,10 @@
 
     function syncHomeLayoutTier({ allowWhileSearchOpen = false, force = false } = {}) {
       if (document.body.dataset.activeAudience !== 'home') return;
-      if (!allowWhileSearchOpen && (document.body.dataset.heroSearch === 'open' || document.body.dataset.heroSearchClosing)) return;
+      const searchOpenOrClosing = document.body.dataset.heroSearch === 'open' || Boolean(document.body.dataset.heroSearchClosing);
+      if (searchOpenOrClosing && (!allowWhileSearchOpen || (isTouchKeyboardViewport() && Math.abs(window.innerWidth - lastMobileWidth) <= 2))) {
+        return;
+      }
       if (!homeMainEl || !homeMainInnerEl || !homeHeroSectionEl) return;
 
       const sidebarReserve = (!isOverlayNavMode() && document.body.dataset.sidebarMode !== 'hidden') ? 270 : 0;
@@ -10021,6 +10055,7 @@
     let heroPendingKeyboardTimer = 0;
     let heroKeyboardSettleTimer = 0;
     let heroLastObservedVvHeight = 0;
+    let lastDockedVvHeight = 0;
 
     function cancelHeroPendingKeyboard() {
       heroAwaitingKeyboard = false;
@@ -10050,6 +10085,7 @@
         lastHeroRestingTop = null;
         heroRestingWidth = null;
         heroRestingLeft = null;
+        lastDockedVvHeight = 0;
         return { shift: 0, currentBarTop: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
       }
       const isHeroOpen = document.body.dataset.heroSearch === 'open';
@@ -10058,18 +10094,27 @@
       const isCoarsePillBottomDock = !mobileSearchMq.matches && isHeroOpen && coarsePointerMq.matches && !shortHeightSheetMq.matches && !isShortBottomDock && !isOverHeader;
       const isBottomDock = isShortBottomDock || isCoarsePillBottomDock;
       const isPillBottomClose = mobileSearchMq.matches || isCoarsePillBottomDock;
-      const compactThreshold = isPillBottomClose ? 235 : 215;
-      const shouldCompact = isHeroOpen && (mobileSearchMq.matches || isBottomDock) && (
-        metrics.vvHeight <= compactThreshold ||
-        (document.body.dataset.mobileKeyboard === 'open' && metrics.vvHeight <= (isPillBottomClose ? 250 : 225))
-      );
-      if (shouldCompact) {
-        if (document.body.dataset.heroSearchCompact !== 'true') {
-          document.body.dataset.heroSearchCompact = 'true';
+      const keyboardOpen = document.body.dataset.mobileKeyboard === 'open';
+      const availAboveKeyboard = Math.max(0, metrics.vvHeight - visibleHeaderBottom);
+      const ultraCompactThreshold = isPillBottomClose ? 245 : 220;
+      const compactThreshold = isPillBottomClose ? 360 : 280;
+      let compactMode = '';
+      if (isHeroOpen && (mobileSearchMq.matches || isBottomDock)) {
+        if (metrics.vvHeight <= ultraCompactThreshold || availAboveKeyboard <= 190) {
+          compactMode = 'tight';
+        } else if (keyboardOpen || metrics.vvHeight <= compactThreshold) {
+          compactMode = 'true';
+        }
+      }
+      if (compactMode) {
+        if (document.body.dataset.heroSearchCompact !== compactMode) {
+          document.body.dataset.heroSearchCompact = compactMode;
         }
       } else if ('heroSearchCompact' in document.body.dataset) {
         delete document.body.dataset.heroSearchCompact;
       }
+      const shouldCompact = Boolean(compactMode);
+      const isUltraCompact = compactMode === 'tight';
 
       const barEl = heroSearchShell.querySelector('.omni-bar') || heroSearchShell;
       const suggEl = heroSearchShell.querySelector('.suggestions-bar');
@@ -10078,11 +10123,12 @@
       const appliedY = heroShellAnimCleanup
         ? currentY
         : (parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || currentY);
-      const barH = Math.max(30, Math.round(barEl.offsetHeight || barRect.height || 44));
+      const barH = Math.max(28, Math.round(barEl.offsetHeight || barRect.height || 44));
+      const unshiftedBaselineTop = Math.round(barRect.top - currentY);
       const layoutUnshiftedTop = getUnshiftedLayoutTop(barEl);
-      const measuredUnshiftedTop = layoutUnshiftedTop > 0
-        ? layoutUnshiftedTop
-        : Math.round(barRect.top + (metrics.vvOffsetTop || 0) - appliedY);
+      const measuredUnshiftedTop = (isTouchKeyboardViewport() && barRect.height > 0)
+        ? unshiftedBaselineTop
+        : (layoutUnshiftedTop > 0 ? layoutUnshiftedTop : Math.round(barRect.top + (metrics.vvOffsetTop || 0) - appliedY));
       if (
         lastHeroRestingTop === null ||
         isScreenResize ||
@@ -10090,9 +10136,9 @@
       ) {
         lastHeroRestingTop = measuredUnshiftedTop;
       }
-      const restingTop = ((mobileSearchMq.matches || isBottomDock) && lastHeroRestingTop !== null)
-        ? lastHeroRestingTop
-        : measuredUnshiftedTop;
+      const restingTop = isTouchKeyboardViewport()
+        ? (barRect.height > 0 ? unshiftedBaselineTop : (lastHeroRestingTop ?? measuredUnshiftedTop))
+        : ((isBottomDock && lastHeroRestingTop !== null) ? lastHeroRestingTop : measuredUnshiftedTop);
       const restingBottom = restingTop + barH;
       const suggH = suggEl ? suggEl.offsetHeight : 38;
       const suggOffset = suggH + 14;
@@ -10103,39 +10149,6 @@
           currentBarTop: barRect.top,
           finalBarTop: restingTop + currentY,
           finalBarBottom: restingBottom + currentY,
-          suggOffset,
-          visibleHeaderBottom
-        };
-      }
-      if (heroAwaitingKeyboard && !isTouchKeyboardViewport()) {
-        cancelHeroPendingKeyboard();
-      }
-      if (heroAwaitingKeyboard && isTouchKeyboardViewport() && document.body.dataset.heroSearch === 'open') {
-        const currentVvH = Math.round(metrics.vvHeight || window.innerHeight);
-        const fullRefH = Math.max(mobileFullHeight || 0, window.innerHeight || 0);
-        const keyboardNowOpen = (fullRefH > 0 && currentVvH < fullRefH - 16) || document.body.dataset.mobileKeyboard === 'open';
-        if (keyboardNowOpen) {
-          if (heroPendingKeyboardTimer) {
-            clearTimeout(heroPendingKeyboardTimer);
-            heroPendingKeyboardTimer = 0;
-          }
-          if (!heroKeyboardSettleTimer || Math.abs(currentVvH - heroLastObservedVvHeight) >= 4) {
-            heroLastObservedVvHeight = currentVvH;
-            if (heroKeyboardSettleTimer) clearTimeout(heroKeyboardSettleTimer);
-            heroKeyboardSettleTimer = setTimeout(() => {
-              heroKeyboardSettleTimer = 0;
-              commitHeroSearchOpen();
-            }, 28);
-          }
-        }
-        heroSearchShell.style.setProperty('--hero-search-shift', '0px');
-        heroSearchShell.style.setProperty('--hero-search-shift-x', '0px');
-        heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
-        return {
-          shift: 0,
-          currentBarTop: barRect.top,
-          finalBarTop: restingTop,
-          finalBarBottom: restingBottom,
           suggOffset,
           visibleHeaderBottom
         };
@@ -10151,10 +10164,9 @@
       else delete document.body.dataset.heroSearchOverHeader;
 
       if (mobileSearchMq.matches) {
-        const keyboardOpen = document.body.dataset.mobileKeyboard === 'open';
-        const closeBtnH = heroSearchCloseBtn?.offsetHeight || (shouldCompact ? 26 : 32);
-        const closeGap = shouldCompact ? 5 : 9;
-        const closeBottomPad = shouldCompact ? 6 : 10;
+        const closeBtnH = heroSearchCloseBtn?.offsetHeight || (isUltraCompact ? 24 : shouldCompact ? 26 : 32);
+        const closeGap = isUltraCompact ? 4 : shouldCompact ? 5 : 9;
+        const closeBottomPad = isUltraCompact ? 5 : shouldCompact ? 6 : 10;
         let closeReserve = 10;
         if (isHeroOpen) {
           if (shouldCompact || keyboardOpen) {
@@ -10168,23 +10180,21 @@
         const desiredTop = safeVvBottom - closeReserve - barH;
         const headerMinTop = visibleHeaderBottom + (shouldCompact ? 4 : 8);
         const minTop = desiredTop < headerMinTop ? Math.max(4, desiredTop) : headerMinTop;
-        const targetTop = Math.max(minTop, desiredTop);
+        const targetTop = Math.max(minTop, Math.min(desiredTop, safeVvBottom - barH - 4));
         shift = Math.round(targetTop - restingTop);
       } else {
         const mainEl = document.getElementById('mainContent');
         const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
         if (isBottomDock) {
           const closeReserve = isCoarsePillBottomDock
-            ? ((heroSearchCloseBtn?.offsetHeight || (shouldCompact ? 26 : 34)) + (shouldCompact ? 11 : 22))
+            ? ((heroSearchCloseBtn?.offsetHeight || (isUltraCompact ? 24 : shouldCompact ? 26 : 34)) + (isUltraCompact ? 9 : shouldCompact ? 11 : 22))
             : (shouldCompact ? 8 : 12);
-          const limitBottom = vvBottom - closeReserve;
+          const limitBottom = Math.min(vvBottom, window.innerHeight) - closeReserve;
           const desiredTop = limitBottom - barH;
           const baseMinTop = isOverHeader ? (metrics.vvTop + (shouldCompact ? 4 : 8)) : (visibleHeaderBottom + 8);
           const minTop = desiredTop < baseMinTop ? Math.max(4, desiredTop) : baseMinTop;
-          shift = Math.max(
-            Math.round(minTop - restingTop),
-            Math.round(limitBottom - restingBottom)
-          );
+          const targetTop = Math.max(minTop, Math.min(desiredTop, Math.min(vvBottom, window.innerHeight) - barH - 4));
+          shift = Math.round(targetTop - restingTop);
         } else {
           const headerRect = topBarEl ? topBarEl.getBoundingClientRect() : { top: 0, height: mainTop || 52 };
           const barH = Math.round(barRect.height || 52);
@@ -10254,21 +10264,26 @@
       const activeTargetY = (heroShellAnimCleanup && heroShellTarget) ? heroShellTarget.y : heroShellCurrent.y;
       const activeTargetX = (heroShellAnimCleanup && heroShellTarget) ? heroShellTarget.x : heroShellCurrent.x;
       const activeTargetW = (heroShellAnimCleanup && heroShellTarget) ? heroShellTarget.w : heroShellCurrent.w;
+      const vvHeightDelta = lastDockedVvHeight > 0 ? Math.abs(metrics.vvHeight - lastDockedVvHeight) : Infinity;
+      const jitterThreshold = (isTouchKeyboardViewport() && vvHeightDelta < 8) ? 8 : 4;
 
       if (
         isHeroOpen &&
         !isScreenResize &&
         (Boolean(heroShellAnimCleanup) || document.body.dataset.heroBarSettled === 'true') &&
-        Math.abs(shift - activeTargetY) < 4 &&
+        Math.abs(shift - activeTargetY) < jitterThreshold &&
         Math.abs(shiftX - activeTargetX) < 4 &&
         ((targetW === null && activeTargetW === null) || (targetW !== null && activeTargetW !== null && Math.abs(targetW - activeTargetW) < 2))
       ) {
         shift = activeTargetY;
         shiftX = activeTargetX;
       } else if (snapToViewport || !isHeroOpen || reducedMotionMq.matches) {
+        if (isHeroOpen) lastDockedVvHeight = metrics.vvHeight;
         applyHeroShellInstant(isHeroOpen ? shiftX : 0, isHeroOpen ? shift : 0, isHeroOpen ? targetW : null, restingW);
       } else {
+        lastDockedVvHeight = metrics.vvHeight;
         const alreadySettled = document.body.dataset.heroBarSettled === 'true';
+        const gentleOpenCurve = isTouchKeyboardViewport() && !keyboardOpen && !alreadySettled && Math.abs(fromY) < 1;
         animateHeroShell({
           fromX,
           fromY,
@@ -10277,13 +10292,15 @@
           toY: shift,
           toW: targetW,
           restingW,
-          duration: isTouchKeyboardViewport() ? 210 : 260,
-          settleAt: alreadySettled ? 0 : (isTouchKeyboardViewport() ? 145 : 180),
+          duration: isTouchKeyboardViewport() ? 220 : 260,
+          easing: gentleOpenCurve ? 'cubic-bezier(0.33, 0, 0.2, 1)' : 'cubic-bezier(0.22, 1, 0.36, 1)',
+          settleAt: alreadySettled ? 0 : (isTouchKeyboardViewport() ? 150 : 180),
           onSettle: alreadySettled ? null : settleHeroBar
         });
       }
       if (!isHeroOpen) {
         lastHeroRestingTop = null;
+        lastDockedVvHeight = 0;
       }
       heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
 
@@ -10348,25 +10365,11 @@
     // Main content scroll fade indicators (replaces native scrollbar with 4-edge long fade masks)
     const mainContentScrollEl = document.getElementById('mainContent');
     const backToTopBtn = document.getElementById('backToTopBtn');
-    let backToTopFullWidth = 66;
 
-    function measureBackToTopFullWidth() {
-      if (!backToTopBtn) return 66;
-      const prevCompact = backToTopBtn.dataset.compact;
-      if (prevCompact) delete backToTopBtn.dataset.compact;
-      const w = Math.ceil(backToTopBtn.getBoundingClientRect().width) || 66;
-      if (prevCompact) backToTopBtn.dataset.compact = prevCompact;
-      backToTopFullWidth = Math.max(54, w);
-      return backToTopFullWidth;
-    }
-
-    function syncBackToTopButton({ remeasureWidth = false } = {}) {
+    function syncBackToTopButton() {
       if (!backToTopBtn || !mainContentScrollEl) return;
-      if (remeasureWidth || !backToTopFullWidth) {
-        measureBackToTopFullWidth();
-      }
       const maxScroll = Math.max(0, mainContentScrollEl.scrollHeight - mainContentScrollEl.clientHeight);
-      const isScrollable = maxScroll > 20;
+      const isScrollable = maxScroll > 8;
       const scrollTop = mainContentScrollEl.scrollTop || 0;
       const overlayActive = Boolean(
         document.body.dataset.heroSearch === 'open' ||
@@ -10376,32 +10379,30 @@
         document.body.dataset.langOpen === 'true' ||
         document.body.dataset.mobileLang === 'open'
       );
-      const shouldShow = isScrollable && scrollTop > 140 && !overlayActive;
+      const shouldShow = isScrollable && scrollTop > 32 && !overlayActive;
       const wasVisible = backToTopBtn.dataset.visible === 'true';
 
-      // Horizontal clearance against .hero-section so the pill never touches or overlaps main content
+      // Horizontal clearance against .hero-section so the circular button never touches or overlaps main content
       const heroEl = homeHeroSectionEl || document.querySelector('.hero-section');
       const heroRect = heroEl ? heroEl.getBoundingClientRect() : null;
       const isRtl = document.documentElement.dir === 'rtl';
       const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
       if (heroRect && heroRect.width > 0 && viewportW > 0) {
         const trailingGutter = Math.max(0, Math.round(isRtl ? heroRect.left : (viewportW - heroRect.right)));
-        const fullW = backToTopFullWidth || 66;
-        const tightW = Math.max(48, fullW - 10);
-        const iconW = 34;
+        const fullD = 38;
+        const tightD = 34;
 
-        if (trailingGutter >= fullW + 24) {
+        if (trailingGutter >= fullD + 24) {
           if (backToTopBtn.dataset.compact) delete backToTopBtn.dataset.compact;
           backToTopBtn.style.removeProperty('--back-to-top-inline-end');
-        } else if (trailingGutter >= tightW + 14) {
-          if (backToTopBtn.dataset.compact !== 'tight') backToTopBtn.dataset.compact = 'tight';
-          const actualTightW = Math.ceil(backToTopBtn.offsetWidth) || tightW;
-          const inlineEnd = Math.max(6, Math.min(16, Math.floor((trailingGutter - actualTightW) / 2)));
+        } else if (trailingGutter >= fullD + 10) {
+          if (backToTopBtn.dataset.compact) delete backToTopBtn.dataset.compact;
+          const inlineEnd = Math.max(5, Math.min(16, Math.floor((trailingGutter - fullD) / 2)));
           backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
         } else {
-          if (backToTopBtn.dataset.compact !== 'icon') backToTopBtn.dataset.compact = 'icon';
-          if (trailingGutter >= iconW + 8) {
-            const inlineEnd = Math.max(4, Math.min(16, Math.floor((trailingGutter - iconW) / 2)));
+          if (backToTopBtn.dataset.compact !== 'tight') backToTopBtn.dataset.compact = 'tight';
+          if (trailingGutter >= tightD + 8) {
+            const inlineEnd = Math.max(4, Math.min(16, Math.floor((trailingGutter - tightD) / 2)));
             backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
           } else {
             backToTopBtn.style.setProperty('--back-to-top-inline-end', '12px');
@@ -10478,16 +10479,46 @@
       requestAnimationFrame(syncMainScrollFades);
     }
 
-    function fitHeroResultsHeight({ isScreenResize = false, positionData = null } = {}) {
+    function getLockedHeroPositionData(metrics) {
+      const barEl = heroSearchShell?.querySelector('.omni-bar') || heroSearchShell;
+      const suggEl = heroSearchShell?.querySelector('.suggestions-bar');
+      const barRect = barEl ? barEl.getBoundingClientRect() : { top: 0, height: 44 };
+      const barH = Math.max(28, Math.round((barEl && barEl.offsetHeight) || barRect.height || 44));
+      const currentY = getCurrentTranslateY(heroSearchShell);
+      const targetY = (heroShellAnimCleanup && heroShellTarget)
+        ? heroShellTarget.y
+        : (parseFloat(heroSearchShell?.style.getPropertyValue('--hero-search-shift')) || heroShellCurrent.y || currentY);
+      const unshiftedTop = Math.round(barRect.top - currentY);
+      const finalBarTop = unshiftedTop + Math.round(targetY);
+      const finalBarBottom = finalBarTop + barH;
+      const suggH = suggEl ? suggEl.offsetHeight : 38;
+      const suggOffset = suggH + 14;
+      return {
+        shift: targetY,
+        currentBarTop: Math.round(barRect.top),
+        finalBarTop,
+        finalBarBottom,
+        suggOffset,
+        visibleHeaderBottom: metrics.visibleHeaderBottom,
+        metrics
+      };
+    }
+
+    function fitHeroResultsHeight({ isScreenResize = false, positionData = null, lockBarPosition = false } = {}) {
       const metrics = positionData?.metrics || getMobileViewportMetrics();
       const { visibleHeaderBottom } = metrics;
       if (document.body.dataset.heroSearchClosing) {
-        if (!positionData) syncMobileViewportVars(metrics, { isScreenResize });
+        if (!positionData && !lockBarPosition) syncMobileViewportVars(metrics, { isScreenResize });
         return;
       }
       const MIN_RESULTS_SPACE = document.body.dataset.heroSearchBottomDock === 'true' ? 56 : 76;
 
-      const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = positionData || updateHeroSearchPosition({ isScreenResize });
+      const resolvedPos = positionData || (
+        (lockBarPosition && document.body.dataset.heroSearch === 'open')
+          ? getLockedHeroPositionData(metrics)
+          : updateHeroSearchPosition({ isScreenResize })
+      );
+      const { currentBarTop, finalBarTop, finalBarBottom, suggOffset } = resolvedPos;
       const suggEl = heroSearchShell?.querySelector('.suggestions-bar');
       const suggH = suggEl ? suggEl.offsetHeight : 38;
       let suggFits = false;
@@ -10503,9 +10534,9 @@
         const effectiveBarTop = Math.min(finalBarTop, liveBarTop) - (metrics.vvOffsetTop || 0);
         const topBound = Math.max(metrics.vvTop + 12, visibleHeaderBottom + 8);
         const totalSpaceAbove = Math.floor(effectiveBarTop - topBound);
-        const barHeight = Math.max(30, Math.round(finalBarBottom - finalBarTop));
+        const barHeight = Math.max(28, Math.round(finalBarBottom - finalBarTop));
         const hasActiveResults = heroSearchShell?.dataset.hasQuery === 'true' && instantResultsBox.classList.contains('active');
-        const isCompact = document.body.dataset.heroSearchCompact === 'true';
+        const isUltraCompact = document.body.dataset.heroSearchCompact === 'tight';
         const isKeyboardOpen = document.body.dataset.mobileKeyboard === 'open';
         const directOffset = 8;
         const spaceWithSugg = Math.floor((effectiveBarTop - suggOffset) - topBound);
@@ -10513,7 +10544,7 @@
         const vvMaxResultsWithSugg = Math.max(0, Math.floor(metrics.vvHeight - barHeight - suggOffset - 16));
         const vvMaxResultsDirect = Math.max(0, Math.floor(metrics.vvHeight - barHeight - directOffset - 16));
         const minSuggSpace = suggH + (isKeyboardOpen ? 24 : 12);
-        const canFitSugg = !isCompact && totalSpaceAbove >= minSuggSpace;
+        const canFitSugg = !isUltraCompact && totalSpaceAbove >= minSuggSpace;
 
         if (!canFitSugg || (hasActiveResults && spaceWithSugg < Math.max(MIN_RESULTS_SPACE, 96) && spaceWithoutSugg >= 48)) {
           // Hide suggestions when vertical space above the mobile keyboard is tight, and dock results right above .omni-bar
@@ -10767,13 +10798,13 @@
       if (inputEl === heroSearchInput) syncHeroQueryState();
       const val = inputEl.value.trim();
       if (val) cancelHeroClose();
-      if (val && heroAwaitingKeyboard) {
-        cancelHeroPendingKeyboard();
+      if (isTouchKeyboardViewport()) {
+        resetMobileWindowScroll();
       }
 
+      const wasOpen = document.body.dataset[bodyStateKey] === 'open';
       const html = buildSearchAndAiHTML(val);
       if (html) {
-        const wasOpen = document.body.dataset[bodyStateKey] === 'open';
         const isSameRendered = boxEl.classList.contains('active') && boxEl.dataset.renderedHtml === html;
         if (!wasOpen) {
           delete document.body.dataset.heroBarSettled;
@@ -10785,7 +10816,7 @@
           bindResultsScrollFades(boxEl);
         }
         document.body.dataset[bodyStateKey] = 'open';
-        fitHeroResultsHeight();
+        fitHeroResultsHeight({ lockBarPosition: wasOpen });
         if (!wasOpen) {
           scheduleHeroBarSettle(true);
         }
@@ -10794,7 +10825,7 @@
         delete boxEl.dataset.renderedHtml;
         if (document.activeElement === heroSearchInput || document.body.dataset.heroSearch === 'open') {
           document.body.dataset.heroSearch = 'open';
-          fitHeroResultsHeight();
+          fitHeroResultsHeight({ lockBarPosition: wasOpen });
         } else {
           delete document.body.dataset[bodyStateKey];
         }
@@ -11233,6 +11264,9 @@
     heroSearchInput.addEventListener('input', () => {
       syncHeroQueryState();
       if (document.body.dataset.heroSearchClosing) return;
+      if (isTouchKeyboardViewport()) {
+        resetMobileWindowScroll();
+      }
       triggerHeroQuery();
     });
     function commitHeroSearchOpen() {
@@ -11258,34 +11292,28 @@
       cancelHeroPendingKeyboard();
       const hasQuery = Boolean(heroSearchInput.value.trim());
       const wasOpen = document.body.dataset.heroSearch === 'open';
-      if (mobileSearchMq.matches) {
+      if (isTouchKeyboardViewport()) {
         resetMobileWindowScroll();
       }
 
-      if (!wasOpen) delete document.body.dataset.heroBarSettled;
-      document.body.dataset.heroSearch = 'open';
-      if (
-        isTouchKeyboardViewport() &&
-        !wasOpen &&
-        !reducedMotionMq.matches &&
-        document.body.dataset.mobileKeyboard !== 'open'
-      ) {
-        heroAwaitingKeyboard = true;
-        heroLastObservedVvHeight = Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight);
-        heroPendingKeyboardTimer = setTimeout(() => {
-          heroPendingKeyboardTimer = 0;
-          commitHeroSearchOpen();
-        }, 90);
+      if (wasOpen && !wasClosing) {
+        if (hasQuery) {
+          triggerHeroQuery();
+        } else {
+          fitHeroResultsHeight({ lockBarPosition: true });
+        }
+        return;
       }
+
+      delete document.body.dataset.heroBarSettled;
+      document.body.dataset.heroSearch = 'open';
       const pos = updateHeroSearchPosition();
       if (hasQuery) {
         triggerHeroQuery();
       } else {
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
-        if (!heroAwaitingKeyboard) {
-          fitHeroResultsHeight({ positionData: pos });
-        }
+        fitHeroResultsHeight({ positionData: pos });
       }
     }
 
