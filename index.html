@@ -355,6 +355,7 @@
       color: var(--text-primary);
     }
 
+    body[data-modal-open="true"] .main-container,
     body[data-lang-open="true"] .main-container,
     body[data-mobile-nav="open"] .main-container {
       pointer-events: none;
@@ -362,6 +363,7 @@
       -webkit-user-select: none;
     }
     body[data-hero-search="open"] .main-container,
+    body[data-modal-open="true"] .main-container,
     body[data-lang-open="true"] .main-container,
     body[data-mobile-nav="open"] .main-container {
       overflow-y: hidden;
@@ -1051,14 +1053,12 @@
         linear-gradient(to left, var(--main-edge-r, transparent) 0, var(--main-edge-r, transparent) var(--main-fade-left-offset), transparent calc(var(--main-fade-left-offset) + 46px));
     }
     body[data-hero-search="open"] .main-container,
-    body[data-hero-search-closing="sliding"] .main-container,
-    body[data-modal-open="true"] .main-container {
+    body[data-hero-search-closing="sliding"] .main-container {
       mask-image: none;
       -webkit-mask-image: none;
     }
     body[data-hero-search="open"] .main-container::after,
-    body[data-hero-search-closing="sliding"] .main-container::after,
-    body[data-modal-open="true"] .main-container::after {
+    body[data-hero-search-closing="sliding"] .main-container::after {
       content: "";
     }
     @media (min-width: 961px) {
@@ -6295,6 +6295,72 @@
         transition: none;
       }
     }
+
+    /* Hide suggestions strip when vertical space above the mobile keyboard is too tight */
+    body[data-hero-sugg-fit="false"] .omni-search-shell .suggestions-bar {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    /* Slightly compact AI search bar & close control when vertical space above the mobile keyboard is very tight */
+    body[data-hero-search-compact="true"] .omni-search-shell .omni-bar {
+      padding-block: 0.18rem;
+      padding-inline: 0.7rem 0.28rem;
+      gap: 0.38rem;
+    }
+    body[data-hero-search-compact="true"] .omni-search-shell .omni-input {
+      font-size: 16px !important;
+      line-height: 1.2;
+      padding: 0.1rem 0;
+    }
+    body[data-hero-search-compact="true"] .omni-search-shell .omni-search-icon {
+      width: 15px;
+      height: 15px;
+    }
+    body[data-hero-search-compact="true"] .omni-search-shell .omni-clear-btn {
+      width: 26px;
+      height: 26px;
+    }
+    body[data-hero-search-compact="true"] .omni-search-shell .btn-subtle-accent,
+    body[data-hero-search-compact="true"] #heroAskAiBtn {
+      padding: 0.34rem 0.65rem;
+      font-size: 0.74rem;
+      gap: 0.26rem;
+    }
+    body[data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+      top: calc(100% + 0.32rem);
+      padding: 0.28rem 0.92rem;
+      font-size: 0.76rem;
+    }
+    @media (min-width: 561px) and (max-height: 460px) {
+      body[data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn,
+      body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+        top: 50%;
+        left: calc(100% + 8px);
+        right: auto;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+      }
+      [dir="rtl"] body[data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn,
+      [dir="rtl"] body[data-active-audience="home"][data-hero-search-bottom-dock="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+        left: auto;
+        right: calc(100% + 8px);
+      }
+    }
+    body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+      top: 50%;
+      left: calc(100% + 8px);
+      right: auto;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+    }
+    [dir="rtl"] body[data-active-audience="home"][data-hero-search-over-header="true"][data-hero-search-compact="true"] .omni-search-shell .hero-search-close-btn {
+      left: auto;
+      right: calc(100% + 8px);
+    }
   </style>
 </head>
 <body data-sidebar-mode="full" data-active-audience="home" data-mobile-nav="closed" data-stage-width="wide" data-stage-height="standard">
@@ -6790,11 +6856,12 @@
           </div>
         </div>
       </footer>
+    </main>
 
-      <!-- ========================================================================
-           MODALS: ALL SECTIONS & POPULAR GUIDES OVERLAY WINDOWS
-           ======================================================================== -->
-      <dialog class="home-modal" id="allSectionsDialog" aria-labelledby="allSectionsHeading">
+    <!-- ========================================================================
+         MODALS: ALL SECTIONS & POPULAR GUIDES OVERLAY WINDOWS
+         ======================================================================== -->
+    <dialog class="home-modal" id="allSectionsDialog" aria-labelledby="allSectionsHeading">
         <div class="home-modal-surface">
           <div class="home-modal-header">
             <div class="home-modal-title-wrap">
@@ -7219,7 +7286,6 @@
           </div>
         </div>
       </dialog>
-    </main>
   </div>
 
   <!-- ========================================================================
@@ -7334,6 +7400,8 @@
         heroBox.innerHTML = '';
       }
       delete document.body.dataset.heroSearch;
+      delete document.body.dataset.heroSearchCompact;
+      delete document.body.dataset.heroSuggFit;
       document.querySelectorAll('.prompt-chips-row, .hero-tall-prompts').forEach((row) => {
         row.scrollLeft = 0;
         if (typeof syncSuggestionStripFade === 'function') syncSuggestionStripFade(row);
@@ -8320,16 +8388,6 @@
         filterPopularGuides(targetAudience);
       }
       if (triggerEl) lastModalTrigger.set(dialog, triggerEl);
-      const mainEl = document.getElementById('mainContent');
-      if (!mobileSearchMq.matches && !shortHeightSheetMq.matches && mainEl && document.body.dataset.homeScroll === 'true') {
-        dialog.style.top = `${mainEl.scrollTop}px`;
-        dialog.style.bottom = 'auto';
-        dialog.style.height = `${mainEl.clientHeight}px`;
-      } else {
-        dialog.style.top = '';
-        dialog.style.bottom = '';
-        dialog.style.height = '';
-      }
       if (!dialog.open) {
         dialog.show();
       }
@@ -8481,7 +8539,6 @@
         dialog.style.top = '';
         dialog.style.bottom = '';
         dialog.style.height = '';
-        resetModalScrollAndFades(dialog);
         if (dialog === allSectionsDialog) {
           if (sectionsResetTimer) clearTimeout(sectionsResetTimer);
           if (reducedMotionMq.matches) {
@@ -9372,6 +9429,7 @@
       cancelHeroClose();
       delete document.body.dataset.heroSearchOverHeader;
       delete document.body.dataset.heroSearchBottomDock;
+      delete document.body.dataset.heroSearchCompact;
       instantResultsBox.classList.remove('active');
       delete instantResultsBox.dataset.renderedHtml;
       lastHeroRestingTop = null;
@@ -9410,6 +9468,7 @@
       const needsSlide = Math.abs(fromY) > 0.5 || Math.abs(fromX) > 0.5 || (isWidened && Math.abs((fromW || 0) - (restingW || 0)) > 0.5);
 
       delete document.body.dataset.heroSearch;
+      delete document.body.dataset.heroSearchCompact;
       delete document.body.dataset.heroBarSettled;
       delete document.body.dataset.heroSuggFit;
       delete document.body.dataset.heroResFit;
@@ -9445,6 +9504,7 @@
         delete document.body.dataset.heroSearch;
         delete document.body.dataset.heroSearchOverHeader;
         delete document.body.dataset.heroSearchBottomDock;
+        delete document.body.dataset.heroSearchCompact;
         delete document.body.dataset.heroBarSettled;
         delete document.body.dataset.heroSuggFit;
         delete document.body.dataset.heroResFit;
@@ -9498,6 +9558,7 @@
 
       document.body.dataset.heroSearchClosing = 'fading';
       instantResultsBox.classList.remove('active');
+      delete document.body.dataset.heroSearchCompact;
       delete document.body.dataset.heroBarSettled;
       delete document.body.dataset.heroSuggFit;
       delete document.body.dataset.heroResFit;
@@ -9514,6 +9575,9 @@
     }
 
     function closeAllInlineResults() {
+      if (!document.body.dataset.heroSearch && !document.body.dataset.heroSearchClosing && !instantResultsBox?.classList.contains('active')) {
+        return;
+      }
       closeHeroResults({ immediate: true });
     }
 
@@ -9553,7 +9617,7 @@
     let wasPinchZoomed = false;
 
     function isTouchKeyboardViewport() {
-      return mobileSearchMq.matches || (shortHeightSheetMq.matches && coarsePointerMq.matches);
+      return mobileSearchMq.matches || shortHeightSheetMq.matches || coarsePointerMq.matches;
     }
 
     function isPinchZoomed() {
@@ -9585,7 +9649,7 @@
       }
       const vv = window.visualViewport;
       const rawVvH = vv ? Math.round(vv.height) : window.innerHeight;
-      const vvHeight = Math.max(120, Math.min(window.innerHeight, rawVvH));
+      const vvHeight = Math.max(60, Math.min(window.innerHeight, rawVvH));
       const vvOffsetTop = vv ? Math.max(0, Math.round(vv.offsetTop)) : 0;
       return { vvTop: 0, vvHeight, vvBottom: vvHeight, vvOffsetTop, visibleHeaderBottom: headerHeight };
     }
@@ -9774,8 +9838,9 @@
           mobileFullHeight = metrics.vvHeight;
         }
 
-        const keyboardOpen = mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50;
-        if (mobileSearchMq.matches && keyboardOpen) document.body.dataset.mobileKeyboard = 'open';
+        const vvShrunkFromWindow = Boolean(window.visualViewport && window.visualViewport.height < window.innerHeight - 40);
+        const keyboardOpen = (mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50) || vvShrunkFromWindow;
+        if (keyboardOpen) document.body.dataset.mobileKeyboard = 'open';
         else delete document.body.dataset.mobileKeyboard;
 
         if (mobileKeyboardSession && !widthChanged && mobileFullHeight === prevFullH) {
@@ -9859,6 +9924,7 @@
         heroSearchShell.style.setProperty('--hero-search-shift', '0px');
         heroSearchShell.style.setProperty('--hero-search-shift-x', '0px');
         delete heroSearchShell.dataset.searchWidened;
+        delete document.body.dataset.heroSearchCompact;
         heroSearchShell.style.removeProperty('--hero-search-open-width');
         heroSearchShell.style.removeProperty('--hero-search-resting-width');
         lastHeroRestingTop = null;
@@ -9866,6 +9932,25 @@
         heroRestingLeft = null;
         return { shift: 0, currentBarTop: 0, finalBarTop: 0, finalBarBottom: 0, suggOffset: 0, visibleHeaderBottom };
       }
+      const isHeroOpen = document.body.dataset.heroSearch === 'open';
+      const isShortBottomDock = !mobileSearchMq.matches && isHeroOpen && (metrics.vvHeight <= 460 || window.innerHeight <= 460);
+      const isOverHeader = !mobileSearchMq.matches && isHeroOpen && (isShortBottomDock || window.innerHeight <= 560);
+      const isCoarsePillBottomDock = !mobileSearchMq.matches && isHeroOpen && coarsePointerMq.matches && !shortHeightSheetMq.matches && !isShortBottomDock && !isOverHeader;
+      const isBottomDock = isShortBottomDock || isCoarsePillBottomDock;
+      const isPillBottomClose = mobileSearchMq.matches || isCoarsePillBottomDock;
+      const compactThreshold = isPillBottomClose ? 235 : 215;
+      const shouldCompact = isHeroOpen && (mobileSearchMq.matches || isBottomDock) && (
+        metrics.vvHeight <= compactThreshold ||
+        (document.body.dataset.mobileKeyboard === 'open' && metrics.vvHeight <= (isPillBottomClose ? 250 : 225))
+      );
+      if (shouldCompact) {
+        if (document.body.dataset.heroSearchCompact !== 'true') {
+          document.body.dataset.heroSearchCompact = 'true';
+        }
+      } else if ('heroSearchCompact' in document.body.dataset) {
+        delete document.body.dataset.heroSearchCompact;
+      }
+
       const barEl = heroSearchShell.querySelector('.omni-bar') || heroSearchShell;
       const suggEl = heroSearchShell.querySelector('.suggestions-bar');
       const barRect = barEl.getBoundingClientRect();
@@ -9873,7 +9958,7 @@
       const appliedY = heroShellAnimCleanup
         ? heroShellCurrent.y
         : (parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || currentY);
-      const barH = Math.max(36, Math.round(barEl.offsetHeight || barRect.height || 48));
+      const barH = Math.max(30, Math.round(barEl.offsetHeight || barRect.height || 44));
       const layoutUnshiftedTop = getUnshiftedLayoutTop(barEl);
       const measuredUnshiftedTop = layoutUnshiftedTop > 0
         ? layoutUnshiftedTop
@@ -9885,7 +9970,7 @@
       ) {
         lastHeroRestingTop = measuredUnshiftedTop;
       }
-      const restingTop = (mobileSearchMq.matches && lastHeroRestingTop !== null)
+      const restingTop = ((mobileSearchMq.matches || isBottomDock) && lastHeroRestingTop !== null)
         ? lastHeroRestingTop
         : measuredUnshiftedTop;
       const restingBottom = restingTop + barH;
@@ -9934,11 +10019,6 @@
       let shiftX = 0;
       let openWidth = null;
       let restingW = 0;
-      const isHeroOpen = document.body.dataset.heroSearch === 'open';
-      const isShortBottomDock = !mobileSearchMq.matches && isHeroOpen && (metrics.vvHeight <= 460 || window.innerHeight <= 460);
-      const isOverHeader = isHeroOpen && (isShortBottomDock || (mobileSearchMq.matches ? (metrics.vvHeight <= 420) : (window.innerHeight <= 560)));
-      const isCoarsePillBottomDock = !mobileSearchMq.matches && isHeroOpen && coarsePointerMq.matches && !shortHeightSheetMq.matches && !isShortBottomDock && !isOverHeader;
-      const isBottomDock = isShortBottomDock || isCoarsePillBottomDock;
       if (isBottomDock) document.body.dataset.heroSearchBottomDock = 'true';
       else delete document.body.dataset.heroSearchBottomDock;
       if (isOverHeader) document.body.dataset.heroSearchOverHeader = 'true';
@@ -9946,33 +10026,35 @@
 
       if (mobileSearchMq.matches) {
         const keyboardOpen = document.body.dataset.mobileKeyboard === 'open';
-        const closeBtnH = heroSearchCloseBtn?.offsetHeight || 32;
-        const closeGap = 9;
+        const closeBtnH = heroSearchCloseBtn?.offsetHeight || (shouldCompact ? 26 : 32);
+        const closeGap = shouldCompact ? 5 : 9;
+        const closeBottomPad = shouldCompact ? 6 : 10;
         let closeReserve = 10;
         if (isHeroOpen) {
-          if (isOverHeader) {
-            closeReserve = (!keyboardOpen ? 52 : 0) + 12;
-          } else if (keyboardOpen) {
-            closeReserve = closeBtnH + closeGap + 10;
+          if (shouldCompact || keyboardOpen) {
+            closeReserve = closeBtnH + closeGap + closeBottomPad;
           } else {
             const centerOverBottomBar = Math.round(26 + (closeBtnH / 2) + closeGap);
-            closeReserve = Math.max(56, centerOverBottomBar, closeBtnH + closeGap + 10);
+            closeReserve = Math.max(56, centerOverBottomBar, closeBtnH + closeGap + closeBottomPad);
           }
         }
-        const safeVvBottom = Math.max(160, Math.min(vvBottom, window.innerHeight));
-        const minTop = isOverHeader ? 8 : (visibleHeaderBottom + 8);
-        const maxBottom = Math.max(minTop + barH, safeVvBottom - closeReserve);
-        const targetTop = Math.max(minTop, Math.min(maxBottom - barH, safeVvBottom - closeReserve - barH));
+        const safeVvBottom = Math.max(60, Math.min(vvBottom, window.innerHeight));
+        const desiredTop = safeVvBottom - closeReserve - barH;
+        const headerMinTop = visibleHeaderBottom + (shouldCompact ? 4 : 8);
+        const minTop = desiredTop < headerMinTop ? Math.max(4, desiredTop) : headerMinTop;
+        const targetTop = Math.max(minTop, desiredTop);
         shift = Math.round(targetTop - restingTop);
       } else {
         const mainEl = document.getElementById('mainContent');
         const mainTop = mainEl ? mainEl.getBoundingClientRect().top : 54;
         if (isBottomDock) {
           const closeReserve = isCoarsePillBottomDock
-            ? ((heroSearchCloseBtn?.offsetHeight || 34) + 22)
-            : 12;
+            ? ((heroSearchCloseBtn?.offsetHeight || (shouldCompact ? 26 : 34)) + (shouldCompact ? 11 : 22))
+            : (shouldCompact ? 8 : 12);
           const limitBottom = vvBottom - closeReserve;
-          const minTop = isOverHeader ? (metrics.vvTop + 8) : (visibleHeaderBottom + 8);
+          const desiredTop = limitBottom - barH;
+          const baseMinTop = isOverHeader ? (metrics.vvTop + (shouldCompact ? 4 : 8)) : (visibleHeaderBottom + 8);
+          const minTop = desiredTop < baseMinTop ? Math.max(4, desiredTop) : baseMinTop;
           shift = Math.max(
             Math.round(minTop - restingTop),
             Math.round(limitBottom - restingBottom)
@@ -10188,32 +10270,40 @@
       let available = 0;
 
       if (mobileSearchMq.matches || document.body.dataset.heroSearchBottomDock === 'true') {
-        const isOverHeader = document.body.dataset.heroSearchOverHeader === 'true';
-        const topBound = isOverHeader ? (metrics.vvTop + 8) : (visibleHeaderBottom + 8);
-        const totalSpaceAbove = Math.floor(finalBarTop - topBound);
-        const barHeight = Math.max(36, Math.round(finalBarBottom - finalBarTop));
+        const barEl = heroSearchShell?.querySelector('.omni-bar') || heroSearchShell;
+        const isSettled = document.body.dataset.heroBarSettled === 'true' && !heroShellAnimCleanup;
+        const liveBarTop = (barEl && isSettled)
+          ? Math.round(barEl.getBoundingClientRect().top)
+          : finalBarTop;
+        const effectiveBarTop = Math.min(finalBarTop, liveBarTop) - (metrics.vvOffsetTop || 0);
+        const topBound = Math.max(metrics.vvTop + 12, visibleHeaderBottom + 8);
+        const totalSpaceAbove = Math.floor(effectiveBarTop - topBound);
+        const barHeight = Math.max(30, Math.round(finalBarBottom - finalBarTop));
         const hasActiveResults = heroSearchShell?.dataset.hasQuery === 'true' && instantResultsBox.classList.contains('active');
-        const isShortLandscape = !mobileSearchMq.matches && (shortHeightSheetMq.matches || document.body.dataset.heroSearchBottomDock === 'true');
-        const spaceWithSugg = Math.floor((finalBarTop - suggOffset) - topBound);
+        const isCompact = document.body.dataset.heroSearchCompact === 'true';
+        const isKeyboardOpen = document.body.dataset.mobileKeyboard === 'open';
         const directOffset = 8;
-        const spaceWithoutSugg = Math.floor((finalBarTop - directOffset) - topBound);
+        const spaceWithSugg = Math.floor((effectiveBarTop - suggOffset) - topBound);
+        const spaceWithoutSugg = Math.floor((effectiveBarTop - directOffset) - topBound);
         const vvMaxResultsWithSugg = Math.max(0, Math.floor(metrics.vvHeight - barHeight - suggOffset - 16));
         const vvMaxResultsDirect = Math.max(0, Math.floor(metrics.vvHeight - barHeight - directOffset - 16));
+        const minSuggSpace = suggH + (isKeyboardOpen ? 24 : 12);
+        const canFitSugg = !isCompact && totalSpaceAbove >= minSuggSpace;
 
-        if (isShortLandscape && hasActiveResults && spaceWithSugg < 110 && spaceWithoutSugg >= 48) {
-          // Prioritize scrollable results in tight short-landscape viewports (e.g., virtual keyboard open)
+        if (!canFitSugg || (hasActiveResults && spaceWithSugg < Math.max(MIN_RESULTS_SPACE, 96) && spaceWithoutSugg >= 48)) {
+          // Hide suggestions when vertical space above the mobile keyboard is tight, and dock results right above .omni-bar
           suggFits = false;
           heroSearchShell.style.setProperty('--hero-suggestions-offset', `${directOffset}px`);
           available = Math.min(spaceWithoutSugg, vvMaxResultsDirect);
-          resFits = available >= 48;
+          resFits = hasActiveResults && available >= 48;
           if (resFits) {
             instantResultsBox.style.maxHeight = `${Math.max(48, Math.round(available))}px`;
           }
         } else {
+          suggFits = true;
           heroSearchShell.style.setProperty('--hero-suggestions-offset', `${suggOffset}px`);
-          suggFits = totalSpaceAbove >= (suggH + 8);
           available = Math.min(spaceWithSugg, vvMaxResultsWithSugg);
-          resFits = suggFits && available >= MIN_RESULTS_SPACE;
+          resFits = available >= MIN_RESULTS_SPACE;
           if (resFits && instantResultsBox.classList.contains('active')) {
             instantResultsBox.style.maxHeight = `${Math.max(0, Math.round(available))}px`;
           }
@@ -10231,8 +10321,11 @@
         }
       }
 
-      if (suggFits) document.body.dataset.heroSuggFit = 'true';
-      else delete document.body.dataset.heroSuggFit;
+      if (document.body.dataset.heroSearch === 'open') {
+        document.body.dataset.heroSuggFit = suggFits ? 'true' : 'false';
+      } else {
+        delete document.body.dataset.heroSuggFit;
+      }
       if (resFits) document.body.dataset.heroResFit = 'true';
       else delete document.body.dataset.heroResFit;
       document.querySelectorAll('.results-scroll-body').forEach(updateResultsScrollFades);
