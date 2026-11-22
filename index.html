@@ -6361,6 +6361,119 @@
       left: auto;
       right: calc(100% + 8px);
     }
+
+    /* ==========================================================================
+       BACK TO TOP ROUNDED PILL BUTTON
+       ========================================================================== */
+    .back-to-top-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      position: fixed;
+      inset-inline-end: var(--back-to-top-inline-end, max(16px, env(safe-area-inset-right)));
+      bottom: var(--back-to-top-bottom, 20px);
+      z-index: 25;
+      margin: 0;
+      border-radius: 9999px;
+      padding: 0.45rem 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate3d(0, 8px, 0);
+      transition:
+        opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+        color 0.18s ease,
+        border-color 0.18s ease,
+        background-color 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+    [dir="rtl"] .back-to-top-btn {
+      inset-inline-end: var(--back-to-top-inline-end, max(16px, env(safe-area-inset-left)));
+    }
+    [data-theme="dark"] .back-to-top-btn {
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.44);
+    }
+    .back-to-top-btn .back-to-top-arrow,
+    .back-to-top-btn .back-to-top-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .back-to-top-btn[data-compact="tight"] {
+      padding: 0.4rem 0.65rem;
+      gap: 0.25rem;
+      font-size: 0.74rem;
+    }
+    .back-to-top-btn[data-compact="icon"] {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      gap: 0;
+    }
+    .back-to-top-btn[data-compact="icon"] .back-to-top-label {
+      display: none;
+    }
+    .back-to-top-btn[data-visible="true"] {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate3d(0, 0, 0);
+    }
+    .back-to-top-btn:active,
+    .back-to-top-btn:focus-visible {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--border-strong));
+      outline: none;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .back-to-top-btn[data-visible="true"]:hover {
+        color: var(--accent);
+        border-color: color-mix(in srgb, var(--accent) 40%, var(--border-strong));
+        transform: translate3d(0, -2px, 0);
+      }
+    }
+    @media (max-width: 560px) {
+      .back-to-top-btn {
+        bottom: var(--back-to-top-bottom, calc(52px + 14px));
+      }
+    }
+    body[data-hero-search="open"] .back-to-top-btn,
+    body[data-hero-search-closing] .back-to-top-btn,
+    body[data-modal-open="true"] .back-to-top-btn,
+    body[data-mobile-nav="open"] .back-to-top-btn,
+    body[data-lang-open="true"] .back-to-top-btn,
+    body[data-mobile-lang="open"] .back-to-top-btn {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translate3d(0, 8px, 0) !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .back-to-top-btn,
+      .back-to-top-btn[data-visible="true"],
+      .back-to-top-btn[data-visible="true"]:hover {
+        transition: none !important;
+        transform: none !important;
+      }
+    }
   </style>
 </head>
 <body data-sidebar-mode="full" data-active-audience="home" data-mobile-nav="closed" data-stage-width="wide" data-stage-height="standard">
@@ -6857,6 +6970,11 @@
         </div>
       </footer>
     </main>
+
+    <!-- ========================================================================
+         FLOATING BACK TO TOP PILL BUTTON
+         ======================================================================== -->
+    <button type="button" class="back-to-top-btn" id="backToTopBtn" aria-label="Back to top" title="Back to top"><span class="back-to-top-arrow" aria-hidden="true">↑</span><span class="back-to-top-label">Top</span></button>
 
     <!-- ========================================================================
          MODALS: ALL SECTIONS & POPULAR GUIDES OVERLAY WINDOWS
@@ -9251,6 +9369,8 @@
           clearTimeout(settleTimer);
           const liveX = getCurrentTranslateX(heroSearchShell);
           const liveY = getCurrentTranslateY(heroSearchShell);
+          heroSearchShell.style.setProperty('--hero-search-shift-x', `${liveX}px`);
+          heroSearchShell.style.setProperty('--hero-search-shift', `${liveY}px`);
           heroShellCurrent = { x: liveX, y: liveY, w: toW };
           anim.onfinish = null;
           anim.oncancel = null;
@@ -9956,7 +10076,7 @@
       const barRect = barEl.getBoundingClientRect();
       const currentY = getCurrentTranslateY(heroSearchShell);
       const appliedY = heroShellAnimCleanup
-        ? heroShellCurrent.y
+        ? currentY
         : (parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || currentY);
       const barH = Math.max(30, Math.round(barEl.offsetHeight || barRect.height || 44));
       const layoutUnshiftedTop = getUnshiftedLayoutTop(barEl);
@@ -9991,15 +10111,21 @@
         cancelHeroPendingKeyboard();
       }
       if (heroAwaitingKeyboard && isTouchKeyboardViewport() && document.body.dataset.heroSearch === 'open') {
-        const keyboardNowOpen = mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50;
+        const currentVvH = Math.round(metrics.vvHeight || window.innerHeight);
+        const fullRefH = Math.max(mobileFullHeight || 0, window.innerHeight || 0);
+        const keyboardNowOpen = (fullRefH > 0 && currentVvH < fullRefH - 16) || document.body.dataset.mobileKeyboard === 'open';
         if (keyboardNowOpen) {
-          if (!heroKeyboardSettleTimer || Math.abs(metrics.vvHeight - heroLastObservedVvHeight) > 2) {
-            heroLastObservedVvHeight = metrics.vvHeight;
+          if (heroPendingKeyboardTimer) {
+            clearTimeout(heroPendingKeyboardTimer);
+            heroPendingKeyboardTimer = 0;
+          }
+          if (!heroKeyboardSettleTimer || Math.abs(currentVvH - heroLastObservedVvHeight) >= 4) {
+            heroLastObservedVvHeight = currentVvH;
             if (heroKeyboardSettleTimer) clearTimeout(heroKeyboardSettleTimer);
             heroKeyboardSettleTimer = setTimeout(() => {
               heroKeyboardSettleTimer = 0;
               commitHeroSearchOpen();
-            }, 50);
+            }, 28);
           }
         }
         heroSearchShell.style.setProperty('--hero-search-shift', '0px');
@@ -10120,23 +10246,25 @@
       const snapToViewport = (isTouchKeyboardViewport() && isHeroOpen && mobileSnapHeroOnViewport && document.body.dataset.heroBarSettled === 'true') || (isScreenResize && isHeroOpen);
       const hasDistinctTargetW = openWidth !== null && restingW > 0 && Math.abs(openWidth - restingW) > 0.5;
       const targetW = hasDistinctTargetW ? openWidth : null;
-      const fromX = heroShellAnimCleanup ? heroShellCurrent.x : getCurrentTranslateX(heroSearchShell);
-      const fromY = heroShellAnimCleanup ? heroShellCurrent.y : currentY;
+      const fromX = getCurrentTranslateX(heroSearchShell);
+      const fromY = currentY;
       const fromW = (targetW !== null)
         ? (heroShellAnimCleanup && heroShellCurrent.w !== null ? heroShellCurrent.w : (heroSearchShell.dataset.searchWidened === 'true' ? Math.round(heroSearchShell.getBoundingClientRect().width) : restingW))
         : null;
+      const activeTargetY = (heroShellAnimCleanup && heroShellTarget) ? heroShellTarget.y : heroShellCurrent.y;
+      const activeTargetX = (heroShellAnimCleanup && heroShellTarget) ? heroShellTarget.x : heroShellCurrent.x;
+      const activeTargetW = (heroShellAnimCleanup && heroShellTarget) ? heroShellTarget.w : heroShellCurrent.w;
 
       if (
-        mobileSearchMq.matches &&
         isHeroOpen &&
-        document.body.dataset.heroBarSettled === 'true' &&
         !isScreenResize &&
-        !heroShellAnimCleanup &&
-        Math.abs(shift - heroShellCurrent.y) < 2 &&
-        Math.abs(shiftX - heroShellCurrent.x) < 2
+        (Boolean(heroShellAnimCleanup) || document.body.dataset.heroBarSettled === 'true') &&
+        Math.abs(shift - activeTargetY) < 4 &&
+        Math.abs(shiftX - activeTargetX) < 4 &&
+        ((targetW === null && activeTargetW === null) || (targetW !== null && activeTargetW !== null && Math.abs(targetW - activeTargetW) < 2))
       ) {
-        shift = heroShellCurrent.y;
-        shiftX = heroShellCurrent.x;
+        shift = activeTargetY;
+        shiftX = activeTargetX;
       } else if (snapToViewport || !isHeroOpen || reducedMotionMq.matches) {
         applyHeroShellInstant(isHeroOpen ? shiftX : 0, isHeroOpen ? shift : 0, isHeroOpen ? targetW : null, restingW);
       } else {
@@ -10149,8 +10277,8 @@
           toY: shift,
           toW: targetW,
           restingW,
-          duration: 260,
-          settleAt: alreadySettled ? 0 : 180,
+          duration: isTouchKeyboardViewport() ? 210 : 260,
+          settleAt: alreadySettled ? 0 : (isTouchKeyboardViewport() ? 145 : 180),
           onSettle: alreadySettled ? null : settleHeroBar
         });
       }
@@ -10219,6 +10347,102 @@
 
     // Main content scroll fade indicators (replaces native scrollbar with 4-edge long fade masks)
     const mainContentScrollEl = document.getElementById('mainContent');
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    let backToTopFullWidth = 66;
+
+    function measureBackToTopFullWidth() {
+      if (!backToTopBtn) return 66;
+      const prevCompact = backToTopBtn.dataset.compact;
+      if (prevCompact) delete backToTopBtn.dataset.compact;
+      const w = Math.ceil(backToTopBtn.getBoundingClientRect().width) || 66;
+      if (prevCompact) backToTopBtn.dataset.compact = prevCompact;
+      backToTopFullWidth = Math.max(54, w);
+      return backToTopFullWidth;
+    }
+
+    function syncBackToTopButton({ remeasureWidth = false } = {}) {
+      if (!backToTopBtn || !mainContentScrollEl) return;
+      if (remeasureWidth || !backToTopFullWidth) {
+        measureBackToTopFullWidth();
+      }
+      const maxScroll = Math.max(0, mainContentScrollEl.scrollHeight - mainContentScrollEl.clientHeight);
+      const isScrollable = maxScroll > 20;
+      const scrollTop = mainContentScrollEl.scrollTop || 0;
+      const overlayActive = Boolean(
+        document.body.dataset.heroSearch === 'open' ||
+        document.body.dataset.heroSearchClosing ||
+        document.body.dataset.modalOpen === 'true' ||
+        document.body.dataset.mobileNav === 'open' ||
+        document.body.dataset.langOpen === 'true' ||
+        document.body.dataset.mobileLang === 'open'
+      );
+      const shouldShow = isScrollable && scrollTop > 140 && !overlayActive;
+      const wasVisible = backToTopBtn.dataset.visible === 'true';
+
+      // Horizontal clearance against .hero-section so the pill never touches or overlaps main content
+      const heroEl = homeHeroSectionEl || document.querySelector('.hero-section');
+      const heroRect = heroEl ? heroEl.getBoundingClientRect() : null;
+      const isRtl = document.documentElement.dir === 'rtl';
+      const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
+      if (heroRect && heroRect.width > 0 && viewportW > 0) {
+        const trailingGutter = Math.max(0, Math.round(isRtl ? heroRect.left : (viewportW - heroRect.right)));
+        const fullW = backToTopFullWidth || 66;
+        const tightW = Math.max(48, fullW - 10);
+        const iconW = 34;
+
+        if (trailingGutter >= fullW + 24) {
+          if (backToTopBtn.dataset.compact) delete backToTopBtn.dataset.compact;
+          backToTopBtn.style.removeProperty('--back-to-top-inline-end');
+        } else if (trailingGutter >= tightW + 14) {
+          if (backToTopBtn.dataset.compact !== 'tight') backToTopBtn.dataset.compact = 'tight';
+          const actualTightW = Math.ceil(backToTopBtn.offsetWidth) || tightW;
+          const inlineEnd = Math.max(6, Math.min(16, Math.floor((trailingGutter - actualTightW) / 2)));
+          backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
+        } else {
+          if (backToTopBtn.dataset.compact !== 'icon') backToTopBtn.dataset.compact = 'icon';
+          if (trailingGutter >= iconW + 8) {
+            const inlineEnd = Math.max(4, Math.min(16, Math.floor((trailingGutter - iconW) / 2)));
+            backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
+          } else {
+            backToTopBtn.style.setProperty('--back-to-top-inline-end', '12px');
+          }
+        }
+      }
+
+      // Stop cleanly at least 12px above .site-footer (and above the 52px mobile bottom bar)
+      const isMobileBar = mobileSearchMq.matches;
+      const baseBottom = isMobileBar ? (52 + 14) : 20;
+      const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
+      const footerEl = blurTargets?.siteFooter || document.querySelector('.site-footer');
+      const footerRect = footerEl ? footerEl.getBoundingClientRect() : null;
+      let resolvedBottom = baseBottom;
+      if (footerRect && footerRect.height > 0 && viewportH > 0 && footerRect.top < viewportH) {
+        const footerClearBottom = Math.ceil(viewportH - footerRect.top + 12);
+        if (footerClearBottom > resolvedBottom) {
+          resolvedBottom = footerClearBottom;
+        }
+      }
+      backToTopBtn.style.setProperty('--back-to-top-bottom', `${resolvedBottom}px`);
+
+      if (shouldShow) {
+        if (!wasVisible) backToTopBtn.dataset.visible = 'true';
+      } else if (wasVisible) {
+        if (document.activeElement === backToTopBtn) {
+          backToTopBtn.blur();
+        }
+        delete backToTopBtn.dataset.visible;
+      }
+    }
+
+    if (backToTopBtn && mainContentScrollEl) {
+      backToTopBtn.addEventListener('click', () => {
+        mainContentScrollEl.scrollTo({
+          top: 0,
+          behavior: reducedMotionMq.matches ? 'auto' : 'smooth'
+        });
+      });
+    }
+
     function syncMainScrollFades() {
       if (!mainContentScrollEl) return;
       const r = mainContentScrollEl.getBoundingClientRect();
@@ -10230,6 +10454,7 @@
       if (typeof updateChipRowFades === 'function') {
         updateChipRowFades(mainContentScrollEl);
       }
+      syncBackToTopButton();
     }
     if (mainContentScrollEl) {
       mainContentScrollEl.addEventListener('scroll', syncMainScrollFades, { passive: true });
@@ -10733,6 +10958,9 @@
       setInertIfChanged(blurTargets.shortHeaderMenuBtn, sidebarBlurred || (shortHeightSheetMq.matches && (mobileNavOpen || langOpen || modalOpen)));
       setInertIfChanged(blurTargets.leftNavPanel, sidebarBlurred);
       setInertIfChanged(topBarEl, overHeaderBlurred);
+      if (typeof syncBackToTopButton === 'function') {
+        syncBackToTopButton();
+      }
     }
 
     if ('MutationObserver' in window) {
@@ -10955,7 +11183,7 @@
       if (document.body.dataset.heroSearchBottomDock === 'true' || shortHeightSheetMq.matches) return true;
       if (coarsePointerMq.matches && document.body.dataset.heroSearchOverHeader !== 'true') return true;
       const currentShiftY = heroShellAnimCleanup
-        ? heroShellCurrent.y
+        ? getCurrentTranslateY(heroSearchShell)
         : (parseFloat(heroSearchShell?.style.getPropertyValue('--hero-search-shift')) || getCurrentTranslateY(heroSearchShell));
       if (currentShiftY > 0.5 && heroSearchCloseBtn && window.getComputedStyle(heroSearchCloseBtn).display !== 'none') {
         return true;
@@ -11036,13 +11264,28 @@
 
       if (!wasOpen) delete document.body.dataset.heroBarSettled;
       document.body.dataset.heroSearch = 'open';
+      if (
+        isTouchKeyboardViewport() &&
+        !wasOpen &&
+        !reducedMotionMq.matches &&
+        document.body.dataset.mobileKeyboard !== 'open'
+      ) {
+        heroAwaitingKeyboard = true;
+        heroLastObservedVvHeight = Math.round(window.visualViewport ? window.visualViewport.height : window.innerHeight);
+        heroPendingKeyboardTimer = setTimeout(() => {
+          heroPendingKeyboardTimer = 0;
+          commitHeroSearchOpen();
+        }, 90);
+      }
       const pos = updateHeroSearchPosition();
       if (hasQuery) {
         triggerHeroQuery();
       } else {
         instantResultsBox.classList.remove('active');
         delete instantResultsBox.dataset.renderedHtml;
-        fitHeroResultsHeight({ positionData: pos });
+        if (!heroAwaitingKeyboard) {
+          fitHeroResultsHeight({ positionData: pos });
+        }
       }
     }
 
@@ -11689,7 +11932,13 @@
         it: "Prova:", pl: "Spróbuj:", ru: "Попробуйте:", tr: "Deneyin:", ar: "جرّب:",
         zh: "试试：", ja: "例:", ko: "추천:", vi: "Thử:", th: "ลอง:", id: "Coba:", ms: "Cuba:"
       };
+      const TOP_LABEL_I18N = {
+        en: "Top", es: "Arriba", pt: "Topo", de: "Oben", fr: "Haut",
+        it: "Su", pl: "Góra", ru: "Наверх", tr: "Yukarı", ar: "الأعلى",
+        zh: "顶部", ja: "トップ", ko: "맨 위", vi: "Đầu trang", th: "ด้านบน", id: "Atas", ms: "Atas"
+      };
       strings.en["Try:"] = TRY_LABEL_I18N.en;
+      strings.en["Top"] = TOP_LABEL_I18N.en;
       Object.entries(REDESIGN_PACKS).forEach(([lang, vals]) => {
         if (!strings[lang]) strings[lang] = {};
         for (let i = 0; i < REDESIGN_KEYS.length; i++) {
@@ -11697,6 +11946,9 @@
         }
         if (TRY_LABEL_I18N[lang]) {
           strings[lang]["Try:"] = TRY_LABEL_I18N[lang];
+        }
+        if (TOP_LABEL_I18N[lang]) {
+          strings[lang]["Top"] = TOP_LABEL_I18N[lang];
         }
         if (strings[lang]["List of Partner Tools"]) {
           strings[lang]["List of partner tools"] = strings[lang]["List of Partner Tools"];
@@ -11885,6 +12137,7 @@
 
       if (typeof syncHeroSuggestionChipFades === 'function') syncHeroSuggestionChipFades();
       document.querySelectorAll('.modal-pill-strip').forEach((row) => updateChipRowFades(row));
+      if (typeof syncBackToTopButton === 'function') syncBackToTopButton({ remeasureWidth: true });
       if (typeof syncMainScrollFades === 'function') syncMainScrollFades();
     }
 
