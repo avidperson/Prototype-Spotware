@@ -7525,7 +7525,7 @@
       if ((mobileSearchMq.matches || shortHeightSheetMq.matches) && (document.body.dataset.mobileNav === 'open' || document.body.dataset.mobileLang === 'open')) {
         return;
       }
-      if (document.body.dataset.heroSearch === 'open' && typeof isHeroTextCloseMode === 'function' && isHeroTextCloseMode()) {
+      if (document.body.dataset.heroSearch === 'open' && typeof isHeroExplicitCloseOnlyMode === 'function' && isHeroExplicitCloseOnlyMode()) {
         return;
       }
       resetToHome();
@@ -7930,6 +7930,9 @@
     });
 
     sidebarCycleBtn.addEventListener('click', () => {
+      if (document.body.dataset.heroSearch === 'open' && typeof isHeroExplicitCloseOnlyMode === 'function' && isHeroExplicitCloseOnlyMode()) {
+        return;
+      }
       if (document.body.dataset.mobileLang === 'open') {
         closeLangPopover();
         return;
@@ -9558,6 +9561,20 @@
       return typeof s === 'number' && s > 1.02;
     }
 
+    function getUnshiftedLayoutTop(el) {
+      if (!el) return 0;
+      let top = 0;
+      let cur = el;
+      while (cur && cur !== document.body && cur !== document.documentElement) {
+        top += cur.offsetTop || 0;
+        cur = cur.offsetParent;
+      }
+      if (homeMainEl && homeMainEl.contains(el)) {
+        top -= homeMainEl.scrollTop || 0;
+      }
+      return Math.round(top);
+    }
+
     function getMobileViewportMetrics() {
       const headerHeight = topBarEl
         ? Math.round(topBarEl.offsetHeight)
@@ -9745,11 +9762,12 @@
         const prevFullH = mobileFullHeight;
         if (widthChanged || !mobileFullHeight) {
           lastMobileWidth = currentWidth;
-          mobileFullHeight = metrics.vvHeight;
+          mobileFullHeight = Math.max(window.innerHeight || 0, metrics.vvHeight || 0);
         } else if (mobileKeyboardSession) {
           // While keyboard is opening, open, or sliding closed, NEVER shrink mobileFullHeight so main content never moves down with keyboard
-          if (metrics.vvHeight > mobileFullHeight) {
-            mobileFullHeight = metrics.vvHeight;
+          const maxObservedH = Math.max(window.innerHeight || 0, metrics.vvHeight || 0);
+          if (maxObservedH > mobileFullHeight) {
+            mobileFullHeight = maxObservedH;
           }
         } else {
           // True screen height change (DevTools resize / browser chrome change outside keyboard session)
@@ -9855,8 +9873,11 @@
       const appliedY = heroShellAnimCleanup
         ? heroShellCurrent.y
         : (parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || currentY);
-      const barH = Math.max(36, Math.round(barRect.height || 48));
-      const measuredUnshiftedTop = Math.round(barRect.top + (metrics.vvOffsetTop || 0) - appliedY);
+      const barH = Math.max(36, Math.round(barEl.offsetHeight || barRect.height || 48));
+      const layoutUnshiftedTop = getUnshiftedLayoutTop(barEl);
+      const measuredUnshiftedTop = layoutUnshiftedTop > 0
+        ? layoutUnshiftedTop
+        : Math.round(barRect.top + (metrics.vvOffsetTop || 0) - appliedY);
       if (
         lastHeroRestingTop === null ||
         isScreenResize ||
@@ -10378,7 +10399,10 @@
         }
         return;
       }
-      if (e && e.type === 'scroll') {
+      if (
+        (e && e.type === 'scroll') ||
+        (mobileSearchMq.matches && (document.body.dataset.heroSearch === 'open' || document.activeElement === heroSearchInput))
+      ) {
         resetMobileWindowScroll();
       }
       mobileViewportPendingSnap = mobileViewportPendingSnap || isViewportEvent;
@@ -10776,6 +10800,9 @@
         if (searchActiveOrClosing) {
           e.preventDefault();
           e.stopPropagation();
+          if (typeof isHeroExplicitCloseOnlyMode === 'function' && isHeroExplicitCloseOnlyMode()) {
+            return;
+          }
           if (pendingLangOpenAfterSearchClose) return;
           pendingLangOpenAfterSearchClose = true;
           closeHeroResults({
@@ -10829,11 +10856,20 @@
     }
     syncBlurredInertState();
 
-    function isHeroTextCloseMode() {
-      if (document.body.dataset.heroSearchOverHeader === 'true') return false;
-      if (shortHeightSheetMq.matches && !mobileSearchMq.matches) return false;
-      return Boolean(mobileSearchMq.matches || coarsePointerMq.matches);
+    function isHeroExplicitCloseOnlyMode() {
+      if (document.body.dataset.heroSearch !== 'open') return false;
+      if (mobileSearchMq.matches) return true;
+      if (document.body.dataset.heroSearchBottomDock === 'true' || shortHeightSheetMq.matches) return true;
+      if (coarsePointerMq.matches && document.body.dataset.heroSearchOverHeader !== 'true') return true;
+      const currentShiftY = heroShellAnimCleanup
+        ? heroShellCurrent.y
+        : (parseFloat(heroSearchShell?.style.getPropertyValue('--hero-search-shift')) || getCurrentTranslateY(heroSearchShell));
+      if (currentShiftY > 0.5 && heroSearchCloseBtn && window.getComputedStyle(heroSearchCloseBtn).display !== 'none') {
+        return true;
+      }
+      return false;
     }
+    const isHeroTextCloseMode = isHeroExplicitCloseOnlyMode;
 
     function isDockedInteractiveSidebarTarget(target) {
       if (!target || isOverlayNavMode()) return false;
@@ -10860,7 +10896,7 @@
       heroPointerStartedInside = false;
       if (
         document.body.dataset.heroSearch === 'open' &&
-        !isHeroTextCloseMode() &&
+        !isHeroExplicitCloseOnlyMode() &&
         !startedInside &&
         !heroSearchShell?.contains(e.target) &&
         !isDockedInteractiveSidebarTarget(e.target)
@@ -10898,28 +10934,11 @@
         cancelHeroShellAnim();
         cancelHeroClose();
       }
-      if (heroAwaitingKeyboard) return;
+      cancelHeroPendingKeyboard();
       const hasQuery = Boolean(heroSearchInput.value.trim());
       const wasOpen = document.body.dataset.heroSearch === 'open';
-      const metrics = getMobileViewportMetrics();
-      const keyboardAlreadyOpen = mobileFullHeight > 0 && metrics.vvHeight < mobileFullHeight - 50;
-      const isTouchInteraction = heroLastPointerType === 'touch' || (heroLastPointerType !== 'mouse' && coarsePointerMq.matches);
-
-      if (!wasOpen && isTouchKeyboardViewport() && !keyboardAlreadyOpen && isTouchInteraction) {
-        syncMobileViewportVars(metrics);
-        cancelHeroBarSettle();
-        delete document.body.dataset.heroBarSettled;
-        delete document.body.dataset.heroSuggFit;
-        delete document.body.dataset.heroResFit;
-        applyHeroShellInstant(0, 0, null, 0);
-        document.body.dataset.heroSearch = 'open';
-        heroAwaitingKeyboard = true;
-        heroLastObservedVvHeight = metrics.vvHeight;
-        heroPendingKeyboardTimer = setTimeout(() => {
-          heroPendingKeyboardTimer = 0;
-          commitHeroSearchOpen();
-        }, 360);
-        return;
+      if (mobileSearchMq.matches) {
+        resetMobileWindowScroll();
       }
 
       if (!wasOpen) delete document.body.dataset.heroBarSettled;
