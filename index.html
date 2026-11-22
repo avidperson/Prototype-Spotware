@@ -397,19 +397,24 @@
       width: 36px;
       height: 36px;
       padding: 0;
-      border: none;
+      border: 1px solid var(--border-strong);
       border-radius: 9999px;
-      background: transparent;
+      background: var(--bg-surface);
       color: var(--text-secondary);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+    :root[data-theme="dark"] #themeToggleBtn {
+      box-shadow: none;
     }
     #themeToggleBtn:active {
-      border: none;
+      border: 1px solid var(--border-strong);
       background: var(--bg-subtle);
       color: var(--text-primary);
     }
     @media (hover: hover) and (pointer: fine) {
       #themeToggleBtn:hover {
-        border: none;
+        border: 1px solid var(--border-strong);
         background: var(--bg-subtle);
         color: var(--text-primary);
       }
@@ -1602,6 +1607,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       gap: 10px;
       padding: 10px 12px;
       border-radius: 12px;
@@ -1687,6 +1693,8 @@
     .home-guide-copy {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
+      text-align: start;
       gap: 0.12rem;
       min-width: 0;
       flex: 1 1 auto;
@@ -2009,13 +2017,15 @@
       padding: 0;
       flex-shrink: 0;
       border-radius: 50%;
-      border-color: transparent;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
       color: var(--text-muted);
     }
-    .omni-clear-btn:hover {
+    .omni-clear-btn:hover,
+    .omni-clear-btn:active {
       color: var(--text-primary);
       background: var(--bg-subtle);
-      border-color: var(--border);
+      border-color: var(--border-strong);
     }
     body[data-active-audience="home"] .omni-search-shell[data-has-query="true"] .omni-clear-btn {
       display: inline-flex;
@@ -3140,14 +3150,16 @@
     .home-modal-close {
       width: 34px;
       height: 34px;
-      border: none;
+      border: 1px solid var(--border-strong);
       border-radius: 9999px;
-      background: transparent;
+      background: var(--bg-surface);
       color: var(--text-secondary);
       flex-shrink: 0;
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
     }
-    .home-modal-close:hover {
-      border: none;
+    .home-modal-close:hover,
+    .home-modal-close:active {
+      border: 1px solid var(--border-strong);
       color: var(--text-primary);
       background: var(--bg-subtle);
     }
@@ -3654,21 +3666,25 @@
         width: 40px;
         height: 36px;
         padding: 0;
-        border: none;
+        border: 1px solid var(--border-strong);
         border-radius: 9999px;
-        background: transparent;
+        background: var(--bg-surface);
         color: var(--text-secondary);
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
         z-index: 42;
-        transition: opacity 0.18s ease, filter 0.2s ease, color 0.15s, background 0.15s;
+        transition: opacity 0.18s ease, filter 0.2s ease, color 0.15s, background 0.15s, border-color 0.15s;
+      }
+      :root[data-theme="dark"] #sidebarCycleBtn {
+        box-shadow: none;
       }
       #sidebarCycleBtn:active {
-        border: none;
+        border: 1px solid var(--border-strong);
         background: var(--bg-subtle);
         color: var(--text-primary);
       }
       @media (hover: hover) and (pointer: fine) {
         #sidebarCycleBtn:hover {
-          border: none;
+          border: 1px solid var(--border-strong);
           background: var(--bg-subtle);
           color: var(--text-primary);
         }
@@ -3720,25 +3736,32 @@
         pointer-events: none;
       }
       #themeToggleBtn {
-        position: static;
-        transform: none;
+        position: absolute;
+        top: 50%;
+        right: calc(50% + 20px + var(--mobile-bar-gap, clamp(30px, 12.5vw, 68px)));
+        left: auto;
+        transform: translateY(-50%);
         width: 36px;
         height: 36px;
         padding: 0;
-        border: none;
+        border: 1px solid var(--border-strong);
         border-radius: 9999px;
-        background: transparent;
+        background: var(--bg-surface);
         color: var(--text-secondary);
-        transition: opacity 0.18s ease, color 0.15s, background 0.15s;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        transition: opacity 0.18s ease, color 0.15s, background 0.15s, border-color 0.15s;
+      }
+      :root[data-theme="dark"] #themeToggleBtn {
+        box-shadow: none;
       }
       #themeToggleBtn:active {
-        border: none;
+        border: 1px solid var(--border-strong);
         background: var(--bg-subtle);
         color: var(--text-primary);
       }
       @media (hover: hover) and (pointer: fine) {
         #themeToggleBtn:hover {
-          border: none;
+          border: 1px solid var(--border-strong);
           background: var(--bg-subtle);
           color: var(--text-primary);
         }
@@ -3757,13 +3780,17 @@
         transform: rotate(180deg);
       }
       #langTriggerBtn {
-        position: static;
-        transform: none;
-        width: auto;
-        height: 34px;
-        padding-block: 0;
-        padding-inline: 12px 5px;
-        gap: 7px;
+        position: absolute;
+        top: 50%;
+        left: calc(50% + 20px + var(--mobile-bar-gap, clamp(30px, 12.5vw, 68px)));
+        right: auto;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
         border-radius: 9999px;
         border: 1px solid var(--border-strong);
         background: var(--bg-surface);
@@ -3778,12 +3805,9 @@
         box-shadow: none;
       }
       #langTriggerBtn .lang-globe-icon,
-      #langTriggerBtn .lang-chevron-icon {
-        display: none;
-      }
+      #langTriggerBtn .lang-chevron-icon,
       #langTriggerBtn .lang-code {
-        display: inline-block;
-        letter-spacing: 0.02em;
+        display: none;
       }
       #langTriggerBtn .lang-flag-circle {
         display: inline-flex;
@@ -3814,23 +3838,27 @@
         height: 36px;
         padding: 0;
         border-radius: 9999px;
-        border: none;
-        background: transparent;
+        border: 1px solid var(--border-strong);
+        background: var(--bg-surface);
         color: var(--text-secondary);
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
         z-index: 43;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.18s ease, color 0.15s, background 0.15s, visibility 0s linear 0.18s;
+        transition: opacity 0.18s ease, color 0.15s, background 0.15s, border-color 0.15s, visibility 0s linear 0.18s;
+      }
+      :root[data-theme="dark"] .mobile-modal-close-btn {
+        box-shadow: none;
       }
       .mobile-modal-close-btn:active {
-        border: none;
+        border: 1px solid var(--border-strong);
         background: var(--bg-subtle);
         color: var(--text-primary);
       }
       @media (hover: hover) and (pointer: fine) {
         .mobile-modal-close-btn:hover {
-          border: none;
+          border: 1px solid var(--border-strong);
           background: var(--bg-subtle);
           color: var(--text-primary);
         }
@@ -3839,7 +3867,7 @@
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
-        transition: opacity 0.18s ease, color 0.15s, background 0.15s, visibility 0s;
+        transition: opacity 0.18s ease, color 0.15s, background 0.15s, border-color 0.15s, visibility 0s;
       }
       body[data-modal-open="true"] #themeToggleBtn,
       body[data-modal-open="true"] #langTriggerBtn,
@@ -3849,6 +3877,7 @@
         pointer-events: none;
       }
       .header-actions {
+        --mobile-bar-gap: clamp(30px, 12.5vw, 68px);
         position: fixed;
         left: 0;
         right: 0;
@@ -3856,12 +3885,9 @@
         bottom: auto;
         width: 100%;
         height: 52px;
-        padding-block: 0;
-        padding-inline: clamp(28px, 14vw, 68px);
+        padding: 0;
         background: var(--bg-header);
         border-top: 1px solid var(--border);
-        justify-content: space-between;
-        align-items: center;
         z-index: 41;
         transition: opacity 0.16s ease, filter 0.2s ease;
       }
@@ -4913,7 +4939,7 @@
     }
     body[data-stage-width="medium"][data-stage-height="short"] .hero-section {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(360px, 390px);
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
       grid-template-rows: auto auto auto;
       align-items: center;
       row-gap: clamp(16px, var(--home-stage-gap, 20px), 26px);
@@ -5286,7 +5312,7 @@
       }
     }
 
-    /* Non-mobile menu toggle clearance (heights > 460px where the side-edge toggle is shown) */
+    /* Non-mobile menu toggle clearance (heights > 460px); symmetric extra gutter only when scrollable */
     @media (min-width: 561px) and (min-height: 461px) {
       .main-inner,
       body[data-active-audience="home"] .main-inner,
@@ -5297,12 +5323,17 @@
       body[data-active-audience="home"]:is([data-stage-width="narrow"], [data-stage-width="mobile"])[data-stage-height="tall"] .main-inner {
         padding-inline: 44px;
       }
+      body[data-home-scroll="true"] .main-inner,
+      body[data-active-audience="home"][data-home-scroll="true"] .main-inner,
+      body[data-active-audience="home"][data-home-scroll="true"][data-stage-width][data-stage-height] .main-inner {
+        padding-inline: 58px;
+      }
       .site-footer {
         padding-inline: 44px;
       }
     }
 
-    /* Mobile centered hero copy + canvas-integrated header top clearance across all height stages */
+    /* Mobile centered hero copy + canvas-integrated header top clearance; symmetric extra gutter only when scrollable */
     @media (max-width: 560px) {
       body .hero-copy {
         text-align: center;
@@ -5319,6 +5350,11 @@
       }
       body[data-active-audience="home"][data-stage-height="short"] .hero-bg-art {
         height: 215px;
+      }
+      body[data-home-scroll="true"] .main-inner,
+      body[data-active-audience="home"][data-home-scroll="true"] .main-inner,
+      body[data-active-audience="home"][data-home-scroll="true"][data-stage-width][data-stage-height] .main-inner {
+        padding-inline: clamp(46px, 13vw, 54px);
       }
       body[data-active-audience="home"][data-home-scroll="true"] .main-inner {
         padding-top: calc(var(--header-height) + 10px);
@@ -5540,6 +5576,11 @@
         padding-inline: max(18px, env(safe-area-inset-left)) max(18px, env(safe-area-inset-right));
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
+      body[data-home-scroll="true"] .main-inner,
+      body[data-active-audience="home"][data-home-scroll="true"] .main-inner,
+      body[data-active-audience="home"][data-home-scroll="true"][data-stage-width][data-stage-height] .main-inner {
+        padding-inline: max(56px, calc(env(safe-area-inset-left) + 50px)) max(56px, calc(env(safe-area-inset-right) + 50px));
+      }
       .site-footer,
       body[data-active-audience="home"][data-stage-width][data-stage-height] .site-footer {
         padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
@@ -5711,9 +5752,9 @@
         transform: translateY(-50%) scale(0.88);
         width: 34px;
         height: 34px;
-        border: none;
+        border: 1px solid var(--border-strong);
         border-radius: 9999px;
-        background: transparent;
+        background: var(--bg-surface);
         color: var(--text-secondary);
         flex-shrink: 0;
         align-items: center;
@@ -5722,9 +5763,11 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.16s ease, transform 0.2s ease, visibility 0s linear 0.16s, background-color 0.15s ease, color 0.15s ease;
+        transition: opacity 0.16s ease, transform 0.2s ease, visibility 0s linear 0.16s, background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
       }
-      .short-sheet-close-btn:hover {
+      .short-sheet-close-btn:hover,
+      .short-sheet-close-btn:active {
+        border: 1px solid var(--border-strong);
         background: var(--bg-subtle);
         color: var(--text-primary);
       }
@@ -6456,11 +6499,6 @@
       align-items: center;
       justify-content: center;
       line-height: 1;
-    }
-    .back-to-top-btn[data-compact="tight"] {
-      width: 34px;
-      height: 34px;
-      font-size: 0.88rem;
     }
     .back-to-top-btn[data-visible="true"] {
       opacity: 1;
@@ -7883,6 +7921,10 @@
     });
 
     let menuCollapseTimer = 0;
+    let userActivatedNavMenu = false;
+    let langMenuLogicalOpen = false;
+    let isTransitioningLangMode = false;
+    let suppressLangCloseOnResizeUntil = 0;
 
     function cancelPendingMenuCollapse() {
       if (menuCollapseTimer) {
@@ -7911,7 +7953,10 @@
       }, 230);
     }
 
-    function closeMobileNav() {
+    function closeMobileNav({ preserveActivation = false } = {}) {
+      if (!preserveActivation) {
+        userActivatedNavMenu = false;
+      }
       const wasOpen = document.body.dataset.mobileNav === 'open';
       document.body.dataset.mobileNav = 'closed';
       if (shortHeaderMenuBtn) shortHeaderMenuBtn.setAttribute('aria-expanded', 'false');
@@ -7919,13 +7964,14 @@
       if (wasOpen && isOverlayNavMode() && leftNavEl?.contains(document.activeElement)) {
         document.activeElement?.blur?.();
       }
-      if (wasOpen) {
+      if (wasOpen && !preserveActivation) {
         scheduleMenuCollapse(() => document.body.dataset.mobileNav !== 'open');
       }
       if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
     }
 
     function closeLangPopover() {
+      langMenuLogicalOpen = false;
       const pop = document.getElementById('langPopover');
       if (document.body.dataset.mobileLang === 'open') {
         document.body.dataset.mobileLang = 'closed';
@@ -7944,6 +7990,7 @@
     function openMobileLang() {
       closeAllInlineResults();
       closeMobileNav();
+      langMenuLogicalOpen = true;
       const grid = document.querySelector('#langPopover .lang-grid');
       if (grid) grid.scrollTop = 0;
       document.body.dataset.mobileLang = 'open';
@@ -7967,6 +8014,7 @@
 
     function openSidebarMenu() {
       cancelPendingMenuCollapse();
+      userActivatedNavMenu = true;
       if (isOverlayNavMode()) {
         closeLangPopover();
         closeAllInlineResults();
@@ -7994,6 +8042,7 @@
         }
         return;
       }
+      userActivatedNavMenu = (mode === 'full');
       const prevMode = document.body.dataset.sidebarMode || 'full';
       if (mode === 'full') {
         cancelPendingMenuCollapse();
@@ -8126,12 +8175,47 @@
       closeMobileNav();
     });
 
-    function syncSidebarToViewport(isOverlay) {
+    function syncSidebarToViewport(isOverlay, { preserveActiveMenu = false } = {}) {
       cancelSidebarFlipAnims();
+      const otherOverlayActive = Boolean(
+        document.body.dataset.heroSearch === 'open' ||
+        document.body.dataset.heroSearchClosing ||
+        document.body.dataset.modalOpen === 'true' ||
+        langMenuLogicalOpen ||
+        document.body.dataset.mobileLang === 'open'
+      );
+      const shouldKeepMenuOpen = preserveActiveMenu && !otherOverlayActive && (
+        document.body.dataset.mobileNav === 'open' || userActivatedNavMenu
+      );
       if (!isOverlay) {
-        document.body.dataset.sidebarMode = 'full';
+        if (shouldKeepMenuOpen || document.body.dataset.sidebarMode !== 'hidden') {
+          document.body.dataset.sidebarMode = 'full';
+        }
+        closeMobileNav({ preserveActivation: shouldKeepMenuOpen });
+        return;
       }
-      closeMobileNav();
+      if (shouldKeepMenuOpen) {
+        cancelPendingMenuCollapse();
+        if (shortHeightSheetMq.matches) {
+          let activeGroup = Array.prototype.find.call(sidebarGroups, (g) => g.open) || sidebarGroups[0];
+          sidebarGroups.forEach((other) => {
+            cancelNavGroupAnimation(other);
+            other.open = other === activeGroup;
+          });
+          renderShortMenuPane(activeGroup);
+          if (shortHeaderMenuBtn) shortHeaderMenuBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          if (shortHeaderMenuBtn) shortHeaderMenuBtn.setAttribute('aria-expanded', 'false');
+          const navScroll = document.querySelector('.nav-tree-scroll');
+          if (navScroll && typeof updateResultsScrollFades === 'function') {
+            requestAnimationFrame(() => updateResultsScrollFades(navScroll));
+          }
+        }
+        document.body.dataset.mobileNav = 'open';
+        if (typeof syncBlurredInertState === 'function') syncBlurredInertState();
+      } else {
+        closeMobileNav();
+      }
     }
     syncSidebarToViewport(isOverlayNavMode());
 
@@ -9817,12 +9901,16 @@
     const homeSiteFooterEl = document.querySelector('.site-footer');
 
     let lastHomeLayoutKey = '';
+    let lastHomeLayoutWidth = window.innerWidth;
 
     function syncHomeLayoutTier({ allowWhileSearchOpen = false, force = false } = {}) {
       if (document.body.dataset.activeAudience !== 'home') return;
       const searchOpenOrClosing = document.body.dataset.heroSearch === 'open' || Boolean(document.body.dataset.heroSearchClosing);
-      if (searchOpenOrClosing && (!allowWhileSearchOpen || (isTouchKeyboardViewport() && Math.abs(window.innerWidth - lastMobileWidth) <= 2))) {
-        return;
+      const widthChangedSinceLastLayout = Math.abs(window.innerWidth - lastHomeLayoutWidth) > 2;
+      if (searchOpenOrClosing) {
+        if (!allowWhileSearchOpen || !widthChangedSinceLastLayout) {
+          return;
+        }
       }
       if (!homeMainEl || !homeMainInnerEl || !homeHeroSectionEl) return;
 
@@ -9832,24 +9920,10 @@
         return;
       }
       lastHomeLayoutKey = layoutKey;
-
-      if (allowWhileSearchOpen && heroSearchShell) {
-        cancelHeroShellAnim();
-        heroShellCurrent = { x: 0, y: 0, w: null };
-        heroSearchShell.style.transform = '';
-        heroSearchShell.style.width = '';
-        delete heroSearchShell.dataset.searchWidened;
-        heroSearchShell.style.removeProperty('--hero-search-open-width');
-        heroSearchShell.style.removeProperty('--hero-search-resting-width');
-        heroSearchShell.style.removeProperty('--hero-search-shift-x');
-        heroSearchShell.style.removeProperty('--hero-search-shift');
-        lastHeroRestingTop = null;
-        heroRestingWidth = null;
-        heroRestingLeft = null;
-      }
+      lastHomeLayoutWidth = window.innerWidth;
 
       const availW = Math.max(0, window.innerWidth - sidebarReserve);
-      const stagePadX = (mobileSearchMq.matches || shortHeightSheetMq.matches) ? 36 : 88; // 44px each side on taller non-mobile clears 32px menu toggle + 12px min gap
+      const stagePadX = (mobileSearchMq.matches || shortHeightSheetMq.matches) ? 36 : 88;
       const usableW = Math.max(0, availW - stagePadX);
       const widthTier = usableW >= 860 ? 'wide' : usableW >= 680 ? 'medium' : usableW >= 500 ? 'narrow' : 'mobile';
 
@@ -9858,24 +9932,37 @@
       homeHeroSectionEl.style.setProperty('--home-stage-gap', '0px');
       document.body.dataset.stageWidth = widthTier;
 
-      let chosenHeight = 'short';
+      const preserveStageHeightDuringCompactSearch = Boolean(
+        searchOpenOrClosing && (document.body.dataset.heroSearchCompact || mobileKeyboardSession)
+      );
+      const prevStageHeight = document.body.dataset.stageHeight || 'standard';
+      let chosenHeight = preserveStageHeightDuringCompactSearch ? prevStageHeight : 'short';
       let fitsVertically = false;
       let chosenAvailH = 0;
       let chosenContentH = 0;
-      for (const hTier of ['tall', 'standard', 'short']) {
-        document.body.dataset.stageHeight = hTier;
+      if (!preserveStageHeightDuringCompactSearch) {
+        for (const hTier of ['tall', 'standard', 'short']) {
+          document.body.dataset.stageHeight = hTier;
+          const innerCs = window.getComputedStyle(homeMainInnerEl);
+          const padY = (parseFloat(innerCs.paddingTop) || 0) + (parseFloat(innerCs.paddingBottom) || 0);
+          const footerH = homeSiteFooterEl ? homeSiteFooterEl.offsetHeight : 0;
+          const availH = homeMainEl.clientHeight - footerH - padY;
+          const contentH = homeHeroSectionEl.offsetHeight;
+          chosenAvailH = availH;
+          chosenContentH = contentH;
+          if (contentH > 0 && contentH <= availH + 0.5) {
+            chosenHeight = hTier;
+            fitsVertically = true;
+            break;
+          }
+        }
+      } else {
         const innerCs = window.getComputedStyle(homeMainInnerEl);
         const padY = (parseFloat(innerCs.paddingTop) || 0) + (parseFloat(innerCs.paddingBottom) || 0);
         const footerH = homeSiteFooterEl ? homeSiteFooterEl.offsetHeight : 0;
-        const availH = homeMainEl.clientHeight - footerH - padY;
-        const contentH = homeHeroSectionEl.offsetHeight;
-        chosenAvailH = availH;
-        chosenContentH = contentH;
-        if (contentH > 0 && contentH <= availH + 0.5) {
-          chosenHeight = hTier;
-          fitsVertically = true;
-          break;
-        }
+        chosenAvailH = homeMainEl.clientHeight - footerH - padY;
+        chosenContentH = homeHeroSectionEl.offsetHeight;
+        fitsVertically = chosenContentH > 0 && chosenContentH <= chosenAvailH + 0.5;
       }
       document.body.dataset.stageHeight = chosenHeight;
       if (typeof syncMobileTabInertState === 'function') {
@@ -9978,7 +10065,7 @@
         }
 
         const prevFullH = mobileFullHeight;
-        if (widthChanged || !mobileFullHeight) {
+        if (widthChanged || !mobileFullHeight || (isScreenResize && !searchActive)) {
           lastMobileWidth = currentWidth;
           mobileFullHeight = Math.max(window.innerHeight || 0, metrics.vvHeight || 0);
         } else if (mobileKeyboardSession) {
@@ -10096,13 +10183,13 @@
       const isPillBottomClose = mobileSearchMq.matches || isCoarsePillBottomDock;
       const keyboardOpen = document.body.dataset.mobileKeyboard === 'open';
       const availAboveKeyboard = Math.max(0, metrics.vvHeight - visibleHeaderBottom);
-      const ultraCompactThreshold = isPillBottomClose ? 245 : 220;
-      const compactThreshold = isPillBottomClose ? 360 : 280;
+      const ultraCompactThreshold = isPillBottomClose ? 190 : 170;
+      const compactThreshold = isPillBottomClose ? 235 : 210;
       let compactMode = '';
       if (isHeroOpen && (mobileSearchMq.matches || isBottomDock)) {
-        if (metrics.vvHeight <= ultraCompactThreshold || availAboveKeyboard <= 190) {
+        if (metrics.vvHeight <= ultraCompactThreshold || availAboveKeyboard <= 140) {
           compactMode = 'tight';
-        } else if (keyboardOpen || metrics.vvHeight <= compactThreshold) {
+        } else if (metrics.vvHeight <= compactThreshold || availAboveKeyboard <= 180) {
           compactMode = 'true';
         }
       }
@@ -10116,17 +10203,32 @@
       const shouldCompact = Boolean(compactMode);
       const isUltraCompact = compactMode === 'tight';
 
+      if (isScreenResize) {
+        cancelHeroShellAnim();
+        heroShellCurrent = { x: 0, y: 0, w: null };
+        heroSearchShell.style.transform = '';
+        heroSearchShell.style.width = '';
+        delete heroSearchShell.dataset.searchWidened;
+        heroSearchShell.style.removeProperty('--hero-search-open-width');
+        heroSearchShell.style.removeProperty('--hero-search-resting-width');
+        heroSearchShell.style.removeProperty('--hero-search-shift-x');
+        heroSearchShell.style.removeProperty('--hero-search-shift');
+        lastHeroRestingTop = null;
+        heroRestingWidth = null;
+        heroRestingLeft = null;
+      }
+
       const barEl = heroSearchShell.querySelector('.omni-bar') || heroSearchShell;
       const suggEl = heroSearchShell.querySelector('.suggestions-bar');
       const barRect = barEl.getBoundingClientRect();
-      const currentY = getCurrentTranslateY(heroSearchShell);
+      const currentY = isScreenResize ? 0 : getCurrentTranslateY(heroSearchShell);
       const appliedY = heroShellAnimCleanup
         ? currentY
         : (parseFloat(heroSearchShell.style.getPropertyValue('--hero-search-shift')) || currentY);
       const barH = Math.max(28, Math.round(barEl.offsetHeight || barRect.height || 44));
       const unshiftedBaselineTop = Math.round(barRect.top - currentY);
       const layoutUnshiftedTop = getUnshiftedLayoutTop(barEl);
-      const measuredUnshiftedTop = (isTouchKeyboardViewport() && barRect.height > 0)
+      const measuredUnshiftedTop = (barRect.height > 0 && (isTouchKeyboardViewport() || isScreenResize))
         ? unshiftedBaselineTop
         : (layoutUnshiftedTop > 0 ? layoutUnshiftedTop : Math.round(barRect.top + (metrics.vvOffsetTop || 0) - appliedY));
       if (
@@ -10278,7 +10380,12 @@
         shift = activeTargetY;
         shiftX = activeTargetX;
       } else if (snapToViewport || !isHeroOpen || reducedMotionMq.matches) {
-        if (isHeroOpen) lastDockedVvHeight = metrics.vvHeight;
+        if (isHeroOpen) {
+          lastDockedVvHeight = metrics.vvHeight;
+          if (isScreenResize) {
+            document.body.dataset.heroBarSettled = 'true';
+          }
+        }
         applyHeroShellInstant(isHeroOpen ? shiftX : 0, isHeroOpen ? shift : 0, isHeroOpen ? targetW : null, restingW);
       } else {
         lastDockedVvHeight = metrics.vvHeight;
@@ -10382,31 +10489,19 @@
       const shouldShow = isScrollable && scrollTop > 32 && !overlayActive;
       const wasVisible = backToTopBtn.dataset.visible === 'true';
 
-      // Horizontal clearance against .hero-section so the circular button never touches or overlaps main content
+      // Horizontal clearance against .hero-section so the 38px circular button never touches or overlaps main content
       const heroEl = homeHeroSectionEl || document.querySelector('.hero-section');
       const heroRect = heroEl ? heroEl.getBoundingClientRect() : null;
       const isRtl = document.documentElement.dir === 'rtl';
       const viewportW = window.innerWidth || document.documentElement.clientWidth || 0;
       if (heroRect && heroRect.width > 0 && viewportW > 0) {
         const trailingGutter = Math.max(0, Math.round(isRtl ? heroRect.left : (viewportW - heroRect.right)));
-        const fullD = 38;
-        const tightD = 34;
-
-        if (trailingGutter >= fullD + 24) {
-          if (backToTopBtn.dataset.compact) delete backToTopBtn.dataset.compact;
+        const btnD = 38;
+        if (trailingGutter >= btnD + 24) {
           backToTopBtn.style.removeProperty('--back-to-top-inline-end');
-        } else if (trailingGutter >= fullD + 10) {
-          if (backToTopBtn.dataset.compact) delete backToTopBtn.dataset.compact;
-          const inlineEnd = Math.max(5, Math.min(16, Math.floor((trailingGutter - fullD) / 2)));
-          backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
         } else {
-          if (backToTopBtn.dataset.compact !== 'tight') backToTopBtn.dataset.compact = 'tight';
-          if (trailingGutter >= tightD + 8) {
-            const inlineEnd = Math.max(4, Math.min(16, Math.floor((trailingGutter - tightD) / 2)));
-            backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
-          } else {
-            backToTopBtn.style.setProperty('--back-to-top-inline-end', '12px');
-          }
+          const inlineEnd = Math.max(4, Math.min(16, Math.floor((trailingGutter - btnD) / 2)));
+          backToTopBtn.style.setProperty('--back-to-top-inline-end', `${inlineEnd}px`);
         }
       }
 
@@ -10922,6 +11017,43 @@
       return Boolean(rect && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
     }
 
+    function syncLangMenuForViewport() {
+      const pop = blurTargets?.langPopover || document.getElementById('langPopover');
+      const trigger = document.getElementById('langTriggerBtn');
+      const sheetLangMode = isSheetLangMode();
+      const currentlyOpen = langMenuLogicalOpen || document.body.dataset.mobileLang === 'open' || isNativeLangPopoverOpen();
+      if (!currentlyOpen) return false;
+      langMenuLogicalOpen = true;
+      if (sheetLangMode) {
+        if (document.body.dataset.mobileLang !== 'open') {
+          document.body.dataset.mobileLang = 'open';
+        }
+        if (isNativeLangPopoverOpen()) {
+          isTransitioningLangMode = true;
+          try { pop?.hidePopover?.(); } catch {}
+          isTransitioningLangMode = false;
+        }
+      } else {
+        if (document.body.dataset.mobileLang === 'open') {
+          document.body.dataset.mobileLang = 'closed';
+        }
+        if (!isNativeLangPopoverOpen() && pop) {
+          isTransitioningLangMode = true;
+          try {
+            pop.showPopover?.({ source: trigger });
+          } catch {
+            try { pop.showPopover?.(); } catch {}
+          }
+          isTransitioningLangMode = false;
+        }
+      }
+      const grid = pop?.querySelector('.lang-grid');
+      if (typeof updateResultsScrollFades === 'function') {
+        requestAnimationFrame(() => updateResultsScrollFades(grid || pop));
+      }
+      return true;
+    }
+
     function syncBlurredInertState() {
       if (!blurInertReady) return;
       const overlayNavMode = isOverlayNavMode();
@@ -10931,14 +11063,10 @@
       }
 
       const sheetLangMode = isSheetLangMode();
-      if (!sheetLangMode && document.body.dataset.mobileLang === 'open') {
-        document.body.dataset.mobileLang = 'closed';
+      if (langMenuLogicalOpen || document.body.dataset.mobileLang === 'open' || isNativeLangPopoverOpen()) {
+        syncLangMenuForViewport();
       }
-      let nativeLangOpen = isNativeLangPopoverOpen();
-      if (sheetLangMode && nativeLangOpen) {
-        try { blurTargets.langPopover?.hidePopover?.(); } catch {}
-        nativeLangOpen = isNativeLangPopoverOpen();
-      }
+      const nativeLangOpen = isNativeLangPopoverOpen();
 
       const heroOpen = document.body.dataset.heroSearch === 'open' || Boolean(document.body.dataset.heroSearchClosing);
       const modalOpen = homeModals.some((dialog) => dialog.open);
@@ -11017,6 +11145,7 @@
         overlay: overlayDrawerMq.matches,
         short: shortHeightSheetMq.matches
       };
+      suppressLangCloseOnResizeUntil = Date.now() + 300;
       snapViewportTransitions();
       sidebarGroups.forEach((group) => cancelNavGroupAnimation(group));
       pendingLangOpenAfterSearchClose = false;
@@ -11027,44 +11156,24 @@
         deferredInertSyncTimer = 0;
       }
 
-      if (source === 'mobile' || source === 'short') {
-        closeLangPopover();
-      } else if (isLangPopoverOpen()) {
-        const pop = blurTargets.langPopover;
-        const grid = pop?.querySelector('.lang-grid');
-        if (typeof updateResultsScrollFades === 'function') {
-          requestAnimationFrame(() => updateResultsScrollFades(grid || pop));
-        }
-      }
+      syncLangMenuForViewport();
+      syncSidebarToViewport(isOverlayNavMode(), { preserveActiveMenu: true });
 
-      if (!isOverlayNavMode()) {
-        syncSidebarToViewport(false);
-      } else if (source === 'short' || source === 'overlay') {
-        syncSidebarToViewport(true);
-      } else if (document.body.dataset.mobileNav === 'open') {
-        if (shortHeightSheetMq.matches) {
-          syncSidebarToViewport(true);
-        } else {
-          const navScroll = document.querySelector('.nav-tree-scroll');
-          if (navScroll && typeof updateResultsScrollFades === 'function') {
-            requestAnimationFrame(() => updateResultsScrollFades(navScroll));
-          }
-        }
-      }
-
-      syncOpenModalsForViewport({ clearInlinePosition: true, realignPills: true });
-      syncSearchUiToScreenSize({ isScreenResize: true });
       if (typeof syncHomeLayoutTier === 'function') {
         syncHomeLayoutTier({ allowWhileSearchOpen: true, force: true });
       }
+      syncOpenModalsForViewport({ clearInlinePosition: true, realignPills: true });
+      syncSearchUiToScreenSize({ isScreenResize: true });
       syncBlurredInertState();
       requestAnimationFrame(() => {
+        syncLangMenuForViewport();
         syncOpenModalsForViewport({ clearInlinePosition: false, realignPills: false });
         syncBlurredInertState();
       });
     }
 
     function checkViewportBreakpointsOnResize() {
+      suppressLangCloseOnResizeUntil = Date.now() + 250;
       const nextMobile = mobileSearchMq.matches;
       const nextOverlay = overlayDrawerMq.matches;
       const nextShort = shortHeightSheetMq.matches;
@@ -11078,6 +11187,7 @@
       } else if (mobileChanged) {
         handleViewportBreakpointChange('mobile');
       } else {
+        syncLangMenuForViewport();
         syncBlurredInertState();
       }
     }
@@ -11128,6 +11238,7 @@
     if (langTriggerBtnEl && langPopoverEl) {
       let desktopLangWasOpenOnPointerDown = false;
       const openLangMenuNow = () => {
+        langMenuLogicalOpen = true;
         if (isSheetLangMode()) {
           openMobileLang();
         } else {
@@ -11195,13 +11306,21 @@
       });
       langPopoverEl.addEventListener('toggle', (e) => {
         if (e.newState === 'open') {
+          langMenuLogicalOpen = true;
           closeAllInlineResults();
           if (isOverlayNavMode()) closeMobileNav();
           if (langGridEl) langGridEl.scrollTop = 0;
           if (langTriggerBtnEl) langTriggerBtnEl.setAttribute('aria-expanded', 'true');
           requestAnimationFrame(syncLangScrollFades);
-        } else if (langTriggerBtnEl && document.body.dataset.mobileLang !== 'open') {
-          langTriggerBtnEl.setAttribute('aria-expanded', 'false');
+        } else if (!isTransitioningLangMode) {
+          if (Date.now() <= suppressLangCloseOnResizeUntil && langMenuLogicalOpen) {
+            requestAnimationFrame(syncLangMenuForViewport);
+            return;
+          }
+          if (document.body.dataset.mobileLang !== 'open') {
+            langMenuLogicalOpen = false;
+            if (langTriggerBtnEl) langTriggerBtnEl.setAttribute('aria-expanded', 'false');
+          }
         }
         syncBlurredInertState();
       });
