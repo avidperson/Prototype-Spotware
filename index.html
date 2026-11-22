@@ -913,6 +913,7 @@
       color: var(--text-primary);
       text-decoration: none;
       white-space: normal;
+      overflow: hidden;
       transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.16s ease;
     }
     [data-theme="dark"] .sidebar-support-card {
@@ -952,6 +953,7 @@
       min-width: 0;
     }
     .support-card-copy {
+      flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: 0.1rem;
@@ -963,12 +965,14 @@
       color: var(--text-primary);
       line-height: 1.22;
       letter-spacing: -0.01em;
+      overflow-wrap: anywhere;
     }
     .support-card-subtitle {
       font-size: 0.68rem;
       font-weight: 400;
       color: var(--text-muted);
       line-height: 1.28;
+      overflow-wrap: anywhere;
     }
     .support-card-arrow {
       width: 24px;
@@ -6118,15 +6122,25 @@
       .short-menu-support-bar {
         flex-shrink: 0;
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         gap: 0.75rem;
+        row-gap: 0.35rem;
         padding: 0.5rem 0.85rem;
         border-radius: 10px;
         border: 1px solid var(--border);
         background: color-mix(in srgb, var(--bg-surface) 78%, var(--bg-canvas));
         font-size: 0.78rem;
+        line-height: 1.35;
         color: var(--text-secondary);
+        white-space: normal;
+        overflow: hidden;
+      }
+      .short-menu-support-copy {
+        min-width: 0;
+        flex: 1 1 180px;
+        overflow-wrap: anywhere;
       }
       .short-menu-support-copy strong {
         color: var(--text-primary);
@@ -6145,10 +6159,15 @@
         display: inline-flex;
         align-items: center;
         gap: 0.3rem;
+        max-width: 100%;
         color: var(--accent);
         font-weight: 700;
         text-decoration: none;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      .short-menu-support-link svg {
+        flex-shrink: 0;
       }
       [dir="rtl"] .short-menu-support-link svg {
         transform: scaleX(-1);
